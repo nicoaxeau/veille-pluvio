@@ -319,6 +319,7 @@ loadStore();
 let cachedData={},results=[];
 let currentTab='liste',sortCol='urgency',sortDir=-1,miniChart=null,openCode=null;
 const THRESH_WINDOW=30; // jours max
+const EXPIRE_DAYS=30;   // si J+7 non envoyée et épisode plus vieux que ça : on abandonne les 2 relances
 const today=new Date();today.setHours(0,0,0,0);
 
 document.getElementById('today-date').textContent=today.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -404,27 +405,29 @@ function mailStatus(m){
 function recompute(){
   const T=parseFloat(document.getElementById('threshold').value);
   results=[];
-  let totalEps=0,sUrgent=0,sSoon=0,sSent=0;
+  let totalEps=0,sUrgent=0,sSoon=0,sSent=0,sExpired=0;
   for(const dept of DEPTS){
     const cd=cachedData[dept.code];
-    if(!cd||!cd.dates.length){results.push({dept,episodes:[],pending:[],urgency:-2,error:cd?.error});continue;}
+    if(!cd||!cd.dates.length){results.push({dept,episodes:[],pending:[],urgency:-2,sentCount:0,expiredCount:0,error:cd?.error});continue;}
     const eps=buildEpisodes(cd.precip,cd.dates,T).sort((a,b)=>b.dateObj-a.dateObj);
-    let urgency=-1,nextDue=null,pending=[];
+    let urgency=-1,nextDue=null,pending=[],sentCount=0,expiredCount=0;
     for(const ep of eps){
       ep.mailings=mailingsFor(dept.code,ep);
+      const j7=ep.mailings.find(m=>m.off===7);
+      // Épisode expiré : J+7 jamais envoyée ET épisode plus vieux que EXPIRE_DAYS jours
+      ep.expired=(!j7.sent)&&(today>addDays(ep.dateObj,EXPIRE_DAYS));
       for(const m of ep.mailings){
-        const st=mailStatus(m);m.st=st;
-        if(m.sent){sSent++;}
-        else{
-          pending.push({ep,m,st});
-          if(st.urg>urgency)urgency=st.urg;
-          if(st.urg>=4)sUrgent++; else if(st.urg===3)sSoon++;
-          if(!nextDue||m.date<nextDue.date)nextDue={date:m.date,off:m.off,ep};
-        }
+        if(m.sent){m.st={txt:`Envoyé le ${frDate(m.sent)}`,cls:'green',urg:-1};m.expired=false;sSent++;sentCount++;continue;}
+        if(ep.expired){m.st={txt:'Expiré (délai dépassé)',cls:'grey',urg:-2};m.expired=true;sExpired++;expiredCount++;continue;}
+        const st=mailStatus(m);m.st=st;m.expired=false;
+        pending.push({ep,m,st});
+        if(st.urg>urgency)urgency=st.urg;
+        if(st.urg>=4)sUrgent++; else if(st.urg===3)sSoon++;
+        if(!nextDue||m.date<nextDue.date)nextDue={date:m.date,off:m.off,ep};
       }
     }
     totalEps+=eps.length;
-    results.push({dept,episodes:eps,pending,urgency,nextDue,precip:cd.precip,dates:cd.dates,error:cd.error});
+    results.push({dept,episodes:eps,pending,urgency,nextDue,sentCount,expiredCount,precip:cd.precip,dates:cd.dates,error:cd.error});
   }
   document.getElementById('cnt-active').textContent=results.filter(r=>r.pending.length>0).length;
   document.getElementById('s-urgent').textContent=sUrgent;
@@ -446,7 +449,11 @@ function urgColor(u){
 function deptBadge(r){
   if(r.error)return `<span class="badge badge-grey">Erreur</span>`;
   if(!r.episodes.length)return `<span class="badge badge-green">Aucun épisode</span>`;
-  if(!r.pending.length)return `<span class="badge badge-blue">Tout traité (${r.episodes.length})</span>`;
+  if(!r.pending.length){
+    if(r.sentCount&&!r.expiredCount)return `<span class="badge badge-blue">Tout traité (${r.episodes.length})</span>`;
+    if(r.expiredCount&&!r.sentCount)return `<span class="badge badge-grey">Expiré</span>`;
+    return `<span class="badge badge-blue">Traité / expiré</span>`;
+  }
   if(r.urgency>=4)return `<span class="badge badge-red">Envoi à faire</span>`;
   if(r.urgency===3)return `<span class="badge badge-orange">Envoi sous 7j</span>`;
   return `<span class="badge badge-yellow">Envoi à venir</span>`;
@@ -557,7 +564,9 @@ function showSidePanel(r){
         const st=m.st;
         const actions=m.sent
           ?`<button class="mini-btn mini-btn-undo" onclick="unmarkMail('${m.key}')">↩ Annuler</button>`
-          :`<button class="mini-btn mini-btn-do" onclick="markMail('${m.key}')">Marquer envoyé</button>`;
+          :m.expired
+            ?`<span style="font-size:11px;color:var(--slate-light)">Abandonné</span>`
+            :`<button class="mini-btn mini-btn-do" onclick="markMail('${m.key}')">Marquer envoyé</button>`;
         return `<div class="mail-row">
           <div class="mail-info"><b>J+${m.off}</b> · ${frDate(m.date)}<br><span class="badge badge-${st.cls}" style="margin-top:4px">${st.txt}</span></div>
           <div class="mail-actions">${actions}</div>
