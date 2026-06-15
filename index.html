@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ax'eau — Veille Pluviométrique</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#0066A1;--blue-dark:#013a5e;--blue-light:#e8f4fd;
+  --cyan:#00b4d8;--cyan-light:#caf0f8;
+  --ink:#0f1c2e;--slate:#3a4a5e;--slate-light:#8395a8;--line:#e7eef5;
+  --white:#fff;--bg:#f4f8fc;
+  --green:#22c55e;--yellow:#eab308;--orange:#f97316;--red:#ef4444;
+  --r:18px;--shadow:0 10px 40px -12px rgba(1,58,94,0.18);--shadow-sm:0 2px 12px rgba(1,58,94,0.08);
+}
+body{font-family:'Outfit',sans-serif;background:
+  radial-gradient(1200px 600px at 100% -10%,rgba(0,180,216,0.12),transparent),
+  radial-gradient(900px 500px at -10% 110%,rgba(0,102,161,0.10),transparent),var(--bg);
+  color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+.header{padding:22px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-mark{filter:drop-shadow(0 6px 14px rgba(0,102,161,0.35))}
+.logo-text h1{font-size:26px;font-weight:800;letter-spacing:-1px;background:linear-gradient(120deg,var(--blue),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.logo-text p{font-size:12px;color:var(--slate-light);font-weight:500;letter-spacing:.3px}
+.header-right{text-align:right}
+.header-right .date{color:var(--slate);font-size:14px;font-weight:600;text-transform:capitalize}
+.header-right .subtitle{color:var(--slate-light);font-size:11px;margin-top:2px}
+.controls{margin:0 24px;background:rgba(255,255,255,0.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.6);border-radius:var(--r);padding:18px 24px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:26px;position:sticky;top:14px;z-index:100;box-shadow:var(--shadow)}
+.ctrl-group{display:flex;flex-direction:column;gap:7px;min-width:200px}
+.ctrl-label{font-size:11px;font-weight:700;color:var(--slate-light);text-transform:uppercase;letter-spacing:.7px;display:flex;justify-content:space-between;align-items:center}
+.ctrl-label .pill{background:var(--blue);color:#fff;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700;letter-spacing:0}
+.ctrl-sub{font-size:10px;color:var(--slate-light);font-weight:400;margin-top:-3px}
+.slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;background:var(--line);outline:none;cursor:pointer}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--blue);box-shadow:0 2px 8px rgba(0,102,161,0.4);cursor:pointer;transition:transform .15s}
+.slider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--blue);cursor:pointer}
+.scale{display:flex;justify-content:space-between;font-size:10px;color:var(--slate-light);margin-top:-2px}
+select{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;border:1.5px solid var(--line);border-radius:12px;padding:9px 14px;color:var(--slate);outline:none;cursor:pointer;background:#fff;transition:border-color .2s}
+select:focus,select:hover{border-color:var(--blue)}
+.btn-refresh{background:linear-gradient(120deg,var(--blue),var(--cyan));color:#fff;border:none;border-radius:14px;padding:13px 22px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:9px;box-shadow:0 8px 20px -6px rgba(0,102,161,0.6);transition:transform .12s,box-shadow .2s}
+.btn-refresh:hover{transform:translateY(-2px)}
+.btn-refresh:active{transform:translateY(0)}
+.spinner{width:15px;height:15px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.spinning .spinner{display:block}
+.counter{margin-left:auto;background:linear-gradient(135deg,var(--blue-dark),var(--blue));color:#fff;border-radius:14px;padding:12px 20px;text-align:center;box-shadow:var(--shadow-sm)}
+.counter .num{font-size:30px;font-weight:800;line-height:1}
+.counter .lbl{font-size:10px;opacity:.8;font-weight:500;margin-top:3px;letter-spacing:.3px}
+.stat-strip{display:flex;gap:14px;margin:18px 24px 0;flex-wrap:wrap}
+.stat-card{flex:1;min-width:150px;background:#fff;border-radius:16px;padding:16px 18px;box-shadow:var(--shadow-sm);border:1px solid var(--line);display:flex;align-items:center;gap:14px;transition:transform .2s}
+.stat-card:hover{transform:translateY(-3px)}
+.stat-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.stat-meta .v{font-size:22px;font-weight:800;line-height:1}
+.stat-meta .k{font-size:11px;color:var(--slate-light);font-weight:500;margin-top:2px}
+.toolbar{display:flex;align-items:center;gap:14px;margin:18px 24px 0;flex-wrap:wrap}
+.tabs{display:flex;gap:8px}
+.tab{padding:10px 20px;font-size:14px;font-weight:600;color:var(--slate-light);cursor:pointer;border-radius:12px;transition:all .2s;display:flex;align-items:center;gap:7px}
+.tab.active{color:var(--blue);background:#fff;box-shadow:var(--shadow-sm)}
+.tab:hover:not(.active){color:var(--slate)}
+.link-btn{margin-left:auto;background:none;border:1px solid var(--line);color:var(--slate);border-radius:10px;padding:8px 14px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.link-btn:hover{border-color:var(--blue);color:var(--blue)}
+.main-layout{display:flex;gap:0;min-height:calc(100vh - 360px)}
+.view-area{flex:1;padding:18px 24px 40px;overflow:auto}
+.side-panel{width:400px;flex-shrink:0;transition:width .35s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.side-panel.hidden{width:0}
+.side-inner{width:400px;margin:18px 24px 24px 0;background:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.progress-wrap{padding:8px 0 16px}
+.progress-bar-outer{background:var(--line);border-radius:99px;height:8px;overflow:hidden;margin-top:8px}
+.progress-bar-inner{background:linear-gradient(90deg,var(--blue),var(--cyan));height:100%;border-radius:99px;transition:width .3s}
+.progress-label{font-size:12px;color:var(--slate-light);margin-top:6px;font-weight:500}
+.table-wrap{overflow-x:auto;background:#fff;border-radius:var(--r);box-shadow:var(--shadow-sm);border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+thead th{background:#fafcfe;color:var(--slate-light);font-weight:600;padding:14px 16px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--line)}
+thead th:hover{color:var(--blue)}
+tbody tr{border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--blue-light)}
+tbody tr.done{opacity:.5}
+td{padding:13px 16px;white-space:nowrap}
+.dept-tag{display:inline-flex;align-items:center;gap:8px}
+.dept-num{background:var(--ink);color:#fff;border-radius:8px;padding:3px 8px;font-size:11px;font-weight:700;min-width:30px;text-align:center}
+.mm-val{font-weight:700;font-variant-numeric:tabular-nums}
+.badge{display:inline-block;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700}
+.badge-red{background:#fee2e2;color:#dc2626}
+.badge-orange{background:#ffedd5;color:#ea580c}
+.badge-yellow{background:#fef9c3;color:#ca8a04}
+.badge-green{background:#dcfce7;color:#16a34a}
+.badge-grey{background:#eef2f6;color:#64748b}
+.badge-blue{background:#e0f2fe;color:#0369a1}
+.btn-sm{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .2s}
+.btn-sm:hover{background:var(--blue-dark)}
+#map-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--shadow-sm);border:1px solid var(--line);padding:18px}
+#france-svg{width:100%;height:auto;display:block;max-height:72vh}
+.dept-shape{cursor:pointer;stroke:#fff;stroke-width:1.2;transition:fill .3s,opacity .2s,transform .15s;transform-origin:center;transform-box:fill-box}
+.dept-shape:hover{opacity:.82;stroke:var(--blue);stroke-width:2;transform:scale(1.06)}
+.map-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:12px;font-weight:600;color:var(--slate)}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:14px;height:14px;border-radius:5px}
+#tooltip{position:fixed;background:rgba(15,28,46,0.96);color:#fff;padding:12px 15px;border-radius:12px;font-size:12px;pointer-events:none;z-index:999;opacity:0;transition:opacity .15s;max-width:250px;line-height:1.7;box-shadow:0 8px 24px rgba(0,0,0,0.35)}
+.sp-header{background:linear-gradient(135deg,var(--blue),var(--cyan));padding:22px;color:#fff;position:relative}
+.sp-header h2{font-size:19px;font-weight:800}
+.sp-header p{font-size:12px;opacity:.85;margin-top:4px}
+.sp-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.22);border:none;color:#fff;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.sp-close:hover{background:rgba(255,255,255,.4)}
+.sp-body{padding:20px;max-height:calc(100vh - 200px);overflow-y:auto}
+.ep-card{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;background:#fafcfe}
+.ep-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+.ep-title{font-size:15px;font-weight:800;color:var(--ink)}
+.ep-meta{font-size:12px;color:var(--slate-light);margin-top:3px;line-height:1.5}
+.mail-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px dashed var(--line)}
+.mail-info{font-size:12.5px}
+.mail-info b{font-weight:700}
+.mail-actions{display:flex;gap:6px;flex-shrink:0}
+.mini-btn{border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+.mini-btn-do{background:var(--blue);color:#fff}
+.mini-btn-do:hover{background:var(--blue-dark)}
+.mini-btn-undo{background:var(--bg);color:var(--slate);border:1px solid var(--line)}
+.mini-btn-undo:hover{background:var(--line)}
+.mini-btn-copy{background:var(--cyan-light);color:var(--blue)}
+.mini-btn-copy:hover{background:#a5e8f5}
+.empty{text-align:center;padding:80px 20px;color:var(--slate-light)}
+.empty .big{font-size:16px;font-weight:700;color:var(--slate);margin-top:14px}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--ink);color:#fff;padding:14px 24px;border-radius:14px;font-size:13.5px;font-weight:600;z-index:9999;opacity:0;transition:all .3s;box-shadow:0 12px 30px rgba(0,0,0,0.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .45s ease forwards}
+@media(max-width:920px){.side-inner{width:100%;margin:18px 24px}.side-panel{width:0}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <svg class="logo-mark" width="46" height="46" viewBox="0 0 44 44" fill="none">
+      <path d="M22 4C22 4 10 18 10 26C10 32.627 15.373 38 22 38C28.627 38 34 32.627 34 26C34 18 22 4 22 4Z" fill="url(#dg)"/>
+      <path d="M16 27C16 27 18 31 22 31" stroke="rgba(255,255,255,0.65)" stroke-width="1.6" stroke-linecap="round"/>
+      <defs><linearGradient id="dg" x1="22" y1="4" x2="22" y2="38" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#0066A1"/></linearGradient></defs>
+    </svg>
+    <div class="logo-text"><h1>ax'eau</h1><p>VEILLE PLUVIOMÉTRIQUE</p></div>
+  </div>
+  <div class="header-right">
+    <div class="date" id="today-date"></div>
+    <div class="subtitle">Épisodes de forte pluie · envois J+7 et J+21</div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="ctrl-group">
+    <div class="ctrl-label">Seuil de forte pluie <span class="pill"><span id="valThr">90</span> mm</span></div>
+    <input type="range" class="slider" id="threshold" min="20" max="200" value="90" step="5">
+    <div class="ctrl-sub">Cumul atteint sur 1 à 30 jours glissants (ou en un seul jour)</div>
+  </div>
+  <div class="ctrl-group" style="min-width:160px">
+    <div class="ctrl-label">Profondeur d'analyse</div>
+    <select id="depth">
+      <option value="31">1 mois</option>
+      <option value="92">3 mois</option>
+      <option value="183" selected>6 mois</option>
+    </select>
+    <div class="ctrl-sub">Historique remonté pour chaque département</div>
+  </div>
+  <button class="btn-refresh" id="btn-refresh" onclick="fetchAllData()">
+    <span class="spinner" id="spinner"></span>
+    <span>Actualiser</span>
+  </button>
+  <button class="btn-refresh" style="background:var(--ink)" onclick="testApi()">🔧 Test</button>
+  <div class="counter"><div class="num" id="cnt-active">—</div><div class="lbl">DÉPT. AVEC ENVOI À FAIRE</div></div>
+</div>
+
+<div id="diag" style="display:none;margin:14px 24px 0;background:#0f1c2e;color:#7fffd4;border-radius:14px;padding:16px 18px;font-family:monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:240px;overflow:auto"></div>
+
+<div class="stat-strip" id="stat-strip">
+  <div class="stat-card"><div class="stat-ico" style="background:#fee2e2;color:#dc2626">📮</div><div class="stat-meta"><div class="v" id="s-urgent">—</div><div class="k">Envois à faire / en retard</div></div></div>
+  <div class="stat-card"><div class="stat-ico" style="background:#ffedd5;color:#ea580c">🗓</div><div class="stat-meta"><div class="v" id="s-soon">—</div><div class="k">Envois dans les 7 jours</div></div></div>
+  <div class="stat-card"><div class="stat-ico" style="background:#e0f2fe;color:#0369a1">🌧</div><div class="stat-meta"><div class="v" id="s-eps">—</div><div class="k">Épisodes détectés</div></div></div>
+  <div class="stat-card"><div class="stat-ico" style="background:#dcfce7;color:#16a34a">✓</div><div class="stat-meta"><div class="v" id="s-sent">—</div><div class="k">Envois déjà traités</div></div></div>
+</div>
+
+<div class="toolbar">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('liste')">📋 Liste</div>
+    <div class="tab" onclick="switchTab('carte')">🗺 Carte</div>
+  </div>
+  <button class="link-btn" onclick="bulkMarkPast()">✓ Marquer tous les envois passés comme traités</button>
+</div>
+
+<div class="main-layout">
+  <div class="view-area" id="view-area">
+    <div class="progress-wrap" id="progress-wrap" style="display:none">
+      <div style="font-size:13px;font-weight:600;color:var(--slate)">Chargement de l'historique météo (6 mois)…</div>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar" style="width:0%"></div></div>
+      <div class="progress-label" id="progress-label">0 / 96 départements</div>
+    </div>
+    <div id="liste-view"></div>
+    <div id="carte-view" style="display:none"></div>
+  </div>
+  <div class="side-panel hidden" id="side-panel"></div>
+</div>
+
+<div id="tooltip"></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// ── DÉPARTEMENTS ─────────────────────────────────────────────────────────────
+const DEPTS=[
+  {code:"01",nom:"Ain",pref:"Bourg-en-Bresse",lat:46.2050,lon:5.2277,region:"Auvergne-Rhône-Alpes"},
+  {code:"02",nom:"Aisne",pref:"Laon",lat:49.5644,lon:3.6244,region:"Hauts-de-France"},
+  {code:"03",nom:"Allier",pref:"Moulins",lat:46.5647,lon:3.3328,region:"Auvergne-Rhône-Alpes"},
+  {code:"04",nom:"Alpes-de-Haute-Provence",pref:"Digne-les-Bains",lat:44.0921,lon:6.2358,region:"PACA"},
+  {code:"05",nom:"Hautes-Alpes",pref:"Gap",lat:44.5594,lon:6.0773,region:"PACA"},
+  {code:"06",nom:"Alpes-Maritimes",pref:"Nice",lat:43.7102,lon:7.2620,region:"PACA"},
+  {code:"07",nom:"Ardèche",pref:"Privas",lat:44.7355,lon:4.5989,region:"Auvergne-Rhône-Alpes"},
+  {code:"08",nom:"Ardennes",pref:"Charleville-Mézières",lat:49.7699,lon:4.7197,region:"Grand Est"},
+  {code:"09",nom:"Ariège",pref:"Foix",lat:42.9659,lon:1.6053,region:"Occitanie"},
+  {code:"10",nom:"Aube",pref:"Troyes",lat:48.2973,lon:4.0744,region:"Grand Est"},
+  {code:"11",nom:"Aude",pref:"Carcassonne",lat:43.2130,lon:2.3491,region:"Occitanie"},
+  {code:"12",nom:"Aveyron",pref:"Rodez",lat:44.3500,lon:2.5750,region:"Occitanie"},
+  {code:"13",nom:"Bouches-du-Rhône",pref:"Marseille",lat:43.2965,lon:5.3698,region:"PACA"},
+  {code:"14",nom:"Calvados",pref:"Caen",lat:49.1829,lon:-0.3707,region:"Normandie"},
+  {code:"15",nom:"Cantal",pref:"Aurillac",lat:44.9261,lon:2.4400,region:"Auvergne-Rhône-Alpes"},
+  {code:"16",nom:"Charente",pref:"Angoulême",lat:45.6498,lon:0.1561,region:"Nouvelle-Aquitaine"},
+  {code:"17",nom:"Charente-Maritime",pref:"La Rochelle",lat:46.1591,lon:-1.1520,region:"Nouvelle-Aquitaine"},
+  {code:"18",nom:"Cher",pref:"Bourges",lat:47.0810,lon:2.3983,region:"Centre-Val de Loire"},
+  {code:"19",nom:"Corrèze",pref:"Tulle",lat:45.2667,lon:1.7667,region:"Nouvelle-Aquitaine"},
+  {code:"2A",nom:"Corse-du-Sud",pref:"Ajaccio",lat:41.9192,lon:8.7386,region:"Corse"},
+  {code:"2B",nom:"Haute-Corse",pref:"Bastia",lat:42.7008,lon:9.4503,region:"Corse"},
+  {code:"21",nom:"Côte-d'Or",pref:"Dijon",lat:47.3220,lon:5.0415,region:"Bourgogne-Franche-Comté"},
+  {code:"22",nom:"Côtes-d'Armor",pref:"Saint-Brieuc",lat:48.5134,lon:-2.7657,region:"Bretagne"},
+  {code:"23",nom:"Creuse",pref:"Guéret",lat:46.1684,lon:1.8684,region:"Nouvelle-Aquitaine"},
+  {code:"24",nom:"Dordogne",pref:"Périgueux",lat:45.1845,lon:0.7211,region:"Nouvelle-Aquitaine"},
+  {code:"25",nom:"Doubs",pref:"Besançon",lat:47.2378,lon:6.0241,region:"Bourgogne-Franche-Comté"},
+  {code:"26",nom:"Drôme",pref:"Valence",lat:44.9334,lon:4.8924,region:"Auvergne-Rhône-Alpes"},
+  {code:"27",nom:"Eure",pref:"Évreux",lat:49.0238,lon:1.1511,region:"Normandie"},
+  {code:"28",nom:"Eure-et-Loir",pref:"Chartres",lat:48.4536,lon:1.4880,region:"Centre-Val de Loire"},
+  {code:"29",nom:"Finistère",pref:"Quimper",lat:47.9960,lon:-4.0975,region:"Bretagne"},
+  {code:"30",nom:"Gard",pref:"Nîmes",lat:43.8367,lon:4.3601,region:"Occitanie"},
+  {code:"31",nom:"Haute-Garonne",pref:"Toulouse",lat:43.6047,lon:1.4442,region:"Occitanie"},
+  {code:"32",nom:"Gers",pref:"Auch",lat:43.6455,lon:0.5853,region:"Occitanie"},
+  {code:"33",nom:"Gironde",pref:"Bordeaux",lat:44.8378,lon:-0.5792,region:"Nouvelle-Aquitaine"},
+  {code:"34",nom:"Hérault",pref:"Montpellier",lat:43.6119,lon:3.8772,region:"Occitanie"},
+  {code:"35",nom:"Ille-et-Vilaine",pref:"Rennes",lat:48.1173,lon:-1.6778,region:"Bretagne"},
+  {code:"36",nom:"Indre",pref:"Châteauroux",lat:46.8130,lon:1.6914,region:"Centre-Val de Loire"},
+  {code:"37",nom:"Indre-et-Loire",pref:"Tours",lat:47.3941,lon:0.6848,region:"Centre-Val de Loire"},
+  {code:"38",nom:"Isère",pref:"Grenoble",lat:45.1885,lon:5.7245,region:"Auvergne-Rhône-Alpes"},
+  {code:"39",nom:"Jura",pref:"Lons-le-Saunier",lat:46.6740,lon:5.5540,region:"Bourgogne-Franche-Comté"},
+  {code:"40",nom:"Landes",pref:"Mont-de-Marsan",lat:43.8895,lon:-0.5020,region:"Nouvelle-Aquitaine"},
+  {code:"41",nom:"Loir-et-Cher",pref:"Blois",lat:47.5860,lon:1.3359,region:"Centre-Val de Loire"},
+  {code:"42",nom:"Loire",pref:"Saint-Étienne",lat:45.4397,lon:4.3872,region:"Auvergne-Rhône-Alpes"},
+  {code:"43",nom:"Haute-Loire",pref:"Le Puy-en-Velay",lat:45.0432,lon:3.8853,region:"Auvergne-Rhône-Alpes"},
+  {code:"44",nom:"Loire-Atlantique",pref:"Nantes",lat:47.2184,lon:-1.5536,region:"Pays de la Loire"},
+  {code:"45",nom:"Loiret",pref:"Orléans",lat:47.9029,lon:1.9039,region:"Centre-Val de Loire"},
+  {code:"46",nom:"Lot",pref:"Cahors",lat:44.4479,lon:1.4405,region:"Occitanie"},
+  {code:"47",nom:"Lot-et-Garonne",pref:"Agen",lat:44.2022,lon:0.6218,region:"Nouvelle-Aquitaine"},
+  {code:"48",nom:"Lozère",pref:"Mende",lat:44.5194,lon:3.4997,region:"Occitanie"},
+  {code:"49",nom:"Maine-et-Loire",pref:"Angers",lat:47.4784,lon:-0.5632,region:"Pays de la Loire"},
+  {code:"50",nom:"Manche",pref:"Saint-Lô",lat:49.1153,lon:-1.0872,region:"Normandie"},
+  {code:"51",nom:"Marne",pref:"Châlons-en-Champagne",lat:48.9575,lon:4.3659,region:"Grand Est"},
+  {code:"52",nom:"Haute-Marne",pref:"Chaumont",lat:48.1111,lon:5.1375,region:"Grand Est"},
+  {code:"53",nom:"Mayenne",pref:"Laval",lat:48.0733,lon:-0.7706,region:"Pays de la Loire"},
+  {code:"54",nom:"Meurthe-et-Moselle",pref:"Nancy",lat:48.6921,lon:6.1844,region:"Grand Est"},
+  {code:"55",nom:"Meuse",pref:"Bar-le-Duc",lat:48.7725,lon:5.1608,region:"Grand Est"},
+  {code:"56",nom:"Morbihan",pref:"Vannes",lat:47.6586,lon:-2.7595,region:"Bretagne"},
+  {code:"57",nom:"Moselle",pref:"Metz",lat:49.1193,lon:6.1757,region:"Grand Est"},
+  {code:"58",nom:"Nièvre",pref:"Nevers",lat:46.9895,lon:3.1572,region:"Bourgogne-Franche-Comté"},
+  {code:"59",nom:"Nord",pref:"Lille",lat:50.6292,lon:3.0573,region:"Hauts-de-France"},
+  {code:"60",nom:"Oise",pref:"Beauvais",lat:49.4295,lon:2.0850,region:"Hauts-de-France"},
+  {code:"61",nom:"Orne",pref:"Alençon",lat:48.4302,lon:0.0934,region:"Normandie"},
+  {code:"62",nom:"Pas-de-Calais",pref:"Arras",lat:50.2921,lon:2.7782,region:"Hauts-de-France"},
+  {code:"63",nom:"Puy-de-Dôme",pref:"Clermont-Ferrand",lat:45.7772,lon:3.0870,region:"Auvergne-Rhône-Alpes"},
+  {code:"64",nom:"Pyrénées-Atlantiques",pref:"Pau",lat:43.2951,lon:-0.3708,region:"Nouvelle-Aquitaine"},
+  {code:"65",nom:"Hautes-Pyrénées",pref:"Tarbes",lat:43.2328,lon:0.0781,region:"Occitanie"},
+  {code:"66",nom:"Pyrénées-Orientales",pref:"Perpignan",lat:42.6986,lon:2.8954,region:"Occitanie"},
+  {code:"67",nom:"Bas-Rhin",pref:"Strasbourg",lat:48.5734,lon:7.7521,region:"Grand Est"},
+  {code:"68",nom:"Haut-Rhin",pref:"Colmar",lat:48.0793,lon:7.3585,region:"Grand Est"},
+  {code:"69",nom:"Rhône",pref:"Lyon",lat:45.7640,lon:4.8357,region:"Auvergne-Rhône-Alpes"},
+  {code:"70",nom:"Haute-Saône",pref:"Vesoul",lat:47.6189,lon:6.1558,region:"Bourgogne-Franche-Comté"},
+  {code:"71",nom:"Saône-et-Loire",pref:"Mâcon",lat:46.3068,lon:4.8280,region:"Bourgogne-Franche-Comté"},
+  {code:"72",nom:"Sarthe",pref:"Le Mans",lat:47.9960,lon:0.1966,region:"Pays de la Loire"},
+  {code:"73",nom:"Savoie",pref:"Chambéry",lat:45.5646,lon:5.9178,region:"Auvergne-Rhône-Alpes"},
+  {code:"74",nom:"Haute-Savoie",pref:"Annecy",lat:45.8992,lon:6.1294,region:"Auvergne-Rhône-Alpes"},
+  {code:"75",nom:"Paris",pref:"Paris",lat:48.8566,lon:2.3522,region:"Île-de-France"},
+  {code:"76",nom:"Seine-Maritime",pref:"Rouen",lat:49.4432,lon:1.0993,region:"Normandie"},
+  {code:"77",nom:"Seine-et-Marne",pref:"Melun",lat:48.5404,lon:2.6596,region:"Île-de-France"},
+  {code:"78",nom:"Yvelines",pref:"Versailles",lat:48.8014,lon:2.1301,region:"Île-de-France"},
+  {code:"79",nom:"Deux-Sèvres",pref:"Niort",lat:46.3238,lon:-0.4653,region:"Nouvelle-Aquitaine"},
+  {code:"80",nom:"Somme",pref:"Amiens",lat:49.8942,lon:2.2957,region:"Hauts-de-France"},
+  {code:"81",nom:"Tarn",pref:"Albi",lat:43.9293,lon:2.1501,region:"Occitanie"},
+  {code:"82",nom:"Tarn-et-Garonne",pref:"Montauban",lat:44.0179,lon:1.3521,region:"Occitanie"},
+  {code:"83",nom:"Var",pref:"Toulon",lat:43.1242,lon:5.9280,region:"PACA"},
+  {code:"84",nom:"Vaucluse",pref:"Avignon",lat:43.9493,lon:4.8055,region:"PACA"},
+  {code:"85",nom:"Vendée",pref:"La Roche-sur-Yon",lat:46.6702,lon:-1.4270,region:"Pays de la Loire"},
+  {code:"86",nom:"Vienne",pref:"Poitiers",lat:46.5802,lon:0.3404,region:"Nouvelle-Aquitaine"},
+  {code:"87",nom:"Haute-Vienne",pref:"Limoges",lat:45.8336,lon:1.2611,region:"Nouvelle-Aquitaine"},
+  {code:"88",nom:"Vosges",pref:"Épinal",lat:48.1741,lon:6.4514,region:"Grand Est"},
+  {code:"89",nom:"Yonne",pref:"Auxerre",lat:47.7980,lon:3.5673,region:"Bourgogne-Franche-Comté"},
+  {code:"90",nom:"Territoire de Belfort",pref:"Belfort",lat:47.6382,lon:6.8635,region:"Bourgogne-Franche-Comté"},
+  {code:"91",nom:"Essonne",pref:"Évry",lat:48.6333,lon:2.4436,region:"Île-de-France"},
+  {code:"92",nom:"Hauts-de-Seine",pref:"Nanterre",lat:48.8924,lon:2.2047,region:"Île-de-France"},
+  {code:"93",nom:"Seine-Saint-Denis",pref:"Bobigny",lat:48.9094,lon:2.4449,region:"Île-de-France"},
+  {code:"94",nom:"Val-de-Marne",pref:"Créteil",lat:48.7902,lon:2.4558,region:"Île-de-France"},
+  {code:"95",nom:"Val-d'Oise",pref:"Cergy",lat:49.0362,lon:2.0756,region:"Île-de-France"},
+];
+const COORDS={
+  "01":[492,310],"02":[370,175],"03":[385,335],"04":[510,430],"05":[520,420],"06":[540,450],"07":[470,390],"08":[395,155],"09":[390,490],"10":[385,230],"11":[415,490],"12":[420,420],"13":[480,480],"14":[260,165],"15":[415,380],"16":[295,365],"17":[265,365],"18":[375,290],"19":[355,380],"2A":[545,535],"2B":[555,510],"21":[435,270],"22":[185,195],"23":[355,345],"24":[315,395],"25":[490,270],"26":[480,400],"27":[285,185],"28":[305,235],"29":[150,215],"30":[455,455],"31":[370,480],"32":[345,465],"33":[280,415],"34":[440,470],"35":[220,230],"36":[340,305],"37":[305,280],"38":[490,370],"39":[460,285],"40":[290,455],"41":[325,270],"42":[455,350],"43":[450,380],"44":[240,280],"45":[345,255],"46":[375,420],"47":[320,430],"48":[440,425],"49":[270,275],"50":[225,170],"51":[385,205],"52":[430,230],"53":[255,245],"54":[470,195],"55":[430,195],"56":[200,250],"57":[490,185],"58":[415,285],"59":[345,120],"60":[330,178],"61":[270,215],"62":[325,125],"63":[420,358],"64":[295,490],"65":[330,490],"66":[400,505],"67":[510,200],"68":[520,225],"69":[465,335],"70":[475,250],"71":[450,305],"72":[285,250],"73":[510,345],"74":[520,325],"75":[348,195],"76":[290,160],"77":[362,212],"78":[322,200],"79":[285,315],"80":[330,152],"81":[400,455],"82":[370,448],"83":[510,470],"84":[487,452],"85":[250,310],"86":[305,325],"87":[330,360],"88":[475,220],"89":[395,255],"90":[500,248],"91":[342,213],"92":[336,200],"93":[356,196],"94":[352,210],"95":[336,188]
+};
+
+// ── STORAGE (persistance navigateur) ─────────────────────────────────────────
+const STORE_KEY='axeau_mailings_v1';
+let sentStore={};   // "code|episodeDateISO|J7" -> "date d'envoi ISO"
+function loadStore(){try{const s=localStorage.getItem(STORE_KEY);sentStore=s?JSON.parse(s):{};}catch(e){sentStore={};}}
+function saveStore(){try{localStorage.setItem(STORE_KEY,JSON.stringify(sentStore));}catch(e){/* environnement sans stockage : reste en mémoire */}}
+loadStore();
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let cachedData={},results=[];
+let currentTab='liste',sortCol='urgency',sortDir=-1,miniChart=null,openCode=null;
+const THRESH_WINDOW=30; // jours max
+const today=new Date();today.setHours(0,0,0,0);
+
+document.getElementById('today-date').textContent=today.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+document.getElementById('threshold').addEventListener('input',e=>{document.getElementById('valThr').textContent=e.target.value;recompute()});
+document.getElementById('depth').addEventListener('change',()=>{cachedData={};fetchAllData()});
+
+function fmtDate(d){return d.toISOString().split('T')[0]}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
+function diffDays(a,b){return Math.round((b-a)/86400000)}
+function frDate(s){if(!s)return '—';const d=(s instanceof Date)?s:new Date(s);return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})}
+
+// ── FETCH ────────────────────────────────────────────────────────────────────
+async function fetchAllData(){
+  const btn=document.getElementById('btn-refresh');
+  btn.classList.add('spinning');
+  document.getElementById('progress-wrap').style.display='block';
+  let done=0,errCount=0;
+  const depth=parseInt(document.getElementById('depth').value);
+  const endDate=fmtDate(today);
+  const startDate=fmtDate(addDays(today,-depth));
+  const BATCH=8;
+  const toFetch=DEPTS.filter(d=>!cachedData[d.code]);
+  if(!toFetch.length){btn.classList.remove('spinning');recompute();return;}
+  for(let i=0;i<toFetch.length;i+=BATCH){
+    const batch=toFetch.slice(i,i+BATCH);
+    await Promise.all(batch.map(async dept=>{
+      try{
+        // Historical Forecast API : 6 mois d'historique incluant les jours récents
+        const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${dept.lat}&longitude=${dept.lon}&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum&timezone=Europe%2FParis`;
+        const r=await Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timeout')),20000))]);
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        const j=await r.json();
+        if(!j.daily||!j.daily.precipitation_sum)throw new Error('Réponse invalide');
+        cachedData[dept.code]={dates:j.daily.time,precip:j.daily.precipitation_sum.map(v=>v??0)};
+      }catch(e){cachedData[dept.code]={dates:[],precip:[],error:true,msg:e.message};errCount++;}
+      done++;
+      document.getElementById('progress-bar').style.width=Math.min(Math.round((done/toFetch.length)*100),100)+'%';
+      document.getElementById('progress-label').textContent=`${done} / ${toFetch.length} chargés`;
+    }));
+  }
+  document.getElementById('progress-bar').style.width='100%';
+  if(errCount>=toFetch.length){
+    const sample=Object.values(cachedData).find(c=>c.error);
+    document.getElementById('progress-label').innerHTML=`<span style="color:#ef4444;font-weight:700">⚠ Échec du chargement (${errCount}). ${sample?.msg||''} — Hors de Claude (fichier .html local ou GitHub Pages), les appels réseau passeront.</span>`;
+  }else{
+    document.getElementById('progress-label').textContent=errCount>0?`Données chargées ✓ (${errCount} en erreur)`:'Données chargées ✓';
+    setTimeout(()=>document.getElementById('progress-wrap').style.display='none',2000);
+  }
+  btn.classList.remove('spinning');
+  recompute();
+}
+
+// ── DÉTECTION DES ÉPISODES ───────────────────────────────────────────────────
+function buildEpisodes(p,d,T){
+  const eps=[];let s=0;
+  for(let i=0;i<p.length;i++){
+    const ws=Math.max(s,i-(THRESH_WINDOW-1));
+    let sum=0,peak=0,peakIdx=ws;
+    for(let k=ws;k<=i;k++){sum+=p[k];if(p[k]>peak){peak=p[k];peakIdx=k;}}
+    if(sum>=T){
+      eps.push({date:d[i],dateObj:new Date(d[i]),cumul:sum,windowDays:i-ws+1,peak24:peak,peakDate:d[peakIdx],startDate:d[ws]});
+      s=i+1;
+    }
+  }
+  return eps;
+}
+function mailingsFor(code,ep){
+  return [7,21].map(off=>{
+    const dt=addDays(ep.dateObj,off);
+    const key=`${code}|${ep.date}|J${off}`;
+    return {off,key,date:dt,sent:sentStore[key]||null};
+  });
+}
+function mailStatus(m){
+  if(m.sent)return {txt:`Envoyé le ${frDate(m.sent)}`,cls:'green',urg:-1};
+  const du=diffDays(today,m.date);
+  if(du<0)return {txt:`En retard de ${-du}j`,cls:'red',urg:4};
+  if(du===0)return {txt:`À envoyer aujourd'hui`,cls:'red',urg:4};
+  if(du<=7)return {txt:`Dans ${du}j`,cls:'orange',urg:3};
+  return {txt:`Prévu le ${frDate(m.date)}`,cls:'yellow',urg:2};
+}
+
+function recompute(){
+  const T=parseFloat(document.getElementById('threshold').value);
+  results=[];
+  let totalEps=0,sUrgent=0,sSoon=0,sSent=0;
+  for(const dept of DEPTS){
+    const cd=cachedData[dept.code];
+    if(!cd||!cd.dates.length){results.push({dept,episodes:[],pending:[],urgency:-2,error:cd?.error});continue;}
+    const eps=buildEpisodes(cd.precip,cd.dates,T).sort((a,b)=>b.dateObj-a.dateObj);
+    let urgency=-1,nextDue=null,pending=[];
+    for(const ep of eps){
+      ep.mailings=mailingsFor(dept.code,ep);
+      for(const m of ep.mailings){
+        const st=mailStatus(m);m.st=st;
+        if(m.sent){sSent++;}
+        else{
+          pending.push({ep,m,st});
+          if(st.urg>urgency)urgency=st.urg;
+          if(st.urg>=4)sUrgent++; else if(st.urg===3)sSoon++;
+          if(!nextDue||m.date<nextDue.date)nextDue={date:m.date,off:m.off,ep};
+        }
+      }
+    }
+    totalEps+=eps.length;
+    results.push({dept,episodes:eps,pending,urgency,nextDue,precip:cd.precip,dates:cd.dates,error:cd.error});
+  }
+  document.getElementById('cnt-active').textContent=results.filter(r=>r.pending.length>0).length;
+  document.getElementById('s-urgent').textContent=sUrgent;
+  document.getElementById('s-soon').textContent=sSoon;
+  document.getElementById('s-eps').textContent=totalEps;
+  document.getElementById('s-sent').textContent=sSent;
+  renderView();
+  if(openCode){const r=results.find(x=>x.dept.code===openCode);if(r)showSidePanel(r);}
+}
+
+// ── COULEURS / BADGES ─────────────────────────────────────────────────────────
+function urgColor(u){
+  if(u>=4)return '#ef4444';
+  if(u===3)return '#f97316';
+  if(u===2)return '#eab308';
+  if(u===-1)return '#9bd3ec';   // épisodes mais tout traité
+  return '#d4ead9';             // aucun épisode
+}
+function deptBadge(r){
+  if(r.error)return `<span class="badge badge-grey">Erreur</span>`;
+  if(!r.episodes.length)return `<span class="badge badge-green">Aucun épisode</span>`;
+  if(!r.pending.length)return `<span class="badge badge-blue">Tout traité (${r.episodes.length})</span>`;
+  if(r.urgency>=4)return `<span class="badge badge-red">Envoi à faire</span>`;
+  if(r.urgency===3)return `<span class="badge badge-orange">Envoi sous 7j</span>`;
+  return `<span class="badge badge-yellow">Envoi à venir</span>`;
+}
+
+function renderView(){currentTab==='carte'?renderCarte():renderListe()}
+function switchTab(t){
+  currentTab=t;
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',(i===0&&t==='liste')||(i===1&&t==='carte')));
+  document.getElementById('liste-view').style.display=t==='liste'?'block':'none';
+  document.getElementById('carte-view').style.display=t==='carte'?'block':'none';
+  renderView();
+}
+
+// ── LISTE ────────────────────────────────────────────────────────────────────
+function renderListe(){
+  const lv=document.getElementById('liste-view');
+  if(!Object.keys(cachedData).length){lv.innerHTML=emptyState();return;}
+  const sorted=[...results].sort((a,b)=>{
+    if(sortCol==='urgency'){
+      if((b.urgency)!==(a.urgency))return sortDir*((a.urgency)-(b.urgency));
+      const an=a.nextDue?a.nextDue.date.getTime():9e15,bn=b.nextDue?b.nextDue.date.getTime():9e15;
+      return an-bn;
+    }
+    if(sortCol==='dept')return sortDir*(a.dept.nom<b.dept.nom?-1:1);
+    if(sortCol==='eps')return sortDir*((a.episodes.length)-(b.episodes.length));
+    if(sortCol==='last'){const al=a.episodes[0]?a.episodes[0].dateObj.getTime():0,bl=b.episodes[0]?b.episodes[0].dateObj.getTime():0;return sortDir*(al-bl);}
+    if(sortCol==='next'){const an=a.nextDue?a.nextDue.date.getTime():9e15,bn=b.nextDue?b.nextDue.date.getTime():9e15;return sortDir*(an-bn);}
+    return 0;
+  });
+  function th(c,l){return `<th onclick="setSortCol('${c}')">${l} ${sortCol===c?(sortDir>0?'↑':'↓'):'↕'}</th>`}
+  const rows=sorted.map(r=>{
+    const last=r.episodes[0];
+    const next=r.nextDue;
+    const nextTxt=next?`J+${next.off} · ${frDate(next.date)}`:(r.episodes.length?'—':'—');
+    return `<tr class="${r.episodes.length&&!r.pending.length?'done':''}" onclick="handleRowClick('${r.dept.code}')">
+      <td><span class="dept-tag"><span class="dept-num">${r.dept.code}</span> ${r.dept.nom}</span></td>
+      <td style="color:var(--slate-light);font-size:12px">${r.dept.region}</td>
+      <td><span class="mm-val">${r.episodes.length||'—'}</span></td>
+      <td>${last?frDate(last.dateObj):'—'}${last?` <span style="color:var(--slate-light);font-size:11px">(${last.cumul.toFixed(0)}mm)</span>`:''}</td>
+      <td>${nextTxt}</td>
+      <td>${deptBadge(r)}</td>
+      <td>${r.episodes.length?`<button class="btn-sm" onclick="event.stopPropagation();showSidePanel(results.find(x=>x.dept.code==='${r.dept.code}'))">Historique</button>`:''}</td>
+    </tr>`;
+  }).join('');
+  lv.innerHTML=`<div class="table-wrap fade-in"><table><thead><tr>${th('dept','Département')}${th('eps','Épisodes')}<th>Région</th>${th('last','Dernier épisode')}${th('next','Prochain envoi')}${th('urgency','Statut')}<th>Historique</th></tr></thead><tbody>${rows.replace('<th>Région</th>','')}</tbody></table></div>`;
+  // fix header order
+  lv.querySelector('thead tr').innerHTML=`${th('dept','Département')}<th onclick="setSortCol('dept')">Région</th>${th('eps','Épisodes')}${th('last','Dernier épisode')}${th('next','Prochain envoi')}${th('urgency','Statut')}<th>Historique</th>`;
+}
+function setSortCol(c){if(sortCol===c)sortDir*=-1;else{sortCol=c;sortDir=(c==='urgency'||c==='eps'||c==='last')?-1:1;}renderListe();}
+function handleRowClick(code){const r=results.find(x=>x.dept.code===code);if(r&&r.episodes.length)showSidePanel(r);}
+
+// ── CARTE ────────────────────────────────────────────────────────────────────
+function renderCarte(){
+  const cv=document.getElementById('carte-view');
+  if(!Object.keys(cachedData).length){cv.innerHTML=emptyState();return;}
+  const byCode={};results.forEach(r=>byCode[r.dept.code]=r);
+  let dots='';
+  for(const dept of DEPTS){
+    const c=COORDS[dept.code];if(!c)continue;
+    const [cx,cy]=c;const r=byCode[dept.code];
+    const fill=urgColor(r?r.urgency:-2);
+    const rad=r&&r.episodes.length?(10+Math.min(8,r.episodes.length*2.5)):9;
+    dots+=`<circle class="dept-shape" data-code="${dept.code}" cx="${cx}" cy="${cy}" r="${rad}" fill="${fill}" opacity="0.94"/>`;
+    dots+=`<text x="${cx}" y="${cy+3.5}" text-anchor="middle" font-size="8" fill="${r&&r.urgency>=3?'#fff':'#1a2c3d'}" font-family="Outfit,sans-serif" font-weight="700" pointer-events="none">${dept.code}</text>`;
+  }
+  cv.innerHTML=`<div id="map-wrap" class="fade-in">
+    <svg id="france-svg" viewBox="120 90 460 480" xmlns="http://www.w3.org/2000/svg">
+      <text x="350" y="120" text-anchor="middle" font-family="Outfit,sans-serif" font-size="13" fill="#8395a8" font-weight="600">France métropolitaine · taille = nombre d'épisodes</text>
+      ${dots}
+    </svg>
+    <div class="map-legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#d4ead9"></span>Aucun épisode</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#eab308"></span>Envoi à venir</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#f97316"></span>Sous 7 jours</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>À faire / en retard</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#9bd3ec"></span>Tout traité</span>
+    </div>
+  </div>`;
+  const tt=document.getElementById('tooltip');
+  document.querySelectorAll('.dept-shape').forEach(el=>{
+    const r=byCode[el.dataset.code];
+    el.addEventListener('mouseenter',e=>{
+      let info=`<b>${r?.dept.nom||''} (${el.dataset.code})</b><br>`;
+      if(!r||!r.episodes.length)info+='Aucun épisode';
+      else{info+=`${r.episodes.length} épisode(s)<br>Dernier : ${frDate(r.episodes[0].dateObj)} (${r.episodes[0].cumul.toFixed(0)}mm)<br>`;info+=r.nextDue?`Prochain envoi J+${r.nextDue.off} : ${frDate(r.nextDue.date)}`:'Tous les envois traités';}
+      tt.innerHTML=info;tt.style.opacity='1';tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px';
+    });
+    el.addEventListener('mousemove',e=>{tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px'});
+    el.addEventListener('mouseleave',()=>{tt.style.opacity='0'});
+    el.addEventListener('click',()=>{if(r&&r.episodes.length)showSidePanel(r)});
+  });
+}
+
+function emptyState(){return `<div class="empty"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0066A1" stroke-width="1.5" opacity=".4"><path d="M12 2C8.13 2 5 5.13 5 9c0 4.25 7 13 7 13s7-8.75 7-13c0-1.3-.36-2.52-.99-3.56"/></svg><div class="big">Cliquez sur « Actualiser » pour charger les données</div></div>`}
+
+// ── PANNEAU LATÉRAL : HISTORIQUE COMPLET ──────────────────────────────────────
+function showSidePanel(r){
+  openCode=r.dept.code;
+  const sp=document.getElementById('side-panel');
+  sp.classList.remove('hidden');
+  let epsHtml='';
+  if(!r.episodes.length){
+    epsHtml=`<p style="color:var(--slate-light);font-size:13px">Aucun épisode de forte pluie sur la période.</p>`;
+  }else{
+    r.episodes.forEach((ep,idx)=>{
+      const mailsHtml=ep.mailings.map(m=>{
+        const st=m.st;
+        const actions=m.sent
+          ?`<button class="mini-btn mini-btn-undo" onclick="unmarkMail('${m.key}')">↩ Annuler</button>`
+          :`<button class="mini-btn mini-btn-do" onclick="markMail('${m.key}')">Marquer envoyé</button>`;
+        return `<div class="mail-row">
+          <div class="mail-info"><b>J+${m.off}</b> · ${frDate(m.date)}<br><span class="badge badge-${st.cls}" style="margin-top:4px">${st.txt}</span></div>
+          <div class="mail-actions">${actions}</div>
+        </div>`;
+      }).join('');
+      epsHtml+=`<div class="ep-card">
+        <div class="ep-head">
+          <div>
+            <div class="ep-title">Épisode du ${frDate(ep.dateObj)}</div>
+            <div class="ep-meta">${ep.cumul.toFixed(0)} mm cumulés sur ${ep.windowDays} j · pic ${ep.peak24.toFixed(0)} mm/24h</div>
+          </div>
+          <button class="mini-btn mini-btn-copy" onclick="copyEmailDraft('${r.dept.code}',${idx})">📋 Email</button>
+        </div>
+        ${mailsHtml}
+      </div>`;
+    });
+  }
+  sp.innerHTML=`<div class="side-inner fade-in">
+    <div class="sp-header">
+      <button class="sp-close" onclick="closeSidePanel()">✕</button>
+      <h2>${r.dept.code} — ${r.dept.nom}</h2>
+      <p>${r.dept.region} · ${r.dept.pref} · ${r.episodes.length} épisode(s)</p>
+    </div>
+    <div class="sp-body">
+      ${r.error?'<p style="color:#ef4444;font-size:13px;margin-bottom:10px">⚠ Erreur de chargement des données.</p>':''}
+      <div style="margin-bottom:16px"><canvas id="chart-canvas" height="120"></canvas></div>
+      ${epsHtml}
+    </div>
+  </div>`;
+  drawMiniChart(r);
+}
+function closeSidePanel(){openCode=null;document.getElementById('side-panel').classList.add('hidden');if(miniChart){miniChart.destroy();miniChart=null;}}
+
+function drawMiniChart(r){
+  if(miniChart){miniChart.destroy();miniChart=null;}
+  const ctx=document.getElementById('chart-canvas');
+  if(!ctx||!r.dates||!r.dates.length)return;
+  const epDates=new Set(r.episodes.map(e=>e.date));
+  miniChart=new Chart(ctx,{type:'bar',data:{labels:r.dates.map(d=>d.slice(5)),datasets:[{data:r.precip,backgroundColor:r.dates.map(d=>epDates.has(d)?'rgba(239,68,68,0.9)':'rgba(0,102,161,0.45)'),borderRadius:2,barPercentage:1,categoryPercentage:1}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>r.dates[c[0].dataIndex],label:c=>`${c.raw.toFixed(1)} mm`}}},scales:{x:{ticks:{font:{size:8},maxTicksLimit:12},grid:{display:false}},y:{ticks:{font:{size:10}},title:{display:true,text:'mm/jour',font:{size:10}}}}}});
+}
+
+// ── ACTIONS ──────────────────────────────────────────────────────────────────
+function markMail(key){sentStore[key]=fmtDate(today);saveStore();showToast('Envoi marqué comme traité ('+frDate(today)+')');recompute();}
+function unmarkMail(key){delete sentStore[key];saveStore();showToast('Statut « envoyé » retiré');recompute();}
+function bulkMarkPast(){
+  let n=0;
+  for(const r of results){
+    for(const ep of r.episodes){
+      for(const m of ep.mailings){
+        if(!m.sent&&diffDays(today,m.date)<=0){sentStore[m.key]=fmtDate(m.date);n++;}
+      }
+    }
+  }
+  saveStore();showToast(n?`${n} envoi(s) passé(s) marqués comme traités`:'Aucun envoi passé à traiter');recompute();
+}
+
+function copyEmailDraft(code,idx){
+  const r=results.find(x=>x.dept.code===code);if(!r)return;
+  const ep=r.episodes[idx];if(!ep)return;
+  const txt=`Objet : Suite aux fortes pluies dans votre département — Diagnostic fuite d'eau\n\nBonjour,\n\nSuite aux fortes précipitations relevées sur le département ${r.dept.nom} autour du ${frDate(ep.dateObj)} (${ep.cumul.toFixed(0)} mm cumulés${ep.windowDays>1?` sur ${ep.windowDays} jours`:` en 24h`}), nous souhaitons vous informer que des fuites d'eau peuvent se déclarer dans les semaines suivant de tels épisodes.\n\nax'eau, expert en détection et recherche de fuites d'eau, vous propose un diagnostic sans tranchée, rapide et non destructif.\n\nN'attendez pas que la situation s'aggrave — contactez-nous dès aujourd'hui pour un devis gratuit.\n\nCordialement,\nL'équipe ax'eau\nwww.ax-eau.com`;
+  navigator.clipboard.writeText(txt).then(()=>showToast('Brouillon copié ✓')).catch(()=>showToast('Copie impossible ici'));
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+
+async function testApi(){
+  const box=document.getElementById('diag');box.style.display='block';
+  const depth=parseInt(document.getElementById('depth').value);
+  const endDate=fmtDate(today),startDate=fmtDate(addDays(today,-depth));
+  const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum&timezone=Europe%2FParis`;
+  box.textContent='⏳ Test sur Paris (75)…\n'+url+'\n\n';
+  try{
+    const r=await Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timeout')),20000))]);
+    box.textContent+='Statut HTTP : '+r.status+' '+r.statusText+'\n';
+    const txt=await r.text();
+    box.textContent+='\nRéponse (extrait) :\n'+txt.slice(0,800);
+    const j=JSON.parse(txt);
+    if(j.daily&&j.daily.precipitation_sum){
+      const vals=j.daily.precipitation_sum.filter(v=>v!=null);
+      box.textContent+=`\n\n✅ ${vals.length} jours · pic ${Math.max(0,...vals).toFixed(1)} mm/j · cumul ${vals.reduce((a,b)=>a+b,0).toFixed(1)} mm`;
+    }
+  }catch(e){box.textContent+='\n❌ ERREUR : '+e.name+' — '+e.message+'\n\n(Normal dans l\'aperçu Claude : ouvrez le fichier .html hors de Claude.)';}
+}
+
+fetchAllData();
+</script>
+</body>
+</html>
