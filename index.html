@@ -76,7 +76,8 @@ thead th:hover{color:var(--blue)}
 tbody tr{border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
 tbody tr:last-child{border-bottom:none}
 tbody tr:hover{background:var(--blue-light)}
-tbody tr.done{opacity:.5}
+tbody tr.done{background:#fafcfe}
+tbody tr.done td:not(:last-child){color:var(--slate-light)}
 td{padding:13px 16px;white-space:nowrap}
 .dept-tag{display:inline-flex;align-items:center;gap:8px}
 .dept-num{background:var(--ink);color:#fff;border-radius:8px;padding:3px 8px;font-size:11px;font-weight:700;min-width:30px;text-align:center}
@@ -488,7 +489,7 @@ function renderListe(){
       <td>${last?frDate(last.dateObj):'—'}${last?` <span style="color:var(--slate-light);font-size:11px">(${last.cumul.toFixed(0)}mm)</span>`:''}</td>
       <td>${nextTxt}</td>
       <td>${deptBadge(r)}</td>
-      <td>${r.episodes.length?`<button class="btn-sm" onclick="event.stopPropagation();showSidePanel(results.find(x=>x.dept.code==='${r.dept.code}'))">Historique</button>`:''}</td>
+      <td>${r.episodes.length?`<button class="btn-sm" onclick="event.stopPropagation();showSidePanel(results.find(x=>x.dept.code==='${r.dept.code}'))">${r.pending.length?'Historique':'Voir / annuler'}</button>`:''}</td>
     </tr>`;
   }).join('');
   lv.innerHTML=`<div class="table-wrap fade-in"><table><thead><tr>${th('dept','Département')}${th('eps','Épisodes')}<th>Région</th>${th('last','Dernier épisode')}${th('next','Prochain envoi')}${th('urgency','Statut')}<th>Historique</th></tr></thead><tbody>${rows.replace('<th>Région</th>','')}</tbody></table></div>`;
