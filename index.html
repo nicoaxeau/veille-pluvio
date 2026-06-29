@@ -557,7 +557,7 @@ function renderListe(){
       <td>${last?frDate(last.dateObj):'—'}${last?` <span style="color:var(--slate-light);font-size:11px">(${last.cumul.toFixed(0)}mm)</span>`:''}</td>
       <td>${nextTxt}</td>
       <td>${deptBadge(r)}</td>
-      <td>${r.episodes.length?`<button class="btn-sm" onclick="event.stopPropagation();showSidePanel(results.find(x=>x.dept.code==='${r.dept.code}'))">${r.pending.length?'Historique':'Voir / annuler'}</button>`:''}</td>
+      <td>${r.episodes.length?`<button class="btn-sm" onclick="event.stopPropagation();showSidePanel(results.find(x=>x.dept.code==='${r.dept.code}'))">${r.pending.length?'Historique':'Voir / annuler'}</button>`:(r.dates&&r.dates.length?`<button class="btn-sm" style="background:var(--slate-light)" onclick="event.stopPropagation();showSidePanel(results.find(x=>x.dept.code==='${r.dept.code}'))">Voir</button>`:'')}</td>
     </tr>`;
   }).join('');
   lv.innerHTML=`<div class="table-wrap fade-in"><table><thead><tr>${th('dept','Département')}${th('eps','Épisodes')}<th>Région</th>${th('last','Dernier épisode')}${th('next','Prochain envoi')}${th('urgency','Statut')}<th>Historique</th></tr></thead><tbody>${rows.replace('<th>Région</th>','')}</tbody></table></div>`;
@@ -565,7 +565,7 @@ function renderListe(){
   lv.querySelector('thead tr').innerHTML=`${th('dept','Département')}<th onclick="setSortCol('dept')">Région</th>${th('eps','Épisodes')}${th('last','Dernier épisode')}${th('next','Prochain envoi')}${th('urgency','Statut')}<th>Historique</th>`;
 }
 function setSortCol(c){if(sortCol===c)sortDir*=-1;else{sortCol=c;sortDir=(c==='urgency'||c==='eps'||c==='last')?-1:1;}renderListe();}
-function handleRowClick(code){const r=results.find(x=>x.dept.code===code);if(r&&r.episodes.length)showSidePanel(r);}
+function handleRowClick(code){const r=results.find(x=>x.dept.code===code);if(r&&((r.dates&&r.dates.length)||r.episodes.length))showSidePanel(r);}
 
 // ── CARTE ────────────────────────────────────────────────────────────────────
 function renderCarte(){
@@ -605,7 +605,7 @@ function renderCarte(){
     });
     el.addEventListener('mousemove',e=>{tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px'});
     el.addEventListener('mouseleave',()=>{tt.style.opacity='0'});
-    el.addEventListener('click',()=>{if(r&&r.episodes.length)showSidePanel(r)});
+    el.addEventListener('click',()=>{if(r&&((r.dates&&r.dates.length)||r.episodes.length))showSidePanel(r)});
   });
 }
 
@@ -618,7 +618,24 @@ function showSidePanel(r){
   sp.classList.remove('hidden');
   let epsHtml='';
   if(!r.episodes.length){
-    epsHtml=`<p style="color:var(--slate-light);font-size:13px">Aucun épisode de forte pluie sur la période.</p>`;
+    const T=parseFloat(document.getElementById('threshold').value);
+    const p=r.precip||[],d=r.dates||[];
+    let maxRoll=0,maxRollEnd=-1,maxDay=0,maxDayIdx=-1;
+    for(let i=0;i<p.length;i++){
+      if(p[i]>maxDay){maxDay=p[i];maxDayIdx=i;}
+      let s=0;for(let k=Math.max(0,i-29);k<=i;k++)s+=p[k];
+      if(s>maxRoll){maxRoll=s;maxRollEnd=i;}
+    }
+    const total=p.reduce((a,b)=>a+b,0);
+    epsHtml=`<div class="ep-card">
+      <div class="ep-title">Aucun épisode de forte pluie</div>
+      <div class="ep-meta" style="margin-top:6px">Le seuil de ${T} mm n'a pas été atteint sur la période analysée.</div>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--slate-light)">Cumul max · 30 j glissants</span><b>${maxRoll.toFixed(0)} mm${maxRollEnd>=0?` · ${frDate(d[maxRollEnd])}`:''}</b></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--slate-light)">Pic max · 24h</span><b>${maxDay.toFixed(0)} mm${maxDayIdx>=0?` · ${frDate(d[maxDayIdx])}`:''}</b></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--slate-light)">Cumul total sur la période</span><b>${total.toFixed(0)} mm</b></div>
+      </div>
+    </div>`;
   }else{
     r.episodes.forEach((ep,idx)=>{
       const mailsHtml=ep.mailings.map(m=>{
