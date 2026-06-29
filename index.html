@@ -400,17 +400,17 @@ async function fetchAllData(force){
   const toFetch=DEPTS.filter(d=>!cachedData[d.code]);
   if(!toFetch.length){btn.classList.remove('spinning');recompute();return;}
 
-  // 2) Open-Meteo accepte plusieurs coordonnées par requête → on charge par lots de 24 (4 appels)
-  const BATCH=24;
+  // 2) On découpe en 2 lots lancés EN PARALLÈLE (rapide) ; le découpage de secours gère d'éventuels échecs
+  const BATCH=48;
+  const batches=[];
+  for(let i=0;i<toFetch.length;i+=BATCH)batches.push(toFetch.slice(i,i+BATCH));
   let done=0;
-  for(let i=0;i<toFetch.length;i+=BATCH){
-    const batch=toFetch.slice(i,i+BATCH);
-    await fetchBatch(batch,startDate,endDate);
-    done+=batch.length;
+  await Promise.all(batches.map(async b=>{
+    await fetchBatch(b,startDate,endDate);
+    done+=b.length;
     document.getElementById('progress-bar').style.width=Math.min(Math.round((done/toFetch.length)*100),100)+'%';
     document.getElementById('progress-label').textContent=`${done} / ${toFetch.length} départements chargés`;
-    if(i+BATCH<toFetch.length)await sleep(400);
-  }
+  }));
   document.getElementById('progress-bar').style.width='100%';
   const errCount=Object.values(cachedData).filter(c=>c.error).length;
   if(errCount>=DEPTS.length){
