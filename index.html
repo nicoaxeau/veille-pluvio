@@ -156,9 +156,9 @@ td{padding:13px 16px;white-space:nowrap}
   <div class="ctrl-group" style="min-width:160px">
     <div class="ctrl-label">Profondeur d'analyse</div>
     <select id="depth">
-      <option value="31">1 mois</option>
+      <option value="31" selected>1 mois</option>
       <option value="92">3 mois</option>
-      <option value="183" selected>6 mois</option>
+      <option value="183">6 mois</option>
     </select>
     <div class="ctrl-sub">Historique remonté pour chaque département</div>
   </div>
@@ -190,7 +190,7 @@ td{padding:13px 16px;white-space:nowrap}
 <div class="main-layout">
   <div class="view-area" id="view-area">
     <div class="progress-wrap" id="progress-wrap" style="display:none">
-      <div style="font-size:13px;font-weight:600;color:var(--slate)">Chargement de l'historique météo (6 mois)…</div>
+      <div style="font-size:13px;font-weight:600;color:var(--slate)">Chargement des données météo…</div>
       <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar" style="width:0%"></div></div>
       <div class="progress-label" id="progress-label">0 / 96 départements</div>
     </div>
@@ -358,7 +358,7 @@ async function fetchBatch(batch,startDate,endDate,attempt=0){
   const lons=batch.map(d=>d.lon.toFixed(4)).join(',');
   const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum&timezone=Europe%2FParis`;
   try{
-    const r=await Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timeout')),25000))]);
+    const r=await Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timeout')),18000))]);
     if(!r.ok)throw new Error('HTTP '+r.status);
     let j=await r.json();
     if(!Array.isArray(j))j=[j]; // une seule coordonnée → objet ; plusieurs → tableau
@@ -371,8 +371,14 @@ async function fetchBatch(batch,startDate,endDate,attempt=0){
       }
     });
   }catch(e){
-    if(attempt<3){await sleep(900*Math.pow(2,attempt));return fetchBatch(batch,startDate,endDate,attempt+1);} // 0.9s, 1.8s, 3.6s
-    batch.forEach(dept=>{cachedData[dept.code]={dates:[],precip:[],error:true,msg:e.message};});
+    if(attempt<2){await sleep(800*Math.pow(2,attempt));return fetchBatch(batch,startDate,endDate,attempt+1);} // 0.8s puis 1.6s
+    if(batch.length>1){ // toujours en échec → on coupe le lot en deux pour isoler le département fautif
+      const mid=Math.ceil(batch.length/2);
+      await fetchBatch(batch.slice(0,mid),startDate,endDate,0);
+      await fetchBatch(batch.slice(mid),startDate,endDate,0);
+      return;
+    }
+    cachedData[batch[0].code]={dates:[],precip:[],error:true,msg:e.message}; // un seul dépt et il échoue vraiment
   }
 }
 
@@ -394,8 +400,8 @@ async function fetchAllData(force){
   const toFetch=DEPTS.filter(d=>!cachedData[d.code]);
   if(!toFetch.length){btn.classList.remove('spinning');recompute();return;}
 
-  // 2) Open-Meteo accepte jusqu'à 100 coordonnées par requête → 96 dépts en 2 appels (et non 96 !)
-  const BATCH=48;
+  // 2) Open-Meteo accepte plusieurs coordonnées par requête → on charge par lots de 24 (4 appels)
+  const BATCH=24;
   let done=0;
   for(let i=0;i<toFetch.length;i+=BATCH){
     const batch=toFetch.slice(i,i+BATCH);
