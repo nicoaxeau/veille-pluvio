@@ -332,7 +332,7 @@ function diffDays(a,b){return Math.round((b-a)/86400000)}
 function frDate(s){if(!s)return '—';const d=(s instanceof Date)?s:new Date(s);return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})}
 
 // ── FETCH (robuste : requêtes groupées + cache du jour + réessais) ───────────
-const WX_KEY='axeau_wx_v1';
+const WX_KEY='axeau_wx_v2';
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 function loadWxCache(depth){
@@ -356,7 +356,7 @@ function saveWxCache(depth){
 async function fetchBatch(batch,startDate,endDate,attempt=0){
   const lats=batch.map(d=>d.lat.toFixed(4)).join(',');
   const lons=batch.map(d=>d.lon.toFixed(4)).join(',');
-  const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum&timezone=Europe%2FParis`;
+  const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum,weather_code&timezone=Europe%2FParis`;
   try{
     const r=await Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timeout')),18000))]);
     if(!r.ok)throw new Error('HTTP '+r.status);
@@ -365,7 +365,7 @@ async function fetchBatch(batch,startDate,endDate,attempt=0){
     batch.forEach((dept,idx)=>{
       const loc=j[idx];
       if(loc&&loc.daily&&loc.daily.precipitation_sum){
-        cachedData[dept.code]={dates:loc.daily.time,precip:loc.daily.precipitation_sum.map(v=>v??0)};
+        cachedData[dept.code]={dates:loc.daily.time,precip:loc.daily.precipitation_sum.map(v=>v??0),codes:(loc.daily.weather_code||[]).map(v=>v??-1)};
       }else{
         cachedData[dept.code]={dates:[],precip:[],error:true,msg:'données absentes'};
       }
@@ -463,19 +463,44 @@ function mailStatus(m){
   return {txt:`Prévu le ${frDate(m.date)}`,cls:'yellow',urg:2};
 }
 
+// Traduction d'un code météo WMO en phénomène marquant (null si rien de notable)
+function eventForCode(c){
+  switch(c){
+    case 95: return {icon:'⛈',label:'Orage'};
+    case 96: return {icon:'🧊',label:'Orage avec grêle'};
+    case 99: return {icon:'🧊',label:'Orage avec forte grêle'};
+    case 82: return {icon:'🌧',label:'Averse violente'};
+    case 66: case 67: return {icon:'🧊',label:'Pluie verglaçante'};
+    case 75: return {icon:'❄',label:'Neige forte'};
+    case 85: case 86: return {icon:'🌨',label:'Fortes chutes de neige'};
+    default: return null;
+  }
+}
+function eventsSummaryIcon(events){
+  if(events.some(e=>e.label.includes('grêle')))return '🧊';
+  if(events.some(e=>e.icon==='⛈'))return '⛈';
+  if(events.some(e=>e.icon==='🌨'||e.icon==='❄'))return '🌨';
+  if(events.some(e=>e.icon==='🧊'))return '🧊';
+  if(events.some(e=>e.icon==='🌧'))return '🌧';
+  return '';
+}
+function buildEvents(cd){
+  const ev=[];
+  if(cd&&cd.codes){for(let i=0;i<cd.codes.length;i++){const e=eventForCode(cd.codes[i]);if(e)ev.push({date:cd.dates[i],icon:e.icon,label:e.label});}}
+  return ev;
+}
 function recompute(){
   const T=parseFloat(document.getElementById('threshold').value);
   results=[];
   let totalEps=0,sUrgent=0,sSoon=0,sSent=0,sExpired=0;
   for(const dept of DEPTS){
     const cd=cachedData[dept.code];
-    if(!cd||!cd.dates.length){results.push({dept,episodes:[],pending:[],urgency:-2,sentCount:0,expiredCount:0,error:cd?.error});continue;}
+    if(!cd||!cd.dates.length){results.push({dept,episodes:[],pending:[],urgency:-2,sentCount:0,expiredCount:0,events:[],error:cd?.error});continue;}
     const eps=buildEpisodes(cd.precip,cd.dates,T).sort((a,b)=>b.dateObj-a.dateObj);
     let urgency=-1,nextDue=null,pending=[],sentCount=0,expiredCount=0;
     for(const ep of eps){
       ep.mailings=mailingsFor(dept.code,ep);
       const j7=ep.mailings.find(m=>m.off===7);
-      // Épisode expiré : J+7 jamais envoyée ET épisode plus vieux que EXPIRE_DAYS jours
       ep.expired=(!j7.sent)&&(today>addDays(ep.dateObj,EXPIRE_DAYS));
       for(const m of ep.mailings){
         if(m.sent){m.st={txt:`Envoyé le ${frDate(m.sent)}`,cls:'green',urg:-1};m.expired=false;sSent++;sentCount++;continue;}
@@ -488,7 +513,7 @@ function recompute(){
       }
     }
     totalEps+=eps.length;
-    results.push({dept,episodes:eps,pending,urgency,nextDue,sentCount,expiredCount,precip:cd.precip,dates:cd.dates,error:cd.error});
+    results.push({dept,episodes:eps,pending,urgency,nextDue,sentCount,expiredCount,events:buildEvents(cd),precip:cd.precip,dates:cd.dates,codes:cd.codes,error:cd.error});
   }
   document.getElementById('cnt-active').textContent=results.filter(r=>r.pending.length>0).length;
   document.getElementById('s-urgent').textContent=sUrgent;
@@ -662,6 +687,11 @@ function showSidePanel(r){
       </div>`;
     });
   }
+  let evHtml='';
+  if(r.events&&r.events.length){
+    const items=r.events.slice().reverse().map(e=>`<span style="display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:12px;margin:0 5px 5px 0">${e.icon} ${frDate(e.date)} · ${e.label}</span>`).join('');
+    evHtml=`<div class="ep-card" style="background:#fbf7ff;border-color:#e9d5ff"><div class="ep-title" style="font-size:14px">⚠ Phénomènes marquants (${r.events.length})</div><div class="ep-meta" style="margin:4px 0 10px">Orages, grêle, neige… signalés par jour (estimation du modèle météo, non quantifiée).</div><div>${items}</div></div>`;
+  }
   sp.innerHTML=`<div class="side-inner fade-in">
     <div class="sp-header">
       <button class="sp-close" onclick="closeSidePanel()">✕</button>
@@ -671,6 +701,7 @@ function showSidePanel(r){
     <div class="sp-body">
       ${r.error?'<p style="color:#ef4444;font-size:13px;margin-bottom:10px">⚠ Erreur de chargement des données.</p>':''}
       <div style="margin-bottom:16px"><canvas id="chart-canvas" height="120"></canvas></div>
+      ${evHtml}
       ${epsHtml}
     </div>
   </div>`;
