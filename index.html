@@ -162,7 +162,7 @@ td{padding:13px 16px;white-space:nowrap}
     </select>
     <div class="ctrl-sub">Historique remonté pour chaque département</div>
   </div>
-  <button class="btn-refresh" id="btn-refresh" onclick="fetchAllData()">
+  <button class="btn-refresh" id="btn-refresh" onclick="fetchAllData(true)">
     <span class="spinner" id="spinner"></span>
     <span>Actualiser</span>
   </button>
@@ -331,45 +331,100 @@ function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
 function diffDays(a,b){return Math.round((b-a)/86400000)}
 function frDate(s){if(!s)return '—';const d=(s instanceof Date)?s:new Date(s);return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})}
 
-// ── FETCH ────────────────────────────────────────────────────────────────────
-async function fetchAllData(){
+// ── FETCH (robuste : requêtes groupées + cache du jour + réessais) ───────────
+const WX_KEY='axeau_wx_v1';
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+function loadWxCache(depth){
+  try{
+    const s=localStorage.getItem(WX_KEY);if(!s)return false;
+    const c=JSON.parse(s);
+    if(c.date!==fmtDate(today)||c.depth!==depth)return false;
+    if(!c.data||Object.keys(c.data).length<DEPTS.length)return false;
+    if(Object.values(c.data).some(x=>x.error))return false;
+    cachedData=c.data;return true;
+  }catch(e){return false;}
+}
+function saveWxCache(depth){
+  try{
+    if(Object.values(cachedData).some(c=>c.error))return; // on ne mémorise qu'un jeu complet et propre
+    localStorage.setItem(WX_KEY,JSON.stringify({date:fmtDate(today),depth,data:cachedData}));
+  }catch(e){}
+}
+
+// Récupère un lot de départements en UNE requête multi-coordonnées, avec réessais
+async function fetchBatch(batch,startDate,endDate,attempt=0){
+  const lats=batch.map(d=>d.lat.toFixed(4)).join(',');
+  const lons=batch.map(d=>d.lon.toFixed(4)).join(',');
+  const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum&timezone=Europe%2FParis`;
+  try{
+    const r=await Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timeout')),25000))]);
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    let j=await r.json();
+    if(!Array.isArray(j))j=[j]; // une seule coordonnée → objet ; plusieurs → tableau
+    batch.forEach((dept,idx)=>{
+      const loc=j[idx];
+      if(loc&&loc.daily&&loc.daily.precipitation_sum){
+        cachedData[dept.code]={dates:loc.daily.time,precip:loc.daily.precipitation_sum.map(v=>v??0)};
+      }else{
+        cachedData[dept.code]={dates:[],precip:[],error:true,msg:'données absentes'};
+      }
+    });
+  }catch(e){
+    if(attempt<3){await sleep(900*Math.pow(2,attempt));return fetchBatch(batch,startDate,endDate,attempt+1);} // 0.9s, 1.8s, 3.6s
+    batch.forEach(dept=>{cachedData[dept.code]={dates:[],precip:[],error:true,msg:e.message};});
+  }
+}
+
+async function fetchAllData(force){
   const btn=document.getElementById('btn-refresh');
   btn.classList.add('spinning');
-  document.getElementById('progress-wrap').style.display='block';
-  let done=0,errCount=0;
   const depth=parseInt(document.getElementById('depth').value);
-  const endDate=fmtDate(today);
-  const startDate=fmtDate(addDays(today,-depth));
-  const BATCH=8;
+  const endDate=fmtDate(today),startDate=fmtDate(addDays(today,-depth));
+
+  // 1) Cache du jour : si déjà chargé avec succès aujourd'hui, on réutilise (fiable + instantané)
+  if(!force&&!Object.keys(cachedData).length&&loadWxCache(depth)){
+    btn.classList.remove('spinning');
+    document.getElementById('progress-wrap').style.display='none';
+    recompute();return;
+  }
+  if(force)cachedData={};
+
+  document.getElementById('progress-wrap').style.display='block';
   const toFetch=DEPTS.filter(d=>!cachedData[d.code]);
   if(!toFetch.length){btn.classList.remove('spinning');recompute();return;}
+
+  // 2) Open-Meteo accepte jusqu'à 100 coordonnées par requête → 96 dépts en 2 appels (et non 96 !)
+  const BATCH=48;
+  let done=0;
   for(let i=0;i<toFetch.length;i+=BATCH){
     const batch=toFetch.slice(i,i+BATCH);
-    await Promise.all(batch.map(async dept=>{
-      try{
-        // Historical Forecast API : 6 mois d'historique incluant les jours récents
-        const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${dept.lat}&longitude=${dept.lon}&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum&timezone=Europe%2FParis`;
-        const r=await Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timeout')),20000))]);
-        if(!r.ok)throw new Error('HTTP '+r.status);
-        const j=await r.json();
-        if(!j.daily||!j.daily.precipitation_sum)throw new Error('Réponse invalide');
-        cachedData[dept.code]={dates:j.daily.time,precip:j.daily.precipitation_sum.map(v=>v??0)};
-      }catch(e){cachedData[dept.code]={dates:[],precip:[],error:true,msg:e.message};errCount++;}
-      done++;
-      document.getElementById('progress-bar').style.width=Math.min(Math.round((done/toFetch.length)*100),100)+'%';
-      document.getElementById('progress-label').textContent=`${done} / ${toFetch.length} chargés`;
-    }));
+    await fetchBatch(batch,startDate,endDate);
+    done+=batch.length;
+    document.getElementById('progress-bar').style.width=Math.min(Math.round((done/toFetch.length)*100),100)+'%';
+    document.getElementById('progress-label').textContent=`${done} / ${toFetch.length} départements chargés`;
+    if(i+BATCH<toFetch.length)await sleep(400);
   }
   document.getElementById('progress-bar').style.width='100%';
-  if(errCount>=toFetch.length){
+  const errCount=Object.values(cachedData).filter(c=>c.error).length;
+  if(errCount>=DEPTS.length){
     const sample=Object.values(cachedData).find(c=>c.error);
-    document.getElementById('progress-label').innerHTML=`<span style="color:#ef4444;font-weight:700">⚠ Échec du chargement (${errCount}). ${sample?.msg||''} — Hors de Claude (fichier .html local ou GitHub Pages), les appels réseau passeront.</span>`;
+    document.getElementById('progress-label').innerHTML=`<span style="color:#ef4444;font-weight:700">⚠ Échec du chargement. ${sample?.msg||''} — Sur GitHub Pages les appels passent ; dans l'aperçu Claude ils sont bloqués.</span>`;
+  }else if(errCount>0){
+    document.getElementById('progress-label').innerHTML=`Données chargées ✓ — <span style="color:#ea580c;font-weight:700">${errCount} département(s) en erreur.</span> <button class="btn-sm" style="margin-left:8px" onclick="retryErrors()">↻ Réessayer ces départements</button>`;
   }else{
-    document.getElementById('progress-label').textContent=errCount>0?`Données chargées ✓ (${errCount} en erreur)`:'Données chargées ✓';
-    setTimeout(()=>document.getElementById('progress-wrap').style.display='none',2000);
+    document.getElementById('progress-label').textContent="Données chargées ✓ (mises en cache pour aujourd'hui)";
+    setTimeout(()=>document.getElementById('progress-wrap').style.display='none',2200);
   }
+  saveWxCache(depth);
   btn.classList.remove('spinning');
   recompute();
+}
+
+// Réessaie uniquement les départements encore en erreur
+async function retryErrors(){
+  DEPTS.filter(d=>cachedData[d.code]&&cachedData[d.code].error).forEach(d=>delete cachedData[d.code]);
+  await fetchAllData(false);
 }
 
 // ── DÉTECTION DES ÉPISODES ───────────────────────────────────────────────────
