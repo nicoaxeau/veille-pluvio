@@ -400,8 +400,8 @@ async function fetchAllData(force){
   const toFetch=DEPTS.filter(d=>!cachedData[d.code]);
   if(!toFetch.length){btn.classList.remove('spinning');recompute();return;}
 
-  // 2) On découpe en 2 lots lancés EN PARALLÈLE (rapide) ; le découpage de secours gère d'éventuels échecs
-  const BATCH=48;
+  // 2) Lots de 24 (taille fiable) lancés EN PARALLÈLE → 4 petites requêtes simultanées : rapide ET fiable
+  const BATCH=24;
   const batches=[];
   for(let i=0;i<toFetch.length;i+=BATCH)batches.push(toFetch.slice(i,i+BATCH));
   let done=0;
