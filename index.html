@@ -168,6 +168,11 @@ td{padding:13px 16px;white-space:nowrap}
     <input type="range" class="slider" id="threshold" min="20" max="200" value="90" step="5">
     <div class="ctrl-sub">Cumul atteint sur 1 à 30 jours glissants (ou en un seul jour)</div>
   </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label">Pic minimum en 24 h <span class="pill"><span id="valPic">30</span> mm</span></div>
+    <input type="range" class="slider" id="pic" min="0" max="80" value="30" step="5">
+    <div class="ctrl-sub">Au moins un jour à ce niveau dans la fenêtre, sinon ce n'est pas un épisode</div>
+  </div>
   <div class="ctrl-group" style="min-width:160px">
     <div class="ctrl-label">Profondeur d'analyse</div>
     <select id="depth">
@@ -197,6 +202,7 @@ td{padding:13px 16px;white-space:nowrap}
     </div>
     <div class="pb-actions">
       <button class="btn-sm" style="background:rgba(255,255,255,.2)" onclick="copyPlanJson()">Copier le JSON</button>
+      <button class="btn-sm" style="background:rgba(255,255,255,.2)" onclick="abandonnerPlan()">Tout abandonner</button>
       <button class="btn-sm" style="background:rgba(255,255,255,.2)" onclick="hidePlan()">Fermer</button>
     </div>
   </div>
@@ -212,6 +218,7 @@ td{padding:13px 16px;white-space:nowrap}
   <div class="stat-card"><div class="stat-ico" style="background:#e0f2fe;color:#0369a1">🌧</div><div class="stat-meta"><div class="v" id="s-eps">—</div><div class="k">Épisodes détectés</div></div></div>
   <div class="stat-card"><div class="stat-ico" style="background:#dcfce7;color:#16a34a">✓</div><div class="stat-meta"><div class="v" id="s-sent">—</div><div class="k">Envois déjà traités</div></div></div>
   <div class="stat-card"><div class="stat-ico" style="background:#ede9fe;color:#6d4fc4">🔒</div><div class="stat-meta"><div class="v" id="s-locked">—</div><div class="k">Bloqués par le verrou 30 j</div></div></div>
+  <div class="stat-card"><div class="stat-ico" style="background:#f1f5f9;color:#64748b">🚫</div><div class="stat-meta"><div class="v" id="s-abandon">—</div><div class="k">Abandonnés</div></div></div>
 </div>
 
 <div class="toolbar">
@@ -345,9 +352,17 @@ const COORDS={
 
 // ── STORAGE (persistance navigateur) ─────────────────────────────────────────
 const STORE_KEY='axeau_mailings_v1';
-let sentStore={};   // "code|episodeDateISO|J7" -> "date d'envoi ISO"
-function loadStore(){try{const s=localStorage.getItem(STORE_KEY);sentStore=s?JSON.parse(s):{};}catch(e){sentStore={};}}
-function saveStore(){try{localStorage.setItem(STORE_KEY,JSON.stringify(sentStore));}catch(e){/* environnement sans stockage : reste en mémoire */}}
+const ABANDON_KEY='axeau_abandons_v1';
+let sentStore={};      // "code|episodeDateISO|J7" -> date d'envoi ISO
+let abandonStore={};   // "code|episodeDateISO|J7" -> date d'abandon ISO
+function loadStore(){
+  try{const s=localStorage.getItem(STORE_KEY);sentStore=s?JSON.parse(s):{};}catch(e){sentStore={};}
+  try{const a=localStorage.getItem(ABANDON_KEY);abandonStore=a?JSON.parse(a):{};}catch(e){abandonStore={};}
+}
+function saveStore(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(sentStore));}catch(e){}
+  try{localStorage.setItem(ABANDON_KEY,JSON.stringify(abandonStore));}catch(e){}
+}
 loadStore();
 
 // ── STATE ────────────────────────────────────────────────────────────────────
@@ -378,6 +393,7 @@ function majAvertissementProfondeur(){
 
 document.getElementById('today-date').textContent=today.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 document.getElementById('threshold').addEventListener('input',e=>{document.getElementById('valThr').textContent=e.target.value;recompute()});
+document.getElementById('pic').addEventListener('input',e=>{document.getElementById('valPic').textContent=e.target.value;recompute()});
 document.getElementById('depth').addEventListener('change',()=>{majAvertissementProfondeur();cachedData={};fetchAllData()});
 majAvertissementProfondeur();
 
@@ -489,14 +505,19 @@ async function retryErrors(){
 }
 
 // ── DÉTECTION DES ÉPISODES ───────────────────────────────────────────────────
-// Retourne les épisodes dans l'ORDRE CHRONOLOGIQUE CROISSANT (indispensable au verrou)
-function buildEpisodes(p,d,T){
+// Retourne les épisodes dans l'ORDRE CHRONOLOGIQUE CROISSANT (indispensable au verrou).
+// Deux conditions cumulatives : le cumul atteint le seuil T sur la fenêtre glissante ET
+// au moins un jour de cette fenêtre atteint P mm en 24 h. Sans le second critère, un mois
+// simplement humide se déclare comme un épisode d'intempéries, ce qui n'en est pas un.
+// Si le cumul est atteint sans le pic, on ne déclenche pas et on ne remet pas le compteur
+// à zéro : la fenêtre continue de glisser jusqu'à ce qu'un vrai gros jour survienne.
+function buildEpisodes(p,d,T,P){
   const eps=[];let s=0;
   for(let i=0;i<p.length;i++){
     const ws=Math.max(s,i-(THRESH_WINDOW-1));
     let sum=0,peak=0,peakIdx=ws;
     for(let k=ws;k<=i;k++){sum+=p[k];if(p[k]>peak){peak=p[k];peakIdx=k;}}
-    if(sum>=T){
+    if(sum>=T&&peak>=P){
       eps.push({date:d[i],dateObj:new Date(d[i]),cumul:sum,windowDays:i-ws+1,peak24:peak,peakDate:d[peakIdx],startDate:d[ws]});
       s=i+1;
     }
@@ -509,7 +530,7 @@ function buildEpisodes(p,d,T){
 function mailingFor(code,ep){
   const dt=addDays(ep.dateObj,SEND_OFFSET);
   const key=`${code}|${ep.date}|J${SEND_OFFSET}`;
-  return {off:SEND_OFFSET,key,date:dt,sent:sentStore[key]||null};
+  return {off:SEND_OFFSET,key,date:dt,sent:sentStore[key]||null,abandon:abandonStore[key]||null};
 }
 
 function mailStatus(m){
@@ -557,20 +578,21 @@ function phenomenesFenetre(cd,ep){
 // de 30 jours après l'ancre, il est VERROUILLÉ : il ne remontera jamais au plan.
 function recompute(){
   const T=parseFloat(document.getElementById('threshold').value);
+  const P=parseFloat(document.getElementById('pic').value);
   results=[];
-  let totalEps=0,sUrgent=0,sSoon=0,sSent=0,sLocked=0;
+  let totalEps=0,sUrgent=0,sSoon=0,sSent=0,sLocked=0,sAbandon=0;
 
   for(const dept of DEPTS){
     const cd=cachedData[dept.code];
     if(!cd||!cd.dates.length){
-      results.push({dept,episodes:[],pending:[],urgency:-2,sentCount:0,lockedCount:0,expiredCount:0,events:[],error:cd?.error});
+      results.push({dept,episodes:[],pending:[],urgency:-2,sentCount:0,lockedCount:0,expiredCount:0,abandonCount:0,events:[],error:cd?.error});
       continue;
     }
-    const epsAsc=buildEpisodes(cd.precip,cd.dates,T);
+    const epsAsc=buildEpisodes(cd.precip,cd.dates,T,P);
     epsAsc.forEach(ep=>{ep.phenomenes=phenomenesFenetre(cd,ep)});
 
     let ancre=null,urgency=-1,nextDue=null;
-    let pending=[],sentCount=0,lockedCount=0,expiredCount=0;
+    let pending=[],sentCount=0,lockedCount=0,expiredCount=0,abandonCount=0;
 
     for(const ep of epsAsc){
       const m=mailingFor(dept.code,ep);
@@ -581,6 +603,14 @@ function recompute(){
         m.st={txt:`Envoyé le ${frDate(m.sent)}`,cls:'green',urg:-1};
         ancre=new Date(m.sent);
         sentCount++;sSent++;
+        continue;
+      }
+      // Abandonné : on n'envoie rien, mais on n'arme PAS le verrou — aucun mail n'est parti,
+      // donc rien ne justifie de bloquer un épisode ultérieur.
+      if(m.abandon){
+        m.state='abandonne';
+        m.st={txt:`Abandonné le ${frDate(m.abandon)}`,cls:'grey',urg:-2};
+        abandonCount++;sAbandon++;
         continue;
       }
       if(ancre&&diffDays(ancre,m.date)<COOLDOWN_DAYS){
@@ -608,7 +638,7 @@ function recompute(){
 
     totalEps+=epsAsc.length;
     const episodes=epsAsc.slice().reverse();   // affichage du plus récent au plus ancien
-    results.push({dept,episodes,pending,urgency,nextDue,sentCount,lockedCount,expiredCount,
+    results.push({dept,episodes,pending,urgency,nextDue,sentCount,lockedCount,expiredCount,abandonCount,
                   events:buildEvents(cd),precip:cd.precip,dates:cd.dates,codes:cd.codes,error:cd.error});
   }
 
@@ -618,6 +648,7 @@ function recompute(){
   document.getElementById('s-eps').textContent=totalEps;
   document.getElementById('s-sent').textContent=sSent;
   document.getElementById('s-locked').textContent=sLocked;
+  document.getElementById('s-abandon').textContent=sAbandon;
   renderView();
   if(document.getElementById('plan-box').style.display==='block')buildPlan();
   if(openCode){const r=results.find(x=>x.dept.code===openCode);if(r)showSidePanel(r);}
@@ -663,7 +694,7 @@ function buildPlan(){
   const ok=profondeurOk();
   document.getElementById('plan-count').textContent=lastPlan.length?`· ${lastPlan.length} département(s)`:'';
   document.getElementById('plan-stamp').textContent=
-    `Généré le ${frDate(today)} · seuil ${T} mm sur ${THRESH_WINDOW} j · envoi J+${SEND_OFFSET} · verrou ${COOLDOWN_DAYS} j · profondeur ${D} j${ok?'':' ⚠ INSUFFISANTE'}`;
+    `Généré le ${frDate(today)} · seuil ${T} mm sur ${THRESH_WINDOW} j · pic min ${document.getElementById('pic').value} mm/24h · envoi J+${SEND_OFFSET} · verrou ${COOLDOWN_DAYS} j · profondeur ${D} j${ok?'':' ⚠ INSUFFISANTE'}`;
   const box=document.getElementById('plan-json');
   box.textContent=JSON.stringify(lastPlan,null,2);
   box.setAttribute('data-plan-count',String(lastPlan.length));
@@ -687,6 +718,7 @@ function buildPlan(){
       </div>
       <div class="mail-actions">
         <button class="mini-btn mini-btn-do" onclick="marquerEnvoye('${p.cle}')">Marquer envoyé</button>
+        <button class="mini-btn mini-btn-undo" onclick="abandonner('${p.cle}')">Abandonner</button>
       </div>
     </div>`;
   }).join('');
@@ -726,6 +758,7 @@ function deptBadge(r){
   }
   if(r.lockedCount)return `<span class="badge badge-lock">Verrou 30 j</span>`;
   if(r.sentCount)return `<span class="badge badge-blue">Tout traité (${r.episodes.length})</span>`;
+  if(r.abandonCount)return `<span class="badge badge-grey">Abandonné</span>`;
   return `<span class="badge badge-grey">Expiré</span>`;
 }
 
@@ -860,9 +893,10 @@ function showSidePanel(r){
       const st=m.st;
       let actions='';
       if(m.state==='sent')actions=`<button class="mini-btn mini-btn-undo" onclick="unmarkMail('${m.key}')">↩ Annuler</button>`;
+      else if(m.state==='abandonne')actions=`<button class="mini-btn mini-btn-undo" onclick="annulerAbandon('${m.key}')">↩ Reprendre</button>`;
       else if(m.state==='locked')actions=`<span style="font-size:11px;color:var(--slate-light)">Libre le ${frDate(m.lockUntil)}</span>`;
       else if(m.state==='expired')actions=`<span style="font-size:11px;color:var(--slate-light)">Abandonné</span>`;
-      else actions=`<button class="mini-btn mini-btn-do" onclick="marquerEnvoye('${m.key}')">Marquer envoyé</button>`;
+      else actions=`<button class="mini-btn mini-btn-do" onclick="marquerEnvoye('${m.key}')">Marquer envoyé</button><button class="mini-btn mini-btn-undo" onclick="abandonner('${m.key}')">Abandonner</button>`;
       const ph=(ep.phenomenes&&ep.phenomenes.length)?`<div class="ep-meta">Phénomènes : ${ep.phenomenes.join(', ')}</div>`:'';
       epsHtml+=`<div class="ep-card${m.state==='locked'?' locked':''}">
         <div class="ep-head">
@@ -912,11 +946,35 @@ function drawMiniChart(r){
 
 // ── ACTIONS ──────────────────────────────────────────────────────────────────
 function marquerEnvoye(key){
+  delete abandonStore[key];
   sentStore[key]=fmtDate(today);saveStore();
   showToast(`Envoi marqué comme traité (${frDate(today)}) — verrou 30 j armé`);
   recompute();
 }
 window.marquerEnvoye=marquerEnvoye;
+
+// Abandon : on renonce à cet envoi sans qu'aucun mail ne parte. Contrairement à
+// « marquer envoyé », le verrou 30 j n'est PAS armé.
+function abandonner(key){
+  delete sentStore[key];
+  abandonStore[key]=fmtDate(today);saveStore();
+  showToast('Envoi abandonné — aucun mail parti, verrou non armé');
+  recompute();
+}
+window.abandonner=abandonner;
+
+function annulerAbandon(key){delete abandonStore[key];saveStore();showToast('Abandon annulé');recompute();}
+window.annulerAbandon=annulerAbandon;
+
+function abandonnerPlan(){
+  const n=lastPlan.length;
+  if(!n){showToast('Rien à abandonner');return;}
+  if(!confirm(`Abandonner les ${n} envoi(s) du plan du jour ?\n\nAucun mail ne part et le verrou 30 j ne sera pas armé.`))return;
+  lastPlan.forEach(p=>{delete sentStore[p.cle];abandonStore[p.cle]=fmtDate(today);});
+  saveStore();showToast(`${n} envoi(s) abandonné(s)`);recompute();
+}
+window.abandonnerPlan=abandonnerPlan;
+
 function markMail(key){marquerEnvoye(key);}   // ancien nom, conservé
 function unmarkMail(key){delete sentStore[key];saveStore();showToast('Statut « envoyé » retiré');recompute();}
 
