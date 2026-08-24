@@ -12,7 +12,7 @@
   --cyan:#00b4d8;--cyan-light:#caf0f8;
   --ink:#0f1c2e;--slate:#3a4a5e;--slate-light:#8395a8;--line:#e7eef5;
   --white:#fff;--bg:#f4f8fc;
-  --green:#22c55e;--yellow:#eab308;--orange:#f97316;--red:#ef4444;
+  --green:#22c55e;--yellow:#eab308;--orange:#f97316;--red:#ef4444;--lock:#8b7fd4;
   --r:18px;--shadow:0 10px 40px -12px rgba(1,58,94,0.18);--shadow-sm:0 2px 12px rgba(1,58,94,0.08);
 }
 body{font-family:'Outfit',sans-serif;background:
@@ -36,12 +36,12 @@ body{font-family:'Outfit',sans-serif;background:
 .slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--blue);box-shadow:0 2px 8px rgba(0,102,161,0.4);cursor:pointer;transition:transform .15s}
 .slider::-webkit-slider-thumb:hover{transform:scale(1.15)}
 .slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--blue);cursor:pointer}
-.scale{display:flex;justify-content:space-between;font-size:10px;color:var(--slate-light);margin-top:-2px}
 select{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;border:1.5px solid var(--line);border-radius:12px;padding:9px 14px;color:var(--slate);outline:none;cursor:pointer;background:#fff;transition:border-color .2s}
 select:focus,select:hover{border-color:var(--blue)}
 .btn-refresh{background:linear-gradient(120deg,var(--blue),var(--cyan));color:#fff;border:none;border-radius:14px;padding:13px 22px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:9px;box-shadow:0 8px 20px -6px rgba(0,102,161,0.6);transition:transform .12s,box-shadow .2s}
 .btn-refresh:hover{transform:translateY(-2px)}
 .btn-refresh:active{transform:translateY(0)}
+.btn-plan{background:linear-gradient(120deg,#1D2E4D,#3f5c8c)}
 .spinner{width:15px;height:15px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
 .spinning .spinner{display:block}
 .counter{margin-left:auto;background:linear-gradient(135deg,var(--blue-dark),var(--blue));color:#fff;border-radius:14px;padding:12px 20px;text-align:center;box-shadow:var(--shadow-sm)}
@@ -89,6 +89,7 @@ td{padding:13px 16px;white-space:nowrap}
 .badge-green{background:#dcfce7;color:#16a34a}
 .badge-grey{background:#eef2f6;color:#64748b}
 .badge-blue{background:#e0f2fe;color:#0369a1}
+.badge-lock{background:#ede9fe;color:#6d4fc4}
 .btn-sm{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .2s}
 .btn-sm:hover{background:var(--blue-dark)}
 #map-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--shadow-sm);border:1px solid var(--line);padding:18px}
@@ -106,6 +107,7 @@ td{padding:13px 16px;white-space:nowrap}
 .sp-close:hover{background:rgba(255,255,255,.4)}
 .sp-body{padding:20px;max-height:calc(100vh - 200px);overflow-y:auto}
 .ep-card{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;background:#fafcfe}
+.ep-card.locked{background:#f8f6ff;border-color:#e0d8fb}
 .ep-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
 .ep-title{font-size:15px;font-weight:800;color:var(--ink)}
 .ep-meta{font-size:12px;color:var(--slate-light);margin-top:3px;line-height:1.5}
@@ -124,6 +126,19 @@ td{padding:13px 16px;white-space:nowrap}
 .empty .big{font-size:16px;font-weight:700;color:var(--slate);margin-top:14px}
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--ink);color:#fff;padding:14px 24px;border-radius:14px;font-size:13.5px;font-weight:600;z-index:9999;opacity:0;transition:all .3s;box-shadow:0 12px 30px rgba(0,0,0,0.3)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ── Panneau Plan du jour ─────────────────────────────────────────────── */
+#plan-box{display:none;margin:18px 24px 0;background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);overflow:hidden}
+#plan-box .pb-head{background:linear-gradient(120deg,#1D2E4D,#3f5c8c);color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+#plan-box .pb-head h3{font-size:16px;font-weight:800}
+#plan-box .pb-head p{font-size:11.5px;opacity:.82;margin-top:3px}
+#plan-box .pb-actions{display:flex;gap:8px}
+#plan-box .pb-body{padding:18px 20px}
+.plan-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+.plan-row:last-of-type{border-bottom:none}
+.plan-info{font-size:13px;line-height:1.6}
+.plan-info .pi-sub{font-size:11.5px;color:var(--slate-light)}
+#plan-json{background:#0f1c2e;color:#8ee6c8;border-radius:12px;padding:14px 16px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;max-height:340px;overflow:auto;margin-top:14px;user-select:all}
+.plan-empty{font-size:13.5px;color:var(--slate);font-weight:600;padding:6px 0}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .fade-in{animation:fadeIn .45s ease forwards}
@@ -143,7 +158,7 @@ td{padding:13px 16px;white-space:nowrap}
   </div>
   <div class="header-right">
     <div class="date" id="today-date"></div>
-    <div class="subtitle">Épisodes de forte pluie · envois J+7 et J+21</div>
+    <div class="subtitle">Envoi unique à J+7 · un seul mail par département tous les 30 jours</div>
   </div>
 </div>
 
@@ -166,17 +181,37 @@ td{padding:13px 16px;white-space:nowrap}
     <span class="spinner" id="spinner"></span>
     <span>Actualiser</span>
   </button>
+  <button class="btn-refresh btn-plan" id="btn-plan" onclick="showPlan()">📋 Plan du jour</button>
   <button class="btn-refresh" style="background:var(--ink)" onclick="testApi()">🔧 Test</button>
   <div class="counter"><div class="num" id="cnt-active">—</div><div class="lbl">DÉPT. AVEC ENVOI À FAIRE</div></div>
 </div>
 
 <div id="diag" style="display:none;margin:14px 24px 0;background:#0f1c2e;color:#7fffd4;border-radius:14px;padding:16px 18px;font-family:monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:240px;overflow:auto"></div>
 
+<!-- ── PLAN DU JOUR ──────────────────────────────────────────────────── -->
+<div id="plan-box">
+  <div class="pb-head">
+    <div>
+      <h3>Plan du jour <span id="plan-count" style="font-weight:600;opacity:.8"></span></h3>
+      <p id="plan-stamp"></p>
+    </div>
+    <div class="pb-actions">
+      <button class="btn-sm" style="background:rgba(255,255,255,.2)" onclick="copyPlanJson()">Copier le JSON</button>
+      <button class="btn-sm" style="background:rgba(255,255,255,.2)" onclick="hidePlan()">Fermer</button>
+    </div>
+  </div>
+  <div class="pb-body">
+    <div id="plan-rows"></div>
+    <pre id="plan-json" data-plan-count="0">[]</pre>
+  </div>
+</div>
+
 <div class="stat-strip" id="stat-strip">
   <div class="stat-card"><div class="stat-ico" style="background:#fee2e2;color:#dc2626">📮</div><div class="stat-meta"><div class="v" id="s-urgent">—</div><div class="k">Envois à faire / en retard</div></div></div>
   <div class="stat-card"><div class="stat-ico" style="background:#ffedd5;color:#ea580c">🗓</div><div class="stat-meta"><div class="v" id="s-soon">—</div><div class="k">Envois dans les 7 jours</div></div></div>
   <div class="stat-card"><div class="stat-ico" style="background:#e0f2fe;color:#0369a1">🌧</div><div class="stat-meta"><div class="v" id="s-eps">—</div><div class="k">Épisodes détectés</div></div></div>
   <div class="stat-card"><div class="stat-ico" style="background:#dcfce7;color:#16a34a">✓</div><div class="stat-meta"><div class="v" id="s-sent">—</div><div class="k">Envois déjà traités</div></div></div>
+  <div class="stat-card"><div class="stat-ico" style="background:#ede9fe;color:#6d4fc4">🔒</div><div class="stat-meta"><div class="v" id="s-locked">—</div><div class="k">Bloqués par le verrou 30 j</div></div></div>
 </div>
 
 <div class="toolbar">
@@ -318,8 +353,11 @@ loadStore();
 // ── STATE ────────────────────────────────────────────────────────────────────
 let cachedData={},results=[];
 let currentTab='liste',sortCol='urgency',sortDir=-1,miniChart=null,openCode=null;
-const THRESH_WINDOW=30; // jours max
-const EXPIRE_DAYS=30;   // si J+7 non envoyée et épisode plus vieux que ça : on abandonne les 2 relances
+let lastPlan=[];
+const THRESH_WINDOW=30;   // fenêtre glissante max pour atteindre le seuil, en jours
+const EXPIRE_DAYS=30;     // épisode plus vieux que ça et non envoyé : on abandonne
+const COOLDOWN_DAYS=30;   // VERROU : pas deux mails au même département sous 30 jours
+const SEND_OFFSET=7;      // envoi unique à J+7 après la fin de l'épisode
 const today=new Date();today.setHours(0,0,0,0);
 
 document.getElementById('today-date').textContent=today.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -434,6 +472,7 @@ async function retryErrors(){
 }
 
 // ── DÉTECTION DES ÉPISODES ───────────────────────────────────────────────────
+// Retourne les épisodes dans l'ORDRE CHRONOLOGIQUE CROISSANT (indispensable au verrou)
 function buildEpisodes(p,d,T){
   const eps=[];let s=0;
   for(let i=0;i<p.length;i++){
@@ -447,15 +486,16 @@ function buildEpisodes(p,d,T){
   }
   return eps;
 }
-function mailingsFor(code,ep){
-  return [7,21].map(off=>{
-    const dt=addDays(ep.dateObj,off);
-    const key=`${code}|${ep.date}|J${off}`;
-    return {off,key,date:dt,sent:sentStore[key]||null};
-  });
+
+// Envoi unique à J+7. La clé reste au format historique "code|date|J7" : les envois
+// déjà marqués dans le navigateur restent reconnus.
+function mailingFor(code,ep){
+  const dt=addDays(ep.dateObj,SEND_OFFSET);
+  const key=`${code}|${ep.date}|J${SEND_OFFSET}`;
+  return {off:SEND_OFFSET,key,date:dt,sent:sentStore[key]||null};
 }
+
 function mailStatus(m){
-  if(m.sent)return {txt:`Envoyé le ${frDate(m.sent)}`,cls:'green',urg:-1};
   const du=diffDays(today,m.date);
   if(du<0)return {txt:`En retard de ${-du}j`,cls:'red',urg:4};
   if(du===0)return {txt:`À envoyer aujourd'hui`,cls:'red',urg:4};
@@ -476,73 +516,195 @@ function eventForCode(c){
     default: return null;
   }
 }
-function eventsSummaryIcon(events){
-  if(events.some(e=>e.label.includes('grêle')))return '🧊';
-  if(events.some(e=>e.icon==='⛈'))return '⛈';
-  if(events.some(e=>e.icon==='🌨'||e.icon==='❄'))return '🌨';
-  if(events.some(e=>e.icon==='🧊'))return '🧊';
-  if(events.some(e=>e.icon==='🌧'))return '🌧';
-  return '';
-}
 function buildEvents(cd){
   const ev=[];
   if(cd&&cd.codes){for(let i=0;i<cd.codes.length;i++){const e=eventForCode(cd.codes[i]);if(e)ev.push({date:cd.dates[i],icon:e.icon,label:e.label});}}
   return ev;
 }
+// Phénomènes marquants survenus DANS la fenêtre de l'épisode, dédoublonnés
+function phenomenesFenetre(cd,ep){
+  const out=[];
+  if(!cd||!cd.codes)return out;
+  for(let i=0;i<cd.dates.length;i++){
+    if(cd.dates[i]<ep.startDate||cd.dates[i]>ep.date)continue;
+    const e=eventForCode(cd.codes[i]);
+    if(e&&out.indexOf(e.label)===-1)out.push(e.label);
+  }
+  return out;
+}
+
+// ── CALCUL PRINCIPAL ─────────────────────────────────────────────────────────
+// Le verrou 30 jours se simule en avançant dans le temps, épisode par épisode.
+// "ancre" = date du dernier envoi retenu pour ce département (réellement envoyé,
+// ou réservé parce qu'il est encore actionnable). Tant qu'un envoi tombe à moins
+// de 30 jours après l'ancre, il est VERROUILLÉ : il ne remontera jamais au plan.
 function recompute(){
   const T=parseFloat(document.getElementById('threshold').value);
   results=[];
-  let totalEps=0,sUrgent=0,sSoon=0,sSent=0,sExpired=0;
+  let totalEps=0,sUrgent=0,sSoon=0,sSent=0,sLocked=0;
+
   for(const dept of DEPTS){
     const cd=cachedData[dept.code];
-    if(!cd||!cd.dates.length){results.push({dept,episodes:[],pending:[],urgency:-2,sentCount:0,expiredCount:0,events:[],error:cd?.error});continue;}
-    const eps=buildEpisodes(cd.precip,cd.dates,T).sort((a,b)=>b.dateObj-a.dateObj);
-    let urgency=-1,nextDue=null,pending=[],sentCount=0,expiredCount=0;
-    for(const ep of eps){
-      ep.mailings=mailingsFor(dept.code,ep);
-      const j7=ep.mailings.find(m=>m.off===7);
-      ep.expired=(!j7.sent)&&(today>addDays(ep.dateObj,EXPIRE_DAYS));
-      for(const m of ep.mailings){
-        if(m.sent){m.st={txt:`Envoyé le ${frDate(m.sent)}`,cls:'green',urg:-1};m.expired=false;sSent++;sentCount++;continue;}
-        if(ep.expired){m.st={txt:'Expiré (délai dépassé)',cls:'grey',urg:-2};m.expired=true;sExpired++;expiredCount++;continue;}
-        const st=mailStatus(m);m.st=st;m.expired=false;
-        pending.push({ep,m,st});
-        if(st.urg>urgency)urgency=st.urg;
-        if(st.urg>=4)sUrgent++; else if(st.urg===3)sSoon++;
-        if(!nextDue||m.date<nextDue.date)nextDue={date:m.date,off:m.off,ep};
-      }
+    if(!cd||!cd.dates.length){
+      results.push({dept,episodes:[],pending:[],urgency:-2,sentCount:0,lockedCount:0,expiredCount:0,events:[],error:cd?.error});
+      continue;
     }
-    totalEps+=eps.length;
-    results.push({dept,episodes:eps,pending,urgency,nextDue,sentCount,expiredCount,events:buildEvents(cd),precip:cd.precip,dates:cd.dates,codes:cd.codes,error:cd.error});
+    const epsAsc=buildEpisodes(cd.precip,cd.dates,T);
+    epsAsc.forEach(ep=>{ep.phenomenes=phenomenesFenetre(cd,ep)});
+
+    let ancre=null,urgency=-1,nextDue=null;
+    let pending=[],sentCount=0,lockedCount=0,expiredCount=0;
+
+    for(const ep of epsAsc){
+      const m=mailingFor(dept.code,ep);
+      ep.mailing=m;
+
+      if(m.sent){
+        m.state='sent';
+        m.st={txt:`Envoyé le ${frDate(m.sent)}`,cls:'green',urg:-1};
+        ancre=new Date(m.sent);
+        sentCount++;sSent++;
+        continue;
+      }
+      if(ancre&&diffDays(ancre,m.date)<COOLDOWN_DAYS){
+        m.state='locked';
+        m.lockRef=new Date(ancre);
+        m.lockUntil=addDays(ancre,COOLDOWN_DAYS);
+        m.st={txt:`Verrouillé — mail du ${frDate(m.lockRef)}`,cls:'lock',urg:-2};
+        lockedCount++;sLocked++;
+        continue;
+      }
+      if(today>addDays(ep.dateObj,EXPIRE_DAYS)){
+        m.state='expired';
+        m.st={txt:'Expiré (délai dépassé)',cls:'grey',urg:-2};
+        expiredCount++;
+        continue;
+      }
+      m.state='open';
+      m.st=mailStatus(m);
+      ancre=new Date(m.date);           // créneau réservé : bloque les épisodes suivants
+      pending.push({ep,m,st:m.st});
+      if(m.st.urg>urgency)urgency=m.st.urg;
+      if(m.st.urg>=4)sUrgent++;else if(m.st.urg===3)sSoon++;
+      if(!nextDue||m.date<nextDue.date)nextDue={date:m.date,off:m.off,ep};
+    }
+
+    totalEps+=epsAsc.length;
+    const episodes=epsAsc.slice().reverse();   // affichage du plus récent au plus ancien
+    results.push({dept,episodes,pending,urgency,nextDue,sentCount,lockedCount,expiredCount,
+                  events:buildEvents(cd),precip:cd.precip,dates:cd.dates,codes:cd.codes,error:cd.error});
   }
+
   document.getElementById('cnt-active').textContent=results.filter(r=>r.pending.length>0).length;
   document.getElementById('s-urgent').textContent=sUrgent;
   document.getElementById('s-soon').textContent=sSoon;
   document.getElementById('s-eps').textContent=totalEps;
   document.getElementById('s-sent').textContent=sSent;
+  document.getElementById('s-locked').textContent=sLocked;
   renderView();
+  if(document.getElementById('plan-box').style.display==='block')buildPlan();
   if(openCode){const r=results.find(x=>x.dept.code===openCode);if(r)showSidePanel(r);}
 }
 
+// ── PLAN DU JOUR ─────────────────────────────────────────────────────────────
+// Ne retient QUE ce qui est actionnable aujourd'hui : envoi dû aujourd'hui ou en retard.
+// Rien de verrouillé, rien d'expiré, rien de futur.
+function planDuJour(){
+  const plan=[];
+  for(const r of results){
+    for(const ep of r.episodes){
+      const m=ep.mailing;
+      if(!m||m.state!=='open')continue;
+      const du=diffDays(today,m.date);
+      if(du>0)continue;
+      plan.push({
+        dept:r.dept.code,
+        nom:r.dept.nom,
+        region:r.dept.region,
+        episode:ep.date,
+        debut:ep.startDate,
+        cumul:Math.round(ep.cumul),
+        fenetre_jours:ep.windowDays,
+        pic24:Math.round(ep.peak24),
+        phenomenes:ep.phenomenes||[],
+        envoi_du:fmtDate(m.date),
+        statut:du<0?'en_retard':'a_faire',
+        retard_jours:du<0?-du:0,
+        cle:m.key
+      });
+    }
+  }
+  plan.sort((a,b)=>a.envoi_du<b.envoi_du?-1:(a.envoi_du>b.envoi_du?1:a.dept.localeCompare(b.dept)));
+  return plan;
+}
+window.planDuJour=planDuJour;   // appelable directement en console ou par un agent
+
+function buildPlan(){
+  lastPlan=planDuJour();
+  const T=document.getElementById('threshold').value;
+  document.getElementById('plan-count').textContent=lastPlan.length?`· ${lastPlan.length} département(s)`:'';
+  document.getElementById('plan-stamp').textContent=`Généré le ${frDate(today)} · seuil ${T} mm sur ${THRESH_WINDOW} j · envoi J+${SEND_OFFSET} · verrou ${COOLDOWN_DAYS} j`;
+  const box=document.getElementById('plan-json');
+  box.textContent=JSON.stringify(lastPlan,null,2);
+  box.setAttribute('data-plan-count',String(lastPlan.length));
+
+  const rows=document.getElementById('plan-rows');
+  if(!lastPlan.length){
+    rows.innerHTML=`<div class="plan-empty">Rien à traiter aujourd'hui. Aucun brouillon à préparer.</div>`;
+    return;
+  }
+  rows.innerHTML=lastPlan.map(p=>{
+    const ph=p.phenomenes.length?` · ${p.phenomenes.join(', ')}`:'';
+    const badge=p.statut==='en_retard'
+      ? `<span class="badge badge-red">En retard de ${p.retard_jours}j</span>`
+      : `<span class="badge badge-orange">À envoyer aujourd'hui</span>`;
+    return `<div class="plan-row">
+      <div class="plan-info">
+        <span class="dept-tag"><span class="dept-num">${p.dept}</span> <b>${p.nom}</b></span> ${badge}
+        <div class="pi-sub">Épisode du ${frDate(p.episode)} · ${p.cumul} mm sur ${p.fenetre_jours} j · pic ${p.pic24} mm/24h${ph}</div>
+      </div>
+      <div class="mail-actions">
+        <button class="mini-btn mini-btn-do" onclick="marquerEnvoye('${p.cle}')">Marquer envoyé</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function showPlan(){
+  if(!Object.keys(cachedData).length){showToast('Chargez d\'abord les données avec « Actualiser »');return;}
+  document.getElementById('plan-box').style.display='block';
+  buildPlan();
+  document.getElementById('plan-box').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function hidePlan(){document.getElementById('plan-box').style.display='none';}
+function copyPlanJson(){
+  const txt=JSON.stringify(lastPlan,null,2);
+  navigator.clipboard.writeText(txt).then(()=>showToast('Plan du jour copié ✓')).catch(()=>showToast('Copie impossible — sélectionnez le bloc à la main'));
+}
+
 // ── COULEURS / BADGES ─────────────────────────────────────────────────────────
-function urgColor(u){
-  if(u>=4)return '#ef4444';
-  if(u===3)return '#f97316';
-  if(u===2)return '#eab308';
-  if(u===-1)return '#9bd3ec';   // épisodes mais tout traité
-  return '#d4ead9';             // aucun épisode
+function urgColorFor(r){
+  if(!r||r.error)return '#e2e8f0';
+  if(!r.episodes.length)return '#d4ead9';       // aucun épisode
+  if(r.pending.length){
+    if(r.urgency>=4)return '#ef4444';
+    if(r.urgency===3)return '#f97316';
+    return '#eab308';
+  }
+  if(r.lockedCount)return '#b8abe8';            // verrou 30 j actif
+  if(r.sentCount)return '#9bd3ec';              // tout traité
+  return '#cbd5e1';                             // expiré / rien d'actionnable
 }
 function deptBadge(r){
   if(r.error)return `<span class="badge badge-grey">Erreur</span>`;
   if(!r.episodes.length)return `<span class="badge badge-green">Aucun épisode</span>`;
-  if(!r.pending.length){
-    if(r.sentCount&&!r.expiredCount)return `<span class="badge badge-blue">Tout traité (${r.episodes.length})</span>`;
-    if(r.expiredCount&&!r.sentCount)return `<span class="badge badge-grey">Expiré</span>`;
-    return `<span class="badge badge-blue">Traité / expiré</span>`;
+  if(r.pending.length){
+    if(r.urgency>=4)return `<span class="badge badge-red">Envoi à faire</span>`;
+    if(r.urgency===3)return `<span class="badge badge-orange">Envoi sous 7j</span>`;
+    return `<span class="badge badge-yellow">Envoi à venir</span>`;
   }
-  if(r.urgency>=4)return `<span class="badge badge-red">Envoi à faire</span>`;
-  if(r.urgency===3)return `<span class="badge badge-orange">Envoi sous 7j</span>`;
-  return `<span class="badge badge-yellow">Envoi à venir</span>`;
+  if(r.lockedCount)return `<span class="badge badge-lock">Verrou 30 j</span>`;
+  if(r.sentCount)return `<span class="badge badge-blue">Tout traité (${r.episodes.length})</span>`;
+  return `<span class="badge badge-grey">Expiré</span>`;
 }
 
 function renderView(){currentTab==='carte'?renderCarte():renderListe()}
@@ -560,21 +722,26 @@ function renderListe(){
   if(!Object.keys(cachedData).length){lv.innerHTML=emptyState();return;}
   const sorted=[...results].sort((a,b)=>{
     if(sortCol==='urgency'){
-      if((b.urgency)!==(a.urgency))return sortDir*((a.urgency)-(b.urgency));
+      if(b.urgency!==a.urgency)return sortDir*(a.urgency-b.urgency);
       const an=a.nextDue?a.nextDue.date.getTime():9e15,bn=b.nextDue?b.nextDue.date.getTime():9e15;
       return an-bn;
     }
     if(sortCol==='dept')return sortDir*(a.dept.nom<b.dept.nom?-1:1);
-    if(sortCol==='eps')return sortDir*((a.episodes.length)-(b.episodes.length));
+    if(sortCol==='region')return sortDir*(a.dept.region<b.dept.region?-1:1);
+    if(sortCol==='eps')return sortDir*(a.episodes.length-b.episodes.length);
     if(sortCol==='last'){const al=a.episodes[0]?a.episodes[0].dateObj.getTime():0,bl=b.episodes[0]?b.episodes[0].dateObj.getTime():0;return sortDir*(al-bl);}
     if(sortCol==='next'){const an=a.nextDue?a.nextDue.date.getTime():9e15,bn=b.nextDue?b.nextDue.date.getTime():9e15;return sortDir*(an-bn);}
     return 0;
   });
   function th(c,l){return `<th onclick="setSortCol('${c}')">${l} ${sortCol===c?(sortDir>0?'↑':'↓'):'↕'}</th>`}
+  const head=`${th('dept','Département')}${th('region','Région')}${th('eps','Épisodes')}${th('last','Dernier épisode')}${th('next','Prochain envoi')}${th('urgency','Statut')}<th>Historique</th>`;
   const rows=sorted.map(r=>{
     const last=r.episodes[0];
     const next=r.nextDue;
-    const nextTxt=next?`J+${next.off} · ${frDate(next.date)}`:(r.episodes.length?'—':'—');
+    const nextTxt=next?`J+${next.off} · ${frDate(next.date)}`:'—';
+    const btn=(r.episodes.length||(r.dates&&r.dates.length))
+      ?`<button class="btn-sm"${r.episodes.length?'':' style="background:var(--slate-light)"'} onclick="event.stopPropagation();showSidePanel(results.find(x=>x.dept.code==='${r.dept.code}'))">${r.episodes.length?(r.pending.length?'Historique':'Voir / annuler'):'Voir'}</button>`
+      :'';
     return `<tr class="${r.episodes.length&&!r.pending.length?'done':''}" onclick="handleRowClick('${r.dept.code}')">
       <td><span class="dept-tag"><span class="dept-num">${r.dept.code}</span> ${r.dept.nom}</span></td>
       <td style="color:var(--slate-light);font-size:12px">${r.dept.region}</td>
@@ -582,12 +749,10 @@ function renderListe(){
       <td>${last?frDate(last.dateObj):'—'}${last?` <span style="color:var(--slate-light);font-size:11px">(${last.cumul.toFixed(0)}mm)</span>`:''}</td>
       <td>${nextTxt}</td>
       <td>${deptBadge(r)}</td>
-      <td>${r.episodes.length?`<button class="btn-sm" onclick="event.stopPropagation();showSidePanel(results.find(x=>x.dept.code==='${r.dept.code}'))">${r.pending.length?'Historique':'Voir / annuler'}</button>`:(r.dates&&r.dates.length?`<button class="btn-sm" style="background:var(--slate-light)" onclick="event.stopPropagation();showSidePanel(results.find(x=>x.dept.code==='${r.dept.code}'))">Voir</button>`:'')}</td>
+      <td>${btn}</td>
     </tr>`;
   }).join('');
-  lv.innerHTML=`<div class="table-wrap fade-in"><table><thead><tr>${th('dept','Département')}${th('eps','Épisodes')}<th>Région</th>${th('last','Dernier épisode')}${th('next','Prochain envoi')}${th('urgency','Statut')}<th>Historique</th></tr></thead><tbody>${rows.replace('<th>Région</th>','')}</tbody></table></div>`;
-  // fix header order
-  lv.querySelector('thead tr').innerHTML=`${th('dept','Département')}<th onclick="setSortCol('dept')">Région</th>${th('eps','Épisodes')}${th('last','Dernier épisode')}${th('next','Prochain envoi')}${th('urgency','Statut')}<th>Historique</th>`;
+  lv.innerHTML=`<div class="table-wrap fade-in"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 function setSortCol(c){if(sortCol===c)sortDir*=-1;else{sortCol=c;sortDir=(c==='urgency'||c==='eps'||c==='last')?-1:1;}renderListe();}
 function handleRowClick(code){const r=results.find(x=>x.dept.code===code);if(r&&((r.dates&&r.dates.length)||r.episodes.length))showSidePanel(r);}
@@ -601,10 +766,10 @@ function renderCarte(){
   for(const dept of DEPTS){
     const c=COORDS[dept.code];if(!c)continue;
     const [cx,cy]=c;const r=byCode[dept.code];
-    const fill=urgColor(r?r.urgency:-2);
+    const fill=urgColorFor(r);
     const rad=r&&r.episodes.length?(10+Math.min(8,r.episodes.length*2.5)):9;
     dots+=`<circle class="dept-shape" data-code="${dept.code}" cx="${cx}" cy="${cy}" r="${rad}" fill="${fill}" opacity="0.94"/>`;
-    dots+=`<text x="${cx}" y="${cy+3.5}" text-anchor="middle" font-size="8" fill="${r&&r.urgency>=3?'#fff':'#1a2c3d'}" font-family="Outfit,sans-serif" font-weight="700" pointer-events="none">${dept.code}</text>`;
+    dots+=`<text x="${cx}" y="${cy+3.5}" text-anchor="middle" font-size="8" fill="${r&&r.pending.length&&r.urgency>=3?'#fff':'#1a2c3d'}" font-family="Outfit,sans-serif" font-weight="700" pointer-events="none">${dept.code}</text>`;
   }
   cv.innerHTML=`<div id="map-wrap" class="fade-in">
     <svg id="france-svg" viewBox="120 90 460 480" xmlns="http://www.w3.org/2000/svg">
@@ -617,6 +782,7 @@ function renderCarte(){
       <span class="legend-item"><span class="legend-dot" style="background:#f97316"></span>Sous 7 jours</span>
       <span class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>À faire / en retard</span>
       <span class="legend-item"><span class="legend-dot" style="background:#9bd3ec"></span>Tout traité</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#b8abe8"></span>Verrou 30 j</span>
     </div>
   </div>`;
   const tt=document.getElementById('tooltip');
@@ -625,7 +791,12 @@ function renderCarte(){
     el.addEventListener('mouseenter',e=>{
       let info=`<b>${r?.dept.nom||''} (${el.dataset.code})</b><br>`;
       if(!r||!r.episodes.length)info+='Aucun épisode';
-      else{info+=`${r.episodes.length} épisode(s)<br>Dernier : ${frDate(r.episodes[0].dateObj)} (${r.episodes[0].cumul.toFixed(0)}mm)<br>`;info+=r.nextDue?`Prochain envoi J+${r.nextDue.off} : ${frDate(r.nextDue.date)}`:'Tous les envois traités';}
+      else{
+        info+=`${r.episodes.length} épisode(s)<br>Dernier : ${frDate(r.episodes[0].dateObj)} (${r.episodes[0].cumul.toFixed(0)}mm)<br>`;
+        if(r.nextDue)info+=`Prochain envoi J+${r.nextDue.off} : ${frDate(r.nextDue.date)}`;
+        else if(r.lockedCount)info+=`Verrou 30 j actif — ${r.lockedCount} envoi(s) bloqué(s)`;
+        else info+='Tous les envois traités';
+      }
       tt.innerHTML=info;tt.style.opacity='1';tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px';
     });
     el.addEventListener('mousemove',e=>{tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px'});
@@ -663,27 +834,27 @@ function showSidePanel(r){
     </div>`;
   }else{
     r.episodes.forEach((ep,idx)=>{
-      const mailsHtml=ep.mailings.map(m=>{
-        const st=m.st;
-        const actions=m.sent
-          ?`<button class="mini-btn mini-btn-undo" onclick="unmarkMail('${m.key}')">↩ Annuler</button>`
-          :m.expired
-            ?`<span style="font-size:11px;color:var(--slate-light)">Abandonné</span>`
-            :`<button class="mini-btn mini-btn-do" onclick="markMail('${m.key}')">Marquer envoyé</button>`;
-        return `<div class="mail-row">
-          <div class="mail-info"><b>J+${m.off}</b> · ${frDate(m.date)}<br><span class="badge badge-${st.cls}" style="margin-top:4px">${st.txt}</span></div>
-          <div class="mail-actions">${actions}</div>
-        </div>`;
-      }).join('');
-      epsHtml+=`<div class="ep-card">
+      const m=ep.mailing;
+      const st=m.st;
+      let actions='';
+      if(m.state==='sent')actions=`<button class="mini-btn mini-btn-undo" onclick="unmarkMail('${m.key}')">↩ Annuler</button>`;
+      else if(m.state==='locked')actions=`<span style="font-size:11px;color:var(--slate-light)">Libre le ${frDate(m.lockUntil)}</span>`;
+      else if(m.state==='expired')actions=`<span style="font-size:11px;color:var(--slate-light)">Abandonné</span>`;
+      else actions=`<button class="mini-btn mini-btn-do" onclick="marquerEnvoye('${m.key}')">Marquer envoyé</button>`;
+      const ph=(ep.phenomenes&&ep.phenomenes.length)?`<div class="ep-meta">Phénomènes : ${ep.phenomenes.join(', ')}</div>`:'';
+      epsHtml+=`<div class="ep-card${m.state==='locked'?' locked':''}">
         <div class="ep-head">
           <div>
             <div class="ep-title">Épisode du ${frDate(ep.dateObj)}</div>
             <div class="ep-meta">${ep.cumul.toFixed(0)} mm cumulés sur ${ep.windowDays} j · pic ${ep.peak24.toFixed(0)} mm/24h</div>
+            ${ph}
           </div>
           <button class="mini-btn mini-btn-copy" onclick="copyEmailDraft('${r.dept.code}',${idx})">📋 Email</button>
         </div>
-        ${mailsHtml}
+        <div class="mail-row">
+          <div class="mail-info"><b>J+${m.off}</b> · ${frDate(m.date)}<br><span class="badge badge-${st.cls}" style="margin-top:4px">${st.txt}</span></div>
+          <div class="mail-actions">${actions}</div>
+        </div>
       </div>`;
     });
   }
@@ -718,15 +889,21 @@ function drawMiniChart(r){
 }
 
 // ── ACTIONS ──────────────────────────────────────────────────────────────────
-function markMail(key){sentStore[key]=fmtDate(today);saveStore();showToast('Envoi marqué comme traité ('+frDate(today)+')');recompute();}
+function marquerEnvoye(key){
+  sentStore[key]=fmtDate(today);saveStore();
+  showToast(`Envoi marqué comme traité (${frDate(today)}) — verrou 30 j armé`);
+  recompute();
+}
+window.marquerEnvoye=marquerEnvoye;
+function markMail(key){marquerEnvoye(key);}   // ancien nom, conservé
 function unmarkMail(key){delete sentStore[key];saveStore();showToast('Statut « envoyé » retiré');recompute();}
+
 function bulkMarkPast(){
   let n=0;
   for(const r of results){
     for(const ep of r.episodes){
-      for(const m of ep.mailings){
-        if(!m.sent&&diffDays(today,m.date)<=0){sentStore[m.key]=fmtDate(m.date);n++;}
-      }
+      const m=ep.mailing;
+      if(m&&m.state==='open'&&diffDays(today,m.date)<=0){sentStore[m.key]=fmtDate(m.date);n++;}
     }
   }
   saveStore();showToast(n?`${n} envoi(s) passé(s) marqués comme traités`:'Aucun envoi passé à traiter');recompute();
@@ -735,7 +912,8 @@ function bulkMarkPast(){
 function copyEmailDraft(code,idx){
   const r=results.find(x=>x.dept.code===code);if(!r)return;
   const ep=r.episodes[idx];if(!ep)return;
-  const txt=`Objet : Suite aux fortes pluies dans votre département — Diagnostic fuite d'eau\n\nBonjour,\n\nSuite aux fortes précipitations relevées sur le département ${r.dept.nom} autour du ${frDate(ep.dateObj)} (${ep.cumul.toFixed(0)} mm cumulés${ep.windowDays>1?` sur ${ep.windowDays} jours`:` en 24h`}), nous souhaitons vous informer que des fuites d'eau peuvent se déclarer dans les semaines suivant de tels épisodes.\n\nax'eau, expert en détection et recherche de fuites d'eau, vous propose un diagnostic sans tranchée, rapide et non destructif.\n\nN'attendez pas que la situation s'aggrave — contactez-nous dès aujourd'hui pour un devis gratuit.\n\nCordialement,\nL'équipe ax'eau\nwww.ax-eau.com`;
+  const ph=(ep.phenomenes&&ep.phenomenes.length)?` Phénomènes relevés : ${ep.phenomenes.join(', ').toLowerCase()}.`:'';
+  const txt=`Objet : Suite aux fortes pluies dans votre département — Diagnostic fuite d'eau\n\nBonjour,\n\nSuite aux fortes précipitations relevées sur le département ${r.dept.nom} autour du ${frDate(ep.dateObj)} (${ep.cumul.toFixed(0)} mm cumulés${ep.windowDays>1?` sur ${ep.windowDays} jours`:` en 24h`}), nous souhaitons vous informer que des infiltrations peuvent se déclarer dans les semaines suivant de tels épisodes.${ph}\n\nax'eau, spécialiste de la recherche de fuites et d'infiltrations, réalise un diagnostic non destructif et vous remet un rapport technique exploitable immédiatement.\n\nCordialement,\nL'équipe ax'eau\nwww.ax-eau.com`;
   navigator.clipboard.writeText(txt).then(()=>showToast('Brouillon copié ✓')).catch(()=>showToast('Copie impossible ici'));
 }
 
