@@ -397,7 +397,10 @@ document.getElementById('pic').addEventListener('input',e=>{document.getElementB
 document.getElementById('depth').addEventListener('change',()=>{majAvertissementProfondeur();cachedData={};fetchAllData()});
 majAvertissementProfondeur();
 
-function fmtDate(d){return d.toISOString().split('T')[0]}
+// Date au format AAAA-MM-JJ en heure LOCALE. toISOString() seul renvoie la date UTC :
+// à minuit heure française (UTC+2 l'été) il renvoyait la veille, décalant d'un jour toutes
+// les dates d'envoi et d'abandon enregistrées, et raccourcissant le verrou d'autant.
+function fmtDate(d){return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().split('T')[0]}
 function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
 function diffDays(a,b){return Math.round((b-a)/86400000)}
 function frDate(s){if(!s)return '—';const d=(s instanceof Date)?s:new Date(s);return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})}
