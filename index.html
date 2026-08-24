@@ -171,11 +171,11 @@ td{padding:13px 16px;white-space:nowrap}
   <div class="ctrl-group" style="min-width:160px">
     <div class="ctrl-label">Profondeur d'analyse</div>
     <select id="depth">
-      <option value="31" selected>1 mois</option>
-      <option value="92">3 mois</option>
+      <option value="31">1 mois</option>
+      <option value="92" selected>3 mois</option>
       <option value="183">6 mois</option>
     </select>
-    <div class="ctrl-sub">Historique remonté pour chaque département</div>
+    <div class="ctrl-sub" id="depth-warn">Historique remonté pour chaque département</div>
   </div>
   <button class="btn-refresh" id="btn-refresh" onclick="fetchAllData(true)">
     <span class="spinner" id="spinner"></span>
@@ -358,11 +358,28 @@ const THRESH_WINDOW=30;   // fenêtre glissante max pour atteindre le seuil, en 
 const EXPIRE_DAYS=30;     // épisode plus vieux que ça et non envoyé : on abandonne
 const COOLDOWN_DAYS=30;   // VERROU : pas deux mails au même département sous 30 jours
 const SEND_OFFSET=7;      // envoi unique à J+7 après la fin de l'épisode
+const MIN_DEPTH=92;       // profondeur minimale pour que le verrou reste fiable (voir ci-dessous)
 const today=new Date();today.setHours(0,0,0,0);
+
+// Le verrou reconstruit l'historique des envois à partir des épisodes VISIBLES dans la
+// fenêtre d'analyse. Si la fenêtre est trop courte, un envoi récent sort du calcul et le
+// verrou saute sans prévenir. En dessous de MIN_DEPTH jours, on avertit à l'écran.
+function profondeurOk(){return parseInt(document.getElementById('depth').value)>=MIN_DEPTH}
+function majAvertissementProfondeur(){
+  const el=document.getElementById('depth-warn');
+  if(profondeurOk()){
+    el.textContent='Historique remonté pour chaque département';
+    el.style.color='';el.style.fontWeight='';
+  }else{
+    el.textContent='⚠ Sous 3 mois, le verrou 30 j peut sauter : un envoi récent sort du calcul.';
+    el.style.color='#dc2626';el.style.fontWeight='700';
+  }
+}
 
 document.getElementById('today-date').textContent=today.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 document.getElementById('threshold').addEventListener('input',e=>{document.getElementById('valThr').textContent=e.target.value;recompute()});
-document.getElementById('depth').addEventListener('change',()=>{cachedData={};fetchAllData()});
+document.getElementById('depth').addEventListener('change',()=>{majAvertissementProfondeur();cachedData={};fetchAllData()});
+majAvertissementProfondeur();
 
 function fmtDate(d){return d.toISOString().split('T')[0]}
 function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
@@ -642,18 +659,23 @@ window.planDuJour=planDuJour;   // appelable directement en console ou par un ag
 function buildPlan(){
   lastPlan=planDuJour();
   const T=document.getElementById('threshold').value;
+  const D=document.getElementById('depth').value;
+  const ok=profondeurOk();
   document.getElementById('plan-count').textContent=lastPlan.length?`· ${lastPlan.length} département(s)`:'';
-  document.getElementById('plan-stamp').textContent=`Généré le ${frDate(today)} · seuil ${T} mm sur ${THRESH_WINDOW} j · envoi J+${SEND_OFFSET} · verrou ${COOLDOWN_DAYS} j`;
+  document.getElementById('plan-stamp').textContent=
+    `Généré le ${frDate(today)} · seuil ${T} mm sur ${THRESH_WINDOW} j · envoi J+${SEND_OFFSET} · verrou ${COOLDOWN_DAYS} j · profondeur ${D} j${ok?'':' ⚠ INSUFFISANTE'}`;
   const box=document.getElementById('plan-json');
   box.textContent=JSON.stringify(lastPlan,null,2);
   box.setAttribute('data-plan-count',String(lastPlan.length));
+  box.setAttribute('data-profondeur-ok',ok?'oui':'non');
 
   const rows=document.getElementById('plan-rows');
+  const alerte=ok?'':`<div style="background:#fee2e2;color:#991b1b;border-radius:12px;padding:12px 14px;font-size:12.5px;font-weight:600;margin-bottom:14px">⚠ Profondeur d'analyse à ${D} jours : le verrou 30 j n'est pas fiable. Repassez sur 3 mois avant de préparer un envoi.</div>`;
   if(!lastPlan.length){
-    rows.innerHTML=`<div class="plan-empty">Rien à traiter aujourd'hui. Aucun brouillon à préparer.</div>`;
+    rows.innerHTML=alerte+`<div class="plan-empty">Rien à traiter aujourd'hui. Aucun brouillon à préparer.</div>`;
     return;
   }
-  rows.innerHTML=lastPlan.map(p=>{
+  rows.innerHTML=alerte+lastPlan.map(p=>{
     const ph=p.phenomenes.length?` · ${p.phenomenes.join(', ')}`:'';
     const badge=p.statut==='en_retard'
       ? `<span class="badge badge-red">En retard de ${p.retard_jours}j</span>`
