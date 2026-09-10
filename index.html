@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ax'eau — Veille Pluviométrique</title>
+<title>Ax'eau — Veille pluviométrique v2</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -12,242 +12,186 @@
   --cyan:#00b4d8;--cyan-light:#caf0f8;
   --ink:#0f1c2e;--slate:#3a4a5e;--slate-light:#8395a8;--line:#e7eef5;
   --white:#fff;--bg:#f4f8fc;
-  --green:#22c55e;--yellow:#eab308;--orange:#f97316;--red:#ef4444;--lock:#8b7fd4;
-  --r:18px;--shadow:0 10px 40px -12px rgba(1,58,94,0.18);--shadow-sm:0 2px 12px rgba(1,58,94,0.08);
+  --green:#22c55e;--yellow:#eab308;--orange:#f97316;--red:#ef4444;--lock:#8b7fd4;--grey:#cbd5e1;
+  --serieA:#0ea5e9;--serieB:#7c3aed;
+  --r:18px;--shadow:0 10px 40px -12px rgba(1,58,94,.18);--shadow-sm:0 2px 12px rgba(1,58,94,.08);
 }
 body{font-family:'Outfit',sans-serif;background:
-  radial-gradient(1200px 600px at 100% -10%,rgba(0,180,216,0.12),transparent),
-  radial-gradient(900px 500px at -10% 110%,rgba(0,102,161,0.10),transparent),var(--bg);
-  color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+  radial-gradient(1200px 600px at 100% -10%,rgba(0,180,216,.12),transparent),
+  radial-gradient(900px 500px at -10% 110%,rgba(0,102,161,.10),transparent),var(--bg);
+  color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:60px}
+
 .header{padding:22px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:14px}
-.logo-mark{filter:drop-shadow(0 6px 14px rgba(0,102,161,0.35))}
 .logo-text h1{font-size:26px;font-weight:800;letter-spacing:-1px;background:linear-gradient(120deg,var(--blue),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .logo-text p{font-size:12px;color:var(--slate-light);font-weight:500;letter-spacing:.3px}
 .header-right{text-align:right}
 .header-right .date{color:var(--slate);font-size:14px;font-weight:600;text-transform:capitalize}
 .header-right .subtitle{color:var(--slate-light);font-size:11px;margin-top:2px}
-.controls{margin:0 24px;background:rgba(255,255,255,0.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.6);border-radius:var(--r);padding:18px 24px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:26px;position:sticky;top:14px;z-index:100;box-shadow:var(--shadow)}
-.ctrl-group{display:flex;flex-direction:column;gap:7px;min-width:200px}
-.ctrl-label{font-size:11px;font-weight:700;color:var(--slate-light);text-transform:uppercase;letter-spacing:.7px;display:flex;justify-content:space-between;align-items:center}
+
+.controls{margin:0 24px;background:rgba(255,255,255,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.6);border-radius:var(--r);padding:18px 24px;display:flex;flex-wrap:wrap;
+  align-items:flex-end;gap:26px;position:sticky;top:14px;z-index:100;box-shadow:var(--shadow)}
+.ctrl-group{display:flex;flex-direction:column;gap:7px;min-width:190px}
+.ctrl-label{font-size:11px;font-weight:700;color:var(--slate-light);text-transform:uppercase;letter-spacing:.7px;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .ctrl-label .pill{background:var(--blue);color:#fff;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700;letter-spacing:0}
+.ctrl-label .pill.b{background:var(--serieB)}
 .ctrl-sub{font-size:10px;color:var(--slate-light);font-weight:400;margin-top:-3px}
 .slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;background:var(--line);outline:none;cursor:pointer}
-.slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--blue);box-shadow:0 2px 8px rgba(0,102,161,0.4);cursor:pointer;transition:transform .15s}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--blue);box-shadow:0 2px 8px rgba(0,102,161,.4);cursor:pointer;transition:transform .15s}
 .slider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.slider.b::-webkit-slider-thumb{border-color:var(--serieB)}
 .slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--blue);cursor:pointer}
-select{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;border:1.5px solid var(--line);border-radius:12px;padding:9px 14px;color:var(--slate);outline:none;cursor:pointer;background:#fff;transition:border-color .2s}
+select{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;border:1.5px solid var(--line);border-radius:12px;padding:9px 14px;color:var(--slate);outline:none;cursor:pointer;background:#fff}
 select:focus,select:hover{border-color:var(--blue)}
-.btn-refresh{background:linear-gradient(120deg,var(--blue),var(--cyan));color:#fff;border:none;border-radius:14px;padding:13px 22px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:9px;box-shadow:0 8px 20px -6px rgba(0,102,161,0.6);transition:transform .12s,box-shadow .2s}
-.btn-refresh:hover{transform:translateY(-2px)}
-.btn-refresh:active{transform:translateY(0)}
-.btn-plan{background:linear-gradient(120deg,#1D2E4D,#3f5c8c)}
-.spinner{width:15px;height:15px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
-.spinning .spinner{display:block}
-.counter{margin-left:auto;background:linear-gradient(135deg,var(--blue-dark),var(--blue));color:#fff;border-radius:14px;padding:12px 20px;text-align:center;box-shadow:var(--shadow-sm)}
-.counter .num{font-size:30px;font-weight:800;line-height:1}
-.counter .lbl{font-size:10px;opacity:.8;font-weight:500;margin-top:3px;letter-spacing:.3px}
-.stat-strip{display:flex;gap:14px;margin:18px 24px 0;flex-wrap:wrap}
-.stat-card{flex:1;min-width:150px;background:#fff;border-radius:16px;padding:16px 18px;box-shadow:var(--shadow-sm);border:1px solid var(--line);display:flex;align-items:center;gap:14px;transition:transform .2s}
-.stat-card:hover{transform:translateY(-3px)}
-.stat-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.stat-meta .v{font-size:22px;font-weight:800;line-height:1}
-.stat-meta .k{font-size:11px;color:var(--slate-light);font-weight:500;margin-top:2px}
-.toolbar{display:flex;align-items:center;gap:14px;margin:18px 24px 0;flex-wrap:wrap}
-.tabs{display:flex;gap:8px}
-.tab{padding:10px 20px;font-size:14px;font-weight:600;color:var(--slate-light);cursor:pointer;border-radius:12px;transition:all .2s;display:flex;align-items:center;gap:7px}
-.tab.active{color:var(--blue);background:#fff;box-shadow:var(--shadow-sm)}
-.tab:hover:not(.active){color:var(--slate)}
-.link-btn{margin-left:auto;background:none;border:1px solid var(--line);color:var(--slate);border-radius:10px;padding:8px 14px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
-.link-btn:hover{border-color:var(--blue);color:var(--blue)}
-.main-layout{display:flex;gap:0;min-height:calc(100vh - 360px)}
-.view-area{flex:1;padding:18px 24px 40px;overflow:auto}
-.side-panel{width:400px;flex-shrink:0;transition:width .35s cubic-bezier(.4,0,.2,1);overflow:hidden}
-.side-panel.hidden{width:0}
-.side-inner{width:400px;margin:18px 24px 24px 0;background:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
-.progress-wrap{padding:8px 0 16px}
-.progress-bar-outer{background:var(--line);border-radius:99px;height:8px;overflow:hidden;margin-top:8px}
-.progress-bar-inner{background:linear-gradient(90deg,var(--blue),var(--cyan));height:100%;border-radius:99px;transition:width .3s}
-.progress-label{font-size:12px;color:var(--slate-light);margin-top:6px;font-weight:500}
-.table-wrap{overflow-x:auto;background:#fff;border-radius:var(--r);box-shadow:var(--shadow-sm);border:1px solid var(--line)}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-thead th{background:#fafcfe;color:var(--slate-light);font-weight:600;padding:14px 16px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--line)}
-thead th:hover{color:var(--blue)}
-tbody tr{border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
-tbody tr:last-child{border-bottom:none}
-tbody tr:hover{background:var(--blue-light)}
-tbody tr.done{background:#fafcfe}
-tbody tr.done td:not(:last-child){color:var(--slate-light)}
-td{padding:13px 16px;white-space:nowrap}
-.dept-tag{display:inline-flex;align-items:center;gap:8px}
-.dept-num{background:var(--ink);color:#fff;border-radius:8px;padding:3px 8px;font-size:11px;font-weight:700;min-width:30px;text-align:center}
-.mm-val{font-weight:700;font-variant-numeric:tabular-nums}
-.badge{display:inline-block;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700}
-.badge-red{background:#fee2e2;color:#dc2626}
-.badge-orange{background:#ffedd5;color:#ea580c}
-.badge-yellow{background:#fef9c3;color:#ca8a04}
-.badge-green{background:#dcfce7;color:#16a34a}
-.badge-grey{background:#eef2f6;color:#64748b}
-.badge-blue{background:#e0f2fe;color:#0369a1}
-.badge-lock{background:#ede9fe;color:#6d4fc4}
-.btn-sm{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .2s}
-.btn-sm:hover{background:var(--blue-dark)}
-#map-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--shadow-sm);border:1px solid var(--line);padding:18px}
-#france-svg{width:100%;height:auto;display:block;max-height:72vh}
-.dept-shape{cursor:pointer;stroke:#fff;stroke-width:1.2;transition:fill .3s,opacity .2s,transform .15s;transform-origin:center;transform-box:fill-box}
-.dept-shape:hover{opacity:.82;stroke:var(--blue);stroke-width:2;transform:scale(1.06)}
-.map-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:12px;font-weight:600;color:var(--slate)}
-.legend-item{display:flex;align-items:center;gap:6px}
-.legend-dot{width:14px;height:14px;border-radius:5px}
-#tooltip{position:fixed;background:rgba(15,28,46,0.96);color:#fff;padding:12px 15px;border-radius:12px;font-size:12px;pointer-events:none;z-index:999;opacity:0;transition:opacity .15s;max-width:250px;line-height:1.7;box-shadow:0 8px 24px rgba(0,0,0,0.35)}
-.sp-header{background:linear-gradient(135deg,var(--blue),var(--cyan));padding:22px;color:#fff;position:relative}
-.sp-header h2{font-size:19px;font-weight:800}
-.sp-header p{font-size:12px;opacity:.85;margin-top:4px}
-.sp-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.22);border:none;color:#fff;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s}
-.sp-close:hover{background:rgba(255,255,255,.4)}
-.sp-body{padding:20px;max-height:calc(100vh - 200px);overflow-y:auto}
-.ep-card{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;background:#fafcfe}
-.ep-card.locked{background:#f8f6ff;border-color:#e0d8fb}
-.ep-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
-.ep-title{font-size:15px;font-weight:800;color:var(--ink)}
-.ep-meta{font-size:12px;color:var(--slate-light);margin-top:3px;line-height:1.5}
-.mail-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px dashed var(--line)}
-.mail-info{font-size:12.5px}
-.mail-info b{font-weight:700}
-.mail-actions{display:flex;gap:6px;flex-shrink:0}
-.mini-btn{border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
-.mini-btn-do{background:var(--blue);color:#fff}
-.mini-btn-do:hover{background:var(--blue-dark)}
-.mini-btn-undo{background:var(--bg);color:var(--slate);border:1px solid var(--line)}
-.mini-btn-undo:hover{background:var(--line)}
-.mini-btn-copy{background:var(--cyan-light);color:var(--blue)}
-.mini-btn-copy:hover{background:#a5e8f5}
-.empty{text-align:center;padding:80px 20px;color:var(--slate-light)}
-.empty .big{font-size:16px;font-weight:700;color:var(--slate);margin-top:14px}
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--ink);color:#fff;padding:14px 24px;border-radius:14px;font-size:13.5px;font-weight:600;z-index:9999;opacity:0;transition:all .3s;box-shadow:0 12px 30px rgba(0,0,0,0.3)}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-/* ── Panneau Plan du jour ─────────────────────────────────────────────── */
-#plan-box{display:none;margin:18px 24px 0;background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);overflow:hidden}
-#plan-box .pb-head{background:linear-gradient(120deg,#1D2E4D,#3f5c8c);color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-#plan-box .pb-head h3{font-size:16px;font-weight:800}
-#plan-box .pb-head p{font-size:11.5px;opacity:.82;margin-top:3px}
-#plan-box .pb-actions{display:flex;gap:8px}
-#plan-box .pb-body{padding:18px 20px}
-.plan-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
-.plan-row:last-of-type{border-bottom:none}
-.plan-info{font-size:13px;line-height:1.6}
-.plan-info .pi-sub{font-size:11.5px;color:var(--slate-light)}
-#plan-json{background:#0f1c2e;color:#8ee6c8;border-radius:12px;padding:14px 16px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;max-height:340px;overflow:auto;margin-top:14px;user-select:all}
-.plan-empty{font-size:13.5px;color:var(--slate);font-weight:600;padding:6px 0}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.fade-in{animation:fadeIn .45s ease forwards}
-@media(max-width:920px){.side-inner{width:100%;margin:18px 24px}.side-panel{width:0}}
+.btn{font-family:'Outfit',sans-serif;background:var(--blue);color:#fff;border:0;border-radius:12px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:var(--shadow-sm)}
+.btn:hover{background:var(--blue-dark)}
+.btn.ghost{background:#fff;color:var(--blue);border:1.5px solid var(--line)}
+.btn.spinning{opacity:.55;pointer-events:none}
+.btn-sm{font-family:'Outfit',sans-serif;background:#eef3f8;border:1px solid #cfdce8;color:var(--blue-dark);padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer}
+.btn-sm:hover{background:#dfeaf5}
+
+#progress-wrap{margin:14px 24px 0;display:none}
+#progress-track{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+#progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .25s}
+#progress-label{font-size:12px;color:var(--slate-light);margin-top:6px;font-weight:500}
+
+.banner{margin:16px 24px 0;padding:12px 18px;border-radius:14px;font-size:13px;font-weight:600;display:none}
+.banner.warn{background:#fef3c7;color:#92400e;border:1px solid #fde68a;display:block}
+.banner.err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;display:block}
+.banner.ok{background:#dcfce7;color:#166534;border:1px solid #bbf7d0;display:block}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:18px 24px 0}
+.kpi{background:#fff;border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow-sm);border:1px solid var(--line)}
+.kpi .n{font-size:30px;font-weight:800;line-height:1;letter-spacing:-1px}
+.kpi .l{font-size:11px;color:var(--slate-light);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:7px}
+
+.tabs{display:flex;gap:6px;margin:22px 24px 0;flex-wrap:wrap}
+.tab{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;color:var(--slate);cursor:pointer;background:rgba(255,255,255,.6);border:1px solid transparent;user-select:none}
+.tab:hover{background:#fff}
+.tab.active{background:var(--blue);color:#fff;box-shadow:var(--shadow-sm)}
+
+.panel{margin:16px 24px 0;background:#fff;border-radius:var(--r);box-shadow:var(--shadow-sm);border:1px solid var(--line);overflow:hidden}
+.panel-head{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.panel-head h2{font-size:16px;font-weight:700}
+.panel-head .sub{font-size:12px;color:var(--slate-light);font-weight:500;margin-top:2px}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:11px 14px;font-size:10.5px;font-weight:700;color:var(--slate-light);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--line);white-space:nowrap;background:#fbfdff}
+td{padding:11px 14px;border-bottom:1px solid #f2f7fb;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fbfdff}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+th.num{text-align:right}
+
+.chip{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+.chip.A{background:#e0f2fe;color:#075985}
+.chip.B{background:#ede9fe;color:#5b21b6}
+.chip.m1{background:#e0f2fe;color:#075985}
+.chip.m2{background:#fef3c7;color:#92400e}
+.st{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px}
+.dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.code{font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums}
+.muted{color:var(--slate-light);font-weight:500}
+.empty{padding:52px 20px;text-align:center;color:var(--slate-light)}
+.empty .big{font-size:15px;font-weight:600;margin-top:12px}
+
+#france-svg{width:100%;height:auto;display:block;max-height:70vh}
+.map-legend{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:10px 20px 22px;font-size:12px;color:var(--slate);font-weight:600}
+.legend-item{display:flex;align-items:center;gap:7px}
+.legend-dot{width:11px;height:11px;border-radius:50%}
+
+.simu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;padding:20px 22px}
+.simu-card{border:1px solid var(--line);border-radius:14px;padding:16px}
+.simu-card .n{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.simu-card .l{font-size:11px;color:var(--slate-light);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:6px}
+.simu-card .d{font-size:12px;color:var(--slate);margin-top:8px;line-height:1.5}
+.bars{display:flex;align-items:flex-end;gap:5px;height:110px;padding:20px 22px 0}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bar{width:100%;background:linear-gradient(180deg,var(--cyan),var(--blue));border-radius:5px 5px 0 0;min-height:2px}
+.bar-lab{font-size:9.5px;color:var(--slate-light);font-weight:600}
+.bar-val{font-size:10px;font-weight:700;color:var(--slate)}
+
+.foot{margin:24px;font-size:11.5px;color:var(--slate-light);line-height:1.7}
+code{background:#eef3f8;padding:1px 6px;border-radius:5px;font-size:11.5px}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="logo">
-    <svg class="logo-mark" width="46" height="46" viewBox="0 0 44 44" fill="none">
-      <path d="M22 4C22 4 10 18 10 26C10 32.627 15.373 38 22 38C28.627 38 34 32.627 34 26C34 18 22 4 22 4Z" fill="url(#dg)"/>
-      <path d="M16 27C16 27 18 31 22 31" stroke="rgba(255,255,255,0.65)" stroke-width="1.6" stroke-linecap="round"/>
-      <defs><linearGradient id="dg" x1="22" y1="4" x2="22" y2="38" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#0066A1"/></linearGradient></defs>
+    <svg width="46" height="46" viewBox="0 0 44 44" fill="none" style="filter:drop-shadow(0 6px 14px rgba(0,102,161,.35))">
+      <path d="M22 4C22 4 8 19 8 27a14 14 0 0 0 28 0C36 19 22 4 22 4z" fill="url(#g)"/>
+      <defs><linearGradient id="g" x1="8" y1="4" x2="36" y2="41"><stop stop-color="#00b4d8"/><stop offset="1" stop-color="#0066A1"/></linearGradient></defs>
     </svg>
-    <div class="logo-text"><h1>ax'eau</h1><p>VEILLE PLUVIOMÉTRIQUE</p></div>
+    <div class="logo-text">
+      <h1>Veille pluviométrique</h1>
+      <p>Ax'eau · deux séries · séquence à deux mails</p>
+    </div>
   </div>
   <div class="header-right">
-    <div class="date" id="today-date"></div>
-    <div class="subtitle">Envoi unique à J+7 · un seul mail par département tous les 30 jours</div>
+    <div class="date" id="today-date">—</div>
+    <div class="subtitle" id="etat-src">état non chargé</div>
   </div>
 </div>
 
 <div class="controls">
   <div class="ctrl-group">
-    <div class="ctrl-label">Seuil de forte pluie <span class="pill"><span id="valThr">90</span> mm</span></div>
-    <input type="range" class="slider" id="threshold" min="20" max="200" value="90" step="5">
-    <div class="ctrl-sub">Cumul atteint sur 1 à 30 jours glissants (ou en un seul jour)</div>
+    <div class="ctrl-label"><span>Série A · pic 24 h</span><span class="pill" id="valPic">30</span></div>
+    <input type="range" class="slider" id="pic" min="10" max="80" step="1" value="30">
+    <div class="ctrl-sub">un seul jour à ce niveau suffit</div>
   </div>
   <div class="ctrl-group">
-    <div class="ctrl-label">Pic minimum en 24 h <span class="pill"><span id="valPic">30</span> mm</span></div>
-    <input type="range" class="slider" id="pic" min="0" max="80" value="30" step="5">
-    <div class="ctrl-sub">Au moins un jour à ce niveau dans la fenêtre, sinon ce n'est pas un épisode</div>
+    <div class="ctrl-label"><span>Série B · jour de pluie</span><span class="pill b" id="valSeuil">1</span></div>
+    <input type="range" class="slider b" id="seuilJour" min="0.1" max="5" step="0.1" value="1">
+    <div class="ctrl-sub">mm à partir desquels un jour compte</div>
   </div>
-  <div class="ctrl-group" style="min-width:160px">
-    <div class="ctrl-label">Profondeur d'analyse</div>
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>Série B · nb de jours</span><span class="pill b" id="valNb">15</span></div>
+    <input type="range" class="slider b" id="nbJours" min="5" max="25" step="1" value="15">
+    <div class="ctrl-sub">sur une fenêtre glissante de 30 j</div>
+  </div>
+  <div class="ctrl-group" style="min-width:150px">
+    <div class="ctrl-label"><span>Profondeur</span></div>
     <select id="depth">
-      <option value="31">1 mois</option>
-      <option value="92" selected>3 mois</option>
-      <option value="183">6 mois</option>
+      <option value="92">3 mois</option>
+      <option value="180">6 mois</option>
+      <option value="365">12 mois</option>
     </select>
-    <div class="ctrl-sub" id="depth-warn">Historique remonté pour chaque département</div>
+    <div class="ctrl-sub" id="depth-warn">—</div>
   </div>
-  <button class="btn-refresh" id="btn-refresh" onclick="fetchAllData(true)">
-    <span class="spinner" id="spinner"></span>
-    <span>Actualiser</span>
-  </button>
-  <button class="btn-refresh btn-plan" id="btn-plan" onclick="showPlan()">📋 Plan du jour</button>
-  <button class="btn-refresh" style="background:var(--ink)" onclick="testApi()">🔧 Test</button>
-  <div class="counter"><div class="num" id="cnt-active">—</div><div class="lbl">DÉPT. AVEC ENVOI À FAIRE</div></div>
-</div>
-
-<div id="diag" style="display:none;margin:14px 24px 0;background:#0f1c2e;color:#7fffd4;border-radius:14px;padding:16px 18px;font-family:monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:240px;overflow:auto"></div>
-
-<!-- ── PLAN DU JOUR ──────────────────────────────────────────────────── -->
-<div id="plan-box">
-  <div class="pb-head">
-    <div>
-      <h3>Plan du jour <span id="plan-count" style="font-weight:600;opacity:.8"></span></h3>
-      <p id="plan-stamp"></p>
-    </div>
-    <div class="pb-actions">
-      <button class="btn-sm" style="background:rgba(255,255,255,.2)" onclick="copyPlanJson()">Copier le JSON</button>
-      <button class="btn-sm" style="background:rgba(255,255,255,.2)" onclick="abandonnerPlan()">Tout abandonner</button>
-      <button class="btn-sm" style="background:rgba(255,255,255,.2)" onclick="hidePlan()">Fermer</button>
-    </div>
-  </div>
-  <div class="pb-body">
-    <div id="plan-rows"></div>
-    <pre id="plan-json" data-plan-count="0">[]</pre>
+  <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:2px">
+    <button class="btn" id="btn-refresh" onclick="chargerTout(true)">Actualiser</button>
+    <button class="btn ghost" onclick="reinit()">Réglages par défaut</button>
   </div>
 </div>
 
-<div class="stat-strip" id="stat-strip">
-  <div class="stat-card"><div class="stat-ico" style="background:#fee2e2;color:#dc2626">📮</div><div class="stat-meta"><div class="v" id="s-urgent">—</div><div class="k">Envois à faire / en retard</div></div></div>
-  <div class="stat-card"><div class="stat-ico" style="background:#ffedd5;color:#ea580c">🗓</div><div class="stat-meta"><div class="v" id="s-soon">—</div><div class="k">Envois dans les 7 jours</div></div></div>
-  <div class="stat-card"><div class="stat-ico" style="background:#e0f2fe;color:#0369a1">🌧</div><div class="stat-meta"><div class="v" id="s-eps">—</div><div class="k">Épisodes détectés</div></div></div>
-  <div class="stat-card"><div class="stat-ico" style="background:#dcfce7;color:#16a34a">✓</div><div class="stat-meta"><div class="v" id="s-sent">—</div><div class="k">Envois déjà traités</div></div></div>
-  <div class="stat-card"><div class="stat-ico" style="background:#ede9fe;color:#6d4fc4">🔒</div><div class="stat-meta"><div class="v" id="s-locked">—</div><div class="k">Bloqués par le verrou 30 j</div></div></div>
-  <div class="stat-card"><div class="stat-ico" style="background:#f1f5f9;color:#64748b">🚫</div><div class="stat-meta"><div class="v" id="s-abandon">—</div><div class="k">Abandonnés</div></div></div>
+<div id="progress-wrap">
+  <div id="progress-track"><div id="progress-bar"></div></div>
+  <div id="progress-label"></div>
 </div>
 
-<div class="toolbar">
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab('liste')">📋 Liste</div>
-    <div class="tab" onclick="switchTab('carte')">🗺 Carte</div>
-  </div>
-  <button class="link-btn" onclick="bulkMarkPast()">✓ Marquer tous les envois passés comme traités</button>
+<div class="banner" id="banner"></div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="tabs">
+  <div class="tab active" data-t="afaire" onclick="onglet('afaire')">À faire</div>
+  <div class="tab" data-t="sequences" onclick="onglet('sequences')">Séquences en cours</div>
+  <div class="tab" data-t="carte" onclick="onglet('carte')">Carte</div>
+  <div class="tab" data-t="historique" onclick="onglet('historique')">Historique &amp; performance</div>
+  <div class="tab" data-t="simulation" onclick="onglet('simulation')">Simulation</div>
 </div>
 
-<div class="main-layout">
-  <div class="view-area" id="view-area">
-    <div class="progress-wrap" id="progress-wrap" style="display:none">
-      <div style="font-size:13px;font-weight:600;color:var(--slate)">Chargement des données météo…</div>
-      <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar" style="width:0%"></div></div>
-      <div class="progress-label" id="progress-label">0 / 96 départements</div>
-    </div>
-    <div id="liste-view"></div>
-    <div id="carte-view" style="display:none"></div>
-  </div>
-  <div class="side-panel hidden" id="side-panel"></div>
+<div id="vue"></div>
+
+<div class="foot">
+  Détection identique à <code>moteur.py</code>. Cette page ne pilote rien : l'avancement des séquences et les
+  statistiques viennent de <code>etat.json</code>, écrit par la tâche planifiée. Aucune clé API n'est présente
+  dans cette page. Source météo : <code>historical-forecast-api.open-meteo.com</code>.
 </div>
 
-<div id="tooltip"></div>
-<div class="toast" id="toast"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-// ── DÉPARTEMENTS ─────────────────────────────────────────────────────────────
 const DEPTS=[
   {code:"01",nom:"Ain",pref:"Bourg-en-Bresse",lat:46.2050,lon:5.2277,region:"Auvergne-Rhône-Alpes"},
   {code:"02",nom:"Aisne",pref:"Laon",lat:49.5644,lon:3.6244,region:"Hauts-de-France"},
@@ -350,678 +294,417 @@ const COORDS={
   "01":[492,310],"02":[370,175],"03":[385,335],"04":[510,430],"05":[520,420],"06":[540,450],"07":[470,390],"08":[395,155],"09":[390,490],"10":[385,230],"11":[415,490],"12":[420,420],"13":[480,480],"14":[260,165],"15":[415,380],"16":[295,365],"17":[265,365],"18":[375,290],"19":[355,380],"2A":[545,535],"2B":[555,510],"21":[435,270],"22":[185,195],"23":[355,345],"24":[315,395],"25":[490,270],"26":[480,400],"27":[285,185],"28":[305,235],"29":[150,215],"30":[455,455],"31":[370,480],"32":[345,465],"33":[280,415],"34":[440,470],"35":[220,230],"36":[340,305],"37":[305,280],"38":[490,370],"39":[460,285],"40":[290,455],"41":[325,270],"42":[455,350],"43":[450,380],"44":[240,280],"45":[345,255],"46":[375,420],"47":[320,430],"48":[440,425],"49":[270,275],"50":[225,170],"51":[385,205],"52":[430,230],"53":[255,245],"54":[470,195],"55":[430,195],"56":[200,250],"57":[490,185],"58":[415,285],"59":[345,120],"60":[330,178],"61":[270,215],"62":[325,125],"63":[420,358],"64":[295,490],"65":[330,490],"66":[400,505],"67":[510,200],"68":[520,225],"69":[465,335],"70":[475,250],"71":[450,305],"72":[285,250],"73":[510,345],"74":[520,325],"75":[348,195],"76":[290,160],"77":[362,212],"78":[322,200],"79":[285,315],"80":[330,152],"81":[400,455],"82":[370,448],"83":[510,470],"84":[487,452],"85":[250,310],"86":[305,325],"87":[330,360],"88":[475,220],"89":[395,255],"90":[500,248],"91":[342,213],"92":[336,200],"93":[356,196],"94":[352,210],"95":[336,188]
 };
 
-// ── STORAGE (persistance navigateur) ─────────────────────────────────────────
-const STORE_KEY='axeau_mailings_v1';
-const ABANDON_KEY='axeau_abandons_v1';
-let sentStore={};      // "code|episodeDateISO|J7" -> date d'envoi ISO
-let abandonStore={};   // "code|episodeDateISO|J7" -> date d'abandon ISO
-function loadStore(){
-  try{const s=localStorage.getItem(STORE_KEY);sentStore=s?JSON.parse(s):{};}catch(e){sentStore={};}
-  try{const a=localStorage.getItem(ABANDON_KEY);abandonStore=a?JSON.parse(a):{};}catch(e){abandonStore={};}
-}
-function saveStore(){
-  try{localStorage.setItem(STORE_KEY,JSON.stringify(sentStore));}catch(e){}
-  try{localStorage.setItem(ABANDON_KEY,JSON.stringify(abandonStore));}catch(e){}
-}
-loadStore();
+// ───────────────────────────────────────────────────────────── paramètres
+const FENETRE=30, OFFSET_1=7, ECART_2=14, SILENCE=30, EXPIRATION=21;
+const ETAT_URL='./etat.json';
 
-// ── STATE ────────────────────────────────────────────────────────────────────
-let cachedData={},results=[];
-let currentTab='liste',sortCol='urgency',sortDir=-1,miniChart=null,openCode=null;
-let lastPlan=[];
-const THRESH_WINDOW=30;   // fenêtre glissante max pour atteindre le seuil, en jours
-const EXPIRE_DAYS=30;     // épisode plus vieux que ça et non envoyé : on abandonne
-const COOLDOWN_DAYS=30;   // VERROU : pas deux mails au même département sous 30 jours
-const SEND_OFFSET=7;      // envoi unique à J+7 après la fin de l'épisode
-const MIN_DEPTH=92;       // profondeur minimale pour que le verrou reste fiable (voir ci-dessous)
-const today=new Date();today.setHours(0,0,0,0);
+let PIC=30, SEUIL_JOUR=1, NB_JOURS=15;
+let meteo={}, etat={sequences:{},campagnes:{},detection_cron:null}, faits=[], tab='afaire';
 
-// Le verrou reconstruit l'historique des envois à partir des épisodes VISIBLES dans la
-// fenêtre d'analyse. Si la fenêtre est trop courte, un envoi récent sort du calcul et le
-// verrou saute sans prévenir. En dessous de MIN_DEPTH jours, on avertit à l'écran.
-function profondeurOk(){return parseInt(document.getElementById('depth').value)>=MIN_DEPTH}
-function majAvertissementProfondeur(){
-  const el=document.getElementById('depth-warn');
-  if(profondeurOk()){
-    el.textContent='Historique remonté pour chaque département';
-    el.style.color='';el.style.fontWeight='';
-  }else{
-    el.textContent='⚠ Sous 3 mois, le verrou 30 j peut sauter : un envoi récent sort du calcul.';
-    el.style.color='#dc2626';el.style.fontWeight='700';
-  }
+const aujourdhui=new Date(); aujourdhui.setHours(0,0,0,0);
+const fmt=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().split('T')[0];
+const plus=(d,n)=>{const r=new Date(d);r.setDate(r.getDate()+n);return r};
+const jours=d=>Math.round((d-aujourdhui)/864e5);
+const iso=s=>{const [a,m,j]=s.split('-').map(Number);return new Date(a,m-1,j)};
+const fr=s=>!s?'—':iso(s).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});
+const nb=n=>(n==null?'—':n.toLocaleString('fr-FR'));
+const pct=(a,b)=>(!b?'—':(100*a/b).toFixed(1).replace('.',',')+' %');
+
+document.getElementById('today-date').textContent=
+  aujourdhui.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// ───────────────────────────────────────────────────────────── contrôles
+function lireControles(){
+  PIC=parseFloat(document.getElementById('pic').value);
+  SEUIL_JOUR=parseFloat(document.getElementById('seuilJour').value);
+  NB_JOURS=parseInt(document.getElementById('nbJours').value);
+  document.getElementById('valPic').textContent=PIC;
+  document.getElementById('valSeuil').textContent=String(SEUIL_JOUR).replace('.',',');
+  document.getElementById('valNb').textContent=NB_JOURS;
+}
+['pic','seuilJour','nbJours'].forEach(id=>
+  document.getElementById(id).addEventListener('input',()=>{lireControles();recalculer()}));
+document.getElementById('depth').addEventListener('change',()=>{meteo={};chargerTout(true)});
+function reinit(){
+  document.getElementById('pic').value=30;
+  document.getElementById('seuilJour').value=1;
+  document.getElementById('nbJours').value=15;
+  lireControles();recalculer();
 }
 
-document.getElementById('today-date').textContent=today.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-document.getElementById('threshold').addEventListener('input',e=>{document.getElementById('valThr').textContent=e.target.value;recompute()});
-document.getElementById('pic').addEventListener('input',e=>{document.getElementById('valPic').textContent=e.target.value;recompute()});
-document.getElementById('depth').addEventListener('change',()=>{majAvertissementProfondeur();cachedData={};fetchAllData()});
-majAvertissementProfondeur();
-
-// Date au format AAAA-MM-JJ en heure LOCALE. toISOString() seul renvoie la date UTC :
-// à minuit heure française (UTC+2 l'été) il renvoyait la veille, décalant d'un jour toutes
-// les dates d'envoi et d'abandon enregistrées, et raccourcissant le verrou d'autant.
-function fmtDate(d){return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().split('T')[0]}
-function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
-function diffDays(a,b){return Math.round((b-a)/86400000)}
-function frDate(s){if(!s)return '—';const d=(s instanceof Date)?s:new Date(s);return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})}
-
-// ── FETCH (robuste : requêtes groupées + cache du jour + réessais) ───────────
-const WX_KEY='axeau_wx_v2';
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-
-function loadWxCache(depth){
+// ───────────────────────────────────────────────────────────── météo
+const dors=ms=>new Promise(r=>setTimeout(r,ms));
+async function lot(batch,d1,d2,essai=0){
+  const la=batch.map(d=>d.lat.toFixed(4)).join(','), lo=batch.map(d=>d.lon.toFixed(4)).join(',');
+  const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}`+
+            `&start_date=${d1}&end_date=${d2}&daily=precipitation_sum&timezone=Europe%2FParis`;
   try{
-    const s=localStorage.getItem(WX_KEY);if(!s)return false;
-    const c=JSON.parse(s);
-    if(c.date!==fmtDate(today)||c.depth!==depth)return false;
-    if(!c.data||Object.keys(c.data).length<DEPTS.length)return false;
-    if(Object.values(c.data).some(x=>x.error))return false;
-    cachedData=c.data;return true;
-  }catch(e){return false;}
-}
-function saveWxCache(depth){
-  try{
-    if(Object.values(cachedData).some(c=>c.error))return; // on ne mémorise qu'un jeu complet et propre
-    localStorage.setItem(WX_KEY,JSON.stringify({date:fmtDate(today),depth,data:cachedData}));
-  }catch(e){}
-}
-
-// Récupère un lot de départements en UNE requête multi-coordonnées, avec réessais
-async function fetchBatch(batch,startDate,endDate,attempt=0){
-  const lats=batch.map(d=>d.lat.toFixed(4)).join(',');
-  const lons=batch.map(d=>d.lon.toFixed(4)).join(',');
-  const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum,weather_code&timezone=Europe%2FParis`;
-  try{
-    const r=await Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timeout')),18000))]);
+    const r=await Promise.race([fetch(url),new Promise((_,x)=>setTimeout(()=>x(new Error('Timeout')),20000))]);
     if(!r.ok)throw new Error('HTTP '+r.status);
-    let j=await r.json();
-    if(!Array.isArray(j))j=[j]; // une seule coordonnée → objet ; plusieurs → tableau
-    batch.forEach((dept,idx)=>{
-      const loc=j[idx];
-      if(loc&&loc.daily&&loc.daily.precipitation_sum){
-        cachedData[dept.code]={dates:loc.daily.time,precip:loc.daily.precipitation_sum.map(v=>v??0),codes:(loc.daily.weather_code||[]).map(v=>v??-1)};
-      }else{
-        cachedData[dept.code]={dates:[],precip:[],error:true,msg:'données absentes'};
-      }
+    let j=await r.json(); if(!Array.isArray(j))j=[j];
+    batch.forEach((dept,i)=>{
+      const l=j[i];
+      meteo[dept.code]=(l&&l.daily&&l.daily.precipitation_sum)
+        ? {dates:l.daily.time,p:l.daily.precipitation_sum.map(v=>v??0)}
+        : {dates:[],p:[],erreur:'données absentes'};
     });
   }catch(e){
-    if(attempt<2){await sleep(800*Math.pow(2,attempt));return fetchBatch(batch,startDate,endDate,attempt+1);} // 0.8s puis 1.6s
-    if(batch.length>1){ // toujours en échec → on coupe le lot en deux pour isoler le département fautif
-      const mid=Math.ceil(batch.length/2);
-      await fetchBatch(batch.slice(0,mid),startDate,endDate,0);
-      await fetchBatch(batch.slice(mid),startDate,endDate,0);
-      return;
-    }
-    cachedData[batch[0].code]={dates:[],precip:[],error:true,msg:e.message}; // un seul dépt et il échoue vraiment
+    if(essai<2){await dors(800*Math.pow(2,essai));return lot(batch,d1,d2,essai+1)}
+    if(batch.length>1){const m=Math.ceil(batch.length/2);
+      await lot(batch.slice(0,m),d1,d2,0); await lot(batch.slice(m),d1,d2,0); return}
+    meteo[batch[0].code]={dates:[],p:[],erreur:e.message};
   }
 }
 
-async function fetchAllData(force){
-  const btn=document.getElementById('btn-refresh');
-  btn.classList.add('spinning');
-  const depth=parseInt(document.getElementById('depth').value);
-  const endDate=fmtDate(today),startDate=fmtDate(addDays(today,-depth));
-
-  // 1) Cache du jour : si déjà chargé avec succès aujourd'hui, on réutilise (fiable + instantané)
-  if(!force&&!Object.keys(cachedData).length&&loadWxCache(depth)){
-    btn.classList.remove('spinning');
-    document.getElementById('progress-wrap').style.display='none';
-    recompute();return;
+async function chargerEtat(){
+  try{
+    const r=await fetch(ETAT_URL+'?t='+Date.now());
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const e=await r.json();
+    etat={sequences:e.sequences||{},campagnes:e.campagnes||{},
+          detection_cron:e.detection_cron||null,maj:e.maj,parametres:e.parametres};
+    document.getElementById('etat-src').textContent=
+      'état du '+(e.maj?new Date(e.maj).toLocaleString('fr-FR'):'?')+' · '+
+      Object.keys(etat.sequences).length+' séquence(s)';
+    return true;
+  }catch(e){
+    etat={sequences:{},campagnes:{},detection_cron:null};
+    document.getElementById('etat-src').textContent='etat.json absent — affichage de la détection seule';
+    return false;
   }
-  if(force)cachedData={};
+}
 
+async function chargerTout(force){
+  const b=document.getElementById('btn-refresh'); b.classList.add('spinning');
+  const prof=parseInt(document.getElementById('depth').value);
+  document.getElementById('depth-warn').textContent=prof<92?'⚠ moins de 3 mois : verrou peu fiable':'historique complet';
   document.getElementById('progress-wrap').style.display='block';
-  const toFetch=DEPTS.filter(d=>!cachedData[d.code]);
-  if(!toFetch.length){btn.classList.remove('spinning');recompute();return;}
-
-  // 2) Lots de 24 (taille fiable) lancés EN PARALLÈLE → 4 petites requêtes simultanées : rapide ET fiable
-  const BATCH=24;
-  const batches=[];
-  for(let i=0;i<toFetch.length;i+=BATCH)batches.push(toFetch.slice(i,i+BATCH));
-  let done=0;
-  await Promise.all(batches.map(async b=>{
-    await fetchBatch(b,startDate,endDate);
-    done+=b.length;
-    document.getElementById('progress-bar').style.width=Math.min(Math.round((done/toFetch.length)*100),100)+'%';
-    document.getElementById('progress-label').textContent=`${done} / ${toFetch.length} départements chargés`;
-  }));
+  if(force)meteo={};
+  await chargerEtat();
+  const d2=fmt(aujourdhui), d1=fmt(plus(aujourdhui,-prof));
+  const reste=DEPTS.filter(d=>!meteo[d.code]);
+  if(reste.length){
+    const T=24, lots=[]; for(let i=0;i<reste.length;i+=T)lots.push(reste.slice(i,i+T));
+    let fini=0;
+    await Promise.all(lots.map(async l=>{
+      await lot(l,d1,d2); fini+=l.length;
+      document.getElementById('progress-bar').style.width=Math.round(fini/reste.length*100)+'%';
+      document.getElementById('progress-label').textContent=fini+' / '+reste.length+' départements';
+    }));
+  }
+  const err=Object.values(meteo).filter(m=>m.erreur).length;
+  const ban=document.getElementById('banner');
+  if(err>=DEPTS.length){ban.className='banner err';ban.textContent='Échec du chargement météo. Les appels passent sur GitHub Pages, pas dans un aperçu local.'}
+  else if(err){ban.className='banner warn';ban.textContent=err+' département(s) en erreur. Le balayage est partiel, ne pas le présenter comme complet.'}
+  else{ban.className='banner';ban.style.display='none'}
   document.getElementById('progress-bar').style.width='100%';
-  const errCount=Object.values(cachedData).filter(c=>c.error).length;
-  if(errCount>=DEPTS.length){
-    const sample=Object.values(cachedData).find(c=>c.error);
-    document.getElementById('progress-label').innerHTML=`<span style="color:#ef4444;font-weight:700">⚠ Échec du chargement. ${sample?.msg||''} — Sur GitHub Pages les appels passent ; dans l'aperçu Claude ils sont bloqués.</span>`;
-  }else if(errCount>0){
-    document.getElementById('progress-label').innerHTML=`Données chargées ✓ — <span style="color:#ea580c;font-weight:700">${errCount} département(s) en erreur.</span> <button class="btn-sm" style="margin-left:8px" onclick="retryErrors()">↻ Réessayer ces départements</button>`;
-  }else{
-    document.getElementById('progress-label').textContent="Données chargées ✓ (mises en cache pour aujourd'hui)";
-    setTimeout(()=>document.getElementById('progress-wrap').style.display='none',2200);
-  }
-  saveWxCache(depth);
-  btn.classList.remove('spinning');
-  recompute();
+  setTimeout(()=>document.getElementById('progress-wrap').style.display='none',1500);
+  b.classList.remove('spinning');
+  recalculer();
 }
 
-// Réessaie uniquement les départements encore en erreur
-async function retryErrors(){
-  DEPTS.filter(d=>cachedData[d.code]&&cachedData[d.code].error).forEach(d=>delete cachedData[d.code]);
-  await fetchAllData(false);
-}
-
-// ── DÉTECTION DES ÉPISODES ───────────────────────────────────────────────────
-// Retourne les épisodes dans l'ORDRE CHRONOLOGIQUE CROISSANT (indispensable au verrou).
-// Deux conditions cumulatives : le cumul atteint le seuil T sur la fenêtre glissante ET
-// au moins un jour de cette fenêtre atteint P mm en 24 h. Sans le second critère, un mois
-// simplement humide se déclare comme un épisode d'intempéries, ce qui n'en est pas un.
-// Si le cumul est atteint sans le pic, on ne déclenche pas et on ne remet pas le compteur
-// à zéro : la fenêtre continue de glisser jusqu'à ce qu'un vrai gros jour survienne.
-function buildEpisodes(p,d,T,P){
-  const eps=[];let s=0;
-  for(let i=0;i<p.length;i++){
-    const ws=Math.max(s,i-(THRESH_WINDOW-1));
-    let sum=0,peak=0,peakIdx=ws;
-    for(let k=ws;k<=i;k++){sum+=p[k];if(p[k]>peak){peak=p[k];peakIdx=k;}}
-    if(sum>=T&&peak>=P){
-      eps.push({date:d[i],dateObj:new Date(d[i]),cumul:sum,windowDays:i-ws+1,peak24:peak,peakDate:d[peakIdx],startDate:d[ws]});
-      s=i+1;
-    }
-  }
-  return eps;
-}
-
-// Envoi unique à J+7. La clé reste au format historique "code|date|J7" : les envois
-// déjà marqués dans le navigateur restent reconnus.
-function mailingFor(code,ep){
-  const dt=addDays(ep.dateObj,SEND_OFFSET);
-  const key=`${code}|${ep.date}|J${SEND_OFFSET}`;
-  return {off:SEND_OFFSET,key,date:dt,sent:sentStore[key]||null,abandon:abandonStore[key]||null};
-}
-
-function mailStatus(m){
-  const du=diffDays(today,m.date);
-  if(du<0)return {txt:`En retard de ${-du}j`,cls:'red',urg:4};
-  if(du===0)return {txt:`À envoyer aujourd'hui`,cls:'red',urg:4};
-  if(du<=7)return {txt:`Dans ${du}j`,cls:'orange',urg:3};
-  return {txt:`Prévu le ${frDate(m.date)}`,cls:'yellow',urg:2};
-}
-
-// Traduction d'un code météo WMO en phénomène marquant (null si rien de notable)
-function eventForCode(c){
-  switch(c){
-    case 95: return {icon:'⛈',label:'Orage'};
-    case 96: return {icon:'🧊',label:'Orage avec grêle'};
-    case 99: return {icon:'🧊',label:'Orage avec forte grêle'};
-    case 82: return {icon:'🌧',label:'Averse violente'};
-    case 66: case 67: return {icon:'🧊',label:'Pluie verglaçante'};
-    case 75: return {icon:'❄',label:'Neige forte'};
-    case 85: case 86: return {icon:'🌨',label:'Fortes chutes de neige'};
-    default: return null;
-  }
-}
-function buildEvents(cd){
-  const ev=[];
-  if(cd&&cd.codes){for(let i=0;i<cd.codes.length;i++){const e=eventForCode(cd.codes[i]);if(e)ev.push({date:cd.dates[i],icon:e.icon,label:e.label});}}
-  return ev;
-}
-// Phénomènes marquants survenus DANS la fenêtre de l'épisode, dédoublonnés
-function phenomenesFenetre(cd,ep){
+// ───────────────────── détection : réplique exacte de moteur.py
+function declencheurs(p,dates){
   const out=[];
-  if(!cd||!cd.codes)return out;
-  for(let i=0;i<cd.dates.length;i++){
-    if(cd.dates[i]<ep.startDate||cd.dates[i]>ep.date)continue;
-    const e=eventForCode(cd.codes[i]);
-    if(e&&out.indexOf(e.label)===-1)out.push(e.label);
+  for(let i=0;i<p.length;i++) if(p[i]>=PIC)
+    out.push({i,serie:'A',pic24_mm:Math.round(p[i]*10)/10,pic_date:dates[i]});
+  for(let i=0;i<p.length;i++){
+    const deb=Math.max(0,i-(FENETRE-1));
+    let n=0; for(let k=deb;k<=i;k++) if(p[k]>=SEUIL_JOUR)n++;
+    if(n>=NB_JOURS) out.push({i,serie:'B',jours_pluie:n,debut_fenetre:dates[deb]});
   }
+  out.sort((a,b)=>a.i-b.i||a.serie.localeCompare(b.serie));
   return out;
 }
 
-// ── CALCUL PRINCIPAL ─────────────────────────────────────────────────────────
-// Le verrou 30 jours se simule en avançant dans le temps, épisode par épisode.
-// "ancre" = date du dernier envoi retenu pour ce département (réellement envoyé,
-// ou réservé parce qu'il est encore actionnable). Tant qu'un envoi tombe à moins
-// de 30 jours après l'ancre, il est VERROUILLÉ : il ne remontera jamais au plan.
-function recompute(){
-  const T=parseFloat(document.getElementById('threshold').value);
-  const P=parseFloat(document.getElementById('pic').value);
-  results=[];
-  let totalEps=0,sUrgent=0,sSoon=0,sSent=0,sLocked=0,sAbandon=0;
-
-  for(const dept of DEPTS){
-    const cd=cachedData[dept.code];
-    if(!cd||!cd.dates.length){
-      results.push({dept,episodes:[],pending:[],urgency:-2,sentCount:0,lockedCount:0,expiredCount:0,abandonCount:0,events:[],error:cd?.error});
+function traiter(dept,p,dates){
+  const res=[]; let libre=null;
+  for(const t of declencheurs(p,dates)){
+    const episode=iso(dates[t.i]);
+    const cle=dept.code+'|'+dates[t.i]+'|'+t.serie;
+    const su=etat.sequences[cle];
+    const detail=t.serie==='A'
+      ? {pic24_mm:t.pic24_mm,pic_date:t.pic_date}
+      : {jours_pluie:t.jours_pluie,debut_fenetre:t.debut_fenetre};
+    if(!su&&libre&&episode<libre){
+      res.push({code:dept.code,dept:dept.nom,region:dept.region,cle,serie:t.serie,
+                episode:dates[t.i],etape:'bloque',libre_le:fmt(libre),...detail});
       continue;
     }
-    const epsAsc=buildEpisodes(cd.precip,cd.dates,T,P);
-    epsAsc.forEach(ep=>{ep.phenomenes=phenomenesFenetre(cd,ep)});
-
-    let ancre=null,urgency=-1,nextDue=null;
-    let pending=[],sentCount=0,lockedCount=0,expiredCount=0,abandonCount=0;
-
-    for(const ep of epsAsc){
-      const m=mailingFor(dept.code,ep);
-      ep.mailing=m;
-
-      if(m.sent){
-        m.state='sent';
-        m.st={txt:`Envoyé le ${frDate(m.sent)}`,cls:'green',urg:-1};
-        ancre=new Date(m.sent);
-        sentCount++;sSent++;
-        continue;
-      }
-      // Abandonné : on n'envoie rien, mais on n'arme PAS le verrou — aucun mail n'est parti,
-      // donc rien ne justifie de bloquer un épisode ultérieur.
-      if(m.abandon){
-        m.state='abandonne';
-        m.st={txt:`Abandonné le ${frDate(m.abandon)}`,cls:'grey',urg:-2};
-        abandonCount++;sAbandon++;
-        continue;
-      }
-      if(ancre&&diffDays(ancre,m.date)<COOLDOWN_DAYS){
-        m.state='locked';
-        m.lockRef=new Date(ancre);
-        m.lockUntil=addDays(ancre,COOLDOWN_DAYS);
-        m.st={txt:`Verrouillé — mail du ${frDate(m.lockRef)}`,cls:'lock',urg:-2};
-        lockedCount++;sLocked++;
-        continue;
-      }
-      if(today>addDays(ep.dateObj,EXPIRE_DAYS)){
-        m.state='expired';
-        m.st={txt:'Expiré (délai dépassé)',cls:'grey',urg:-2};
-        expiredCount++;
-        continue;
-      }
-      m.state='open';
-      m.st=mailStatus(m);
-      ancre=new Date(m.date);           // créneau réservé : bloque les épisodes suivants
-      pending.push({ep,m,st:m.st});
-      if(m.st.urg>urgency)urgency=m.st.urg;
-      if(m.st.urg>=4)sUrgent++;else if(m.st.urg===3)sSoon++;
-      if(!nextDue||m.date<nextDue.date)nextDue={date:m.date,off:m.off,ep};
+    const m1=plus(episode,OFFSET_1);
+    const base={code:dept.code,dept:dept.nom,region:dept.region,cle,serie:t.serie,
+                episode:dates[t.i],mail1_prevu:fmt(m1),...detail};
+    if(!su){
+      if(jours(m1)<-EXPIRATION){res.push({...base,etape:'expire'});continue}
+      res.push({...base,etape:jours(m1)<=0?'a_monter':'a_venir',jours:jours(m1)});
+      libre=plus(m1,ECART_2+SILENCE); continue;
     }
-
-    totalEps+=epsAsc.length;
-    const episodes=epsAsc.slice().reverse();   // affichage du plus récent au plus ancien
-    results.push({dept,episodes,pending,urgency,nextDue,sentCount,lockedCount,expiredCount,abandonCount,
-                  events:buildEvents(cd),precip:cd.precip,dates:cd.dates,codes:cd.codes,error:cd.error});
-  }
-
-  document.getElementById('cnt-active').textContent=results.filter(r=>r.pending.length>0).length;
-  document.getElementById('s-urgent').textContent=sUrgent;
-  document.getElementById('s-soon').textContent=sSoon;
-  document.getElementById('s-eps').textContent=totalEps;
-  document.getElementById('s-sent').textContent=sSent;
-  document.getElementById('s-locked').textContent=sLocked;
-  document.getElementById('s-abandon').textContent=sAbandon;
-  renderView();
-  if(document.getElementById('plan-box').style.display==='block')buildPlan();
-  if(openCode){const r=results.find(x=>x.dept.code===openCode);if(r)showSidePanel(r);}
-}
-
-// ── PLAN DU JOUR ─────────────────────────────────────────────────────────────
-// Ne retient QUE ce qui est actionnable aujourd'hui : envoi dû aujourd'hui ou en retard.
-// Rien de verrouillé, rien d'expiré, rien de futur.
-function planDuJour(){
-  const plan=[];
-  for(const r of results){
-    for(const ep of r.episodes){
-      const m=ep.mailing;
-      if(!m||m.state!=='open')continue;
-      const du=diffDays(today,m.date);
-      if(du>0)continue;
-      plan.push({
-        dept:r.dept.code,
-        nom:r.dept.nom,
-        region:r.dept.region,
-        episode:ep.date,
-        debut:ep.startDate,
-        cumul:Math.round(ep.cumul),
-        fenetre_jours:ep.windowDays,
-        pic24:Math.round(ep.peak24),
-        phenomenes:ep.phenomenes||[],
-        envoi_du:fmtDate(m.date),
-        statut:du<0?'en_retard':'a_faire',
-        retard_jours:du<0?-du:0,
-        cle:m.key
-      });
+    const e=su.etape; Object.assign(base,su); base.etape=e;
+    if(e==='abandonne'){res.push({...base,etape:'abandonne'});continue}
+    if(e==='mail1_monte'){
+      const age=-jours(iso(su.mail1_monte_le));
+      if(age>EXPIRATION){res.push({...base,etape:'expire_non_envoye',age});libre=null}
+      else{res.push({...base,etape:'attente_envoi_mail1',age});libre=plus(m1,ECART_2+SILENCE)}
+      continue;
     }
-  }
-  plan.sort((a,b)=>a.envoi_du<b.envoi_du?-1:(a.envoi_du>b.envoi_du?1:a.dept.localeCompare(b.dept)));
-  return plan;
-}
-window.planDuJour=planDuJour;   // appelable directement en console ou par un agent
-
-function buildPlan(){
-  lastPlan=planDuJour();
-  const T=document.getElementById('threshold').value;
-  const D=document.getElementById('depth').value;
-  const ok=profondeurOk();
-  document.getElementById('plan-count').textContent=lastPlan.length?`· ${lastPlan.length} département(s)`:'';
-  document.getElementById('plan-stamp').textContent=
-    `Généré le ${frDate(today)} · seuil ${T} mm sur ${THRESH_WINDOW} j · pic min ${document.getElementById('pic').value} mm/24h · envoi J+${SEND_OFFSET} · verrou ${COOLDOWN_DAYS} j · profondeur ${D} j${ok?'':' ⚠ INSUFFISANTE'}`;
-  const box=document.getElementById('plan-json');
-  box.textContent=JSON.stringify(lastPlan,null,2);
-  box.setAttribute('data-plan-count',String(lastPlan.length));
-  box.setAttribute('data-profondeur-ok',ok?'oui':'non');
-
-  const rows=document.getElementById('plan-rows');
-  const alerte=ok?'':`<div style="background:#fee2e2;color:#991b1b;border-radius:12px;padding:12px 14px;font-size:12.5px;font-weight:600;margin-bottom:14px">⚠ Profondeur d'analyse à ${D} jours : le verrou 30 j n'est pas fiable. Repassez sur 3 mois avant de préparer un envoi.</div>`;
-  if(!lastPlan.length){
-    rows.innerHTML=alerte+`<div class="plan-empty">Rien à traiter aujourd'hui. Aucun brouillon à préparer.</div>`;
-    return;
-  }
-  rows.innerHTML=alerte+lastPlan.map(p=>{
-    const ph=p.phenomenes.length?` · ${p.phenomenes.join(', ')}`:'';
-    const badge=p.statut==='en_retard'
-      ? `<span class="badge badge-red">En retard de ${p.retard_jours}j</span>`
-      : `<span class="badge badge-orange">À envoyer aujourd'hui</span>`;
-    return `<div class="plan-row">
-      <div class="plan-info">
-        <span class="dept-tag"><span class="dept-num">${p.dept}</span> <b>${p.nom}</b></span> ${badge}
-        <div class="pi-sub">Épisode du ${frDate(p.episode)} · ${p.cumul} mm sur ${p.fenetre_jours} j · pic ${p.pic24} mm/24h${ph}</div>
-      </div>
-      <div class="mail-actions">
-        <button class="mini-btn mini-btn-do" onclick="marquerEnvoye('${p.cle}')">Marquer envoyé</button>
-        <button class="mini-btn mini-btn-undo" onclick="abandonner('${p.cle}')">Abandonner</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-function showPlan(){
-  if(!Object.keys(cachedData).length){showToast('Chargez d\'abord les données avec « Actualiser »');return;}
-  document.getElementById('plan-box').style.display='block';
-  buildPlan();
-  document.getElementById('plan-box').scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-function hidePlan(){document.getElementById('plan-box').style.display='none';}
-function copyPlanJson(){
-  const txt=JSON.stringify(lastPlan,null,2);
-  navigator.clipboard.writeText(txt).then(()=>showToast('Plan du jour copié ✓')).catch(()=>showToast('Copie impossible — sélectionnez le bloc à la main'));
-}
-
-// ── COULEURS / BADGES ─────────────────────────────────────────────────────────
-function urgColorFor(r){
-  if(!r||r.error)return '#e2e8f0';
-  if(!r.episodes.length)return '#d4ead9';       // aucun épisode
-  if(r.pending.length){
-    if(r.urgency>=4)return '#ef4444';
-    if(r.urgency===3)return '#f97316';
-    return '#eab308';
-  }
-  if(r.lockedCount)return '#b8abe8';            // verrou 30 j actif
-  if(r.sentCount)return '#9bd3ec';              // tout traité
-  return '#cbd5e1';                             // expiré / rien d'actionnable
-}
-function deptBadge(r){
-  if(r.error)return `<span class="badge badge-grey">Erreur</span>`;
-  if(!r.episodes.length)return `<span class="badge badge-green">Aucun épisode</span>`;
-  if(r.pending.length){
-    if(r.urgency>=4)return `<span class="badge badge-red">Envoi à faire</span>`;
-    if(r.urgency===3)return `<span class="badge badge-orange">Envoi sous 7j</span>`;
-    return `<span class="badge badge-yellow">Envoi à venir</span>`;
-  }
-  if(r.lockedCount)return `<span class="badge badge-lock">Verrou 30 j</span>`;
-  if(r.sentCount)return `<span class="badge badge-blue">Tout traité (${r.episodes.length})</span>`;
-  if(r.abandonCount)return `<span class="badge badge-grey">Abandonné</span>`;
-  return `<span class="badge badge-grey">Expiré</span>`;
-}
-
-function renderView(){currentTab==='carte'?renderCarte():renderListe()}
-function switchTab(t){
-  currentTab=t;
-  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',(i===0&&t==='liste')||(i===1&&t==='carte')));
-  document.getElementById('liste-view').style.display=t==='liste'?'block':'none';
-  document.getElementById('carte-view').style.display=t==='carte'?'block':'none';
-  renderView();
-}
-
-// ── LISTE ────────────────────────────────────────────────────────────────────
-function renderListe(){
-  const lv=document.getElementById('liste-view');
-  if(!Object.keys(cachedData).length){lv.innerHTML=emptyState();return;}
-  const sorted=[...results].sort((a,b)=>{
-    if(sortCol==='urgency'){
-      if(b.urgency!==a.urgency)return sortDir*(a.urgency-b.urgency);
-      const an=a.nextDue?a.nextDue.date.getTime():9e15,bn=b.nextDue?b.nextDue.date.getTime():9e15;
-      return an-bn;
+    if(e==='mail1_envoye'||e==='mail2_monte'){
+      const m2=plus(iso(su.mail1_envoye_le),ECART_2);
+      const et=e==='mail2_monte'?'attente_envoi_mail2':(jours(m2)<=0?'mail2_a_monter':'mail2_a_venir');
+      res.push({...base,etape:et,mail2_prevu:fmt(m2),jours:jours(m2)});
+      libre=plus(m2,SILENCE); continue;
     }
-    if(sortCol==='dept')return sortDir*(a.dept.nom<b.dept.nom?-1:1);
-    if(sortCol==='region')return sortDir*(a.dept.region<b.dept.region?-1:1);
-    if(sortCol==='eps')return sortDir*(a.episodes.length-b.episodes.length);
-    if(sortCol==='last'){const al=a.episodes[0]?a.episodes[0].dateObj.getTime():0,bl=b.episodes[0]?b.episodes[0].dateObj.getTime():0;return sortDir*(al-bl);}
-    if(sortCol==='next'){const an=a.nextDue?a.nextDue.date.getTime():9e15,bn=b.nextDue?b.nextDue.date.getTime():9e15;return sortDir*(an-bn);}
-    return 0;
+    if(e==='mail2_envoye'){
+      const fin=plus(iso(su.mail2_envoye_le),SILENCE);
+      res.push({...base,etape:jours(fin)<0?'silence':'termine',silence_jusquau:fmt(fin)});
+      libre=fin; continue;
+    }
+    res.push({...base,etape:e||'inconnu'});
+  }
+  return res;
+}
+
+function recalculer(){
+  faits=[];
+  for(const d of DEPTS){
+    const m=meteo[d.code]; if(!m||m.erreur||!m.dates.length)continue;
+    faits.push(...traiter(d,m.p,m.dates));
+  }
+  rendre();
+}
+
+// ───────────────────────────────────────────────────────────── rendu
+const ETIQ={a_monter:['Mail 1 à monter','var(--red)'],mail2_a_monter:['Mail 2 à monter','var(--orange)'],
+  a_venir:['Mail 1 à venir','var(--yellow)'],mail2_a_venir:['Mail 2 à venir','var(--yellow)'],
+  attente_envoi_mail1:['Mail 1 monté, à envoyer','var(--orange)'],
+  attente_envoi_mail2:['Mail 2 monté, à envoyer','var(--orange)'],
+  silence:['Silence','var(--lock)'],termine:['Terminé','var(--green)'],
+  bloque:['Bloqué','var(--grey)'],expire:['Expiré','var(--grey)'],
+  expire_non_envoye:['Expiré non envoyé','var(--grey)'],abandonne:['Abandonné','var(--grey)']};
+const st=e=>{const [l,c]=ETIQ[e]||[e,'var(--slate)'];
+  return `<span class="st"><span class="dot" style="background:${c}"></span>${l}</span>`};
+const chipSerie=s=>`<span class="chip ${s}">Série ${s}</span>`;
+const fait=r=>r.serie==='A'
+  ? `<b>${String(r.pic24_mm).replace('.',',')} mm</b> le ${fr(r.pic_date).slice(0,5)}`
+  : `<b>${r.jours_pluie} jours</b> de pluie sur 30`;
+const par=e=>faits.filter(f=>f.etape===e);
+
+function rendre(){
+  const aFaire=[...par('a_monter'),...par('mail2_a_monter')];
+  const attente=[...par('attente_envoi_mail1'),...par('attente_envoi_mail2')];
+  const aVenir=[...par('a_venir'),...par('mail2_a_venir')];
+  const camp=Object.values(etat.campagnes||{});
+  document.getElementById('kpis').innerHTML=[
+    ['À faire',aFaire.length,'var(--red)'],
+    ['En attente d\'envoi',attente.length,'var(--orange)'],
+    ['À venir',aVenir.length,'var(--yellow)'],
+    ['Sous silence',par('silence').length,'var(--lock)'],
+    ['Bloqués',par('bloque').length,'var(--grey)'],
+    ['Campagnes parties',camp.length,'var(--green)']
+  ].map(([l,n,c])=>`<div class="kpi"><div class="n" style="color:${c}">${n}</div><div class="l">${l}</div></div>`).join('');
+  coherence();
+  const v=document.getElementById('vue');
+  if(tab==='afaire')v.innerHTML=vueAFaire(aFaire,attente,aVenir);
+  else if(tab==='sequences')v.innerHTML=vueSequences();
+  else if(tab==='carte')v.innerHTML=vueCarte();
+  else if(tab==='historique')v.innerHTML=vueHistorique();
+  else v.innerHTML=vueSimulation();
+}
+
+function coherence(){
+  if(!etat.detection_cron)return;
+  const mien=new Set(faits.filter(f=>!['bloque','expire'].includes(f.etape)).map(f=>f.cle));
+  const sien=new Set(Object.keys(etat.detection_cron));
+  const manque=[...sien].filter(k=>!mien.has(k)), trop=[...mien].filter(k=>!sien.has(k));
+  if(manque.length||trop.length){
+    const b=document.getElementById('banner');
+    b.className='banner warn';
+    b.textContent='Divergence page / tâche planifiée : '+trop.length+' détection(s) ici absente(s) du cron, '+
+      manque.length+' du cron absente(s) ici. Vérifier que les réglages correspondent.';
+  }
+}
+
+function onglet(t){tab=t;document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.t===t));rendre()}
+
+function vide(txt){return `<div class="empty"><div class="big">${txt}</div></div>`}
+
+function vueAFaire(aFaire,attente,aVenir){
+  const tbl=(rows,titre,sub)=>`
+  <div class="panel"><div class="panel-head"><div><h2>${titre}</h2><div class="sub">${sub}</div></div>
+    <span class="muted">${rows.length} ligne(s)</span></div>
+  ${rows.length?`<table><thead><tr>
+    <th>Dépt</th><th>Série</th><th>Fait déclencheur</th><th>Épisode</th><th>Étape</th><th>Échéance</th><th class="num">Retard</th>
+  </tr></thead><tbody>${rows.sort((a,b)=>(a.mail2_prevu||a.mail1_prevu).localeCompare(b.mail2_prevu||b.mail1_prevu)).map(r=>{
+    const ech=r.mail2_prevu||r.mail1_prevu, j=jours(iso(ech));
+    return `<tr>
+      <td><span class="code">${r.code}</span> ${r.dept}</td>
+      <td>${chipSerie(r.serie)}</td>
+      <td>${fait(r)}</td>
+      <td class="muted">${fr(r.episode)}</td>
+      <td>${st(r.etape)}</td>
+      <td>${fr(ech)}</td>
+      <td class="num" style="color:${j<0?'var(--red)':'var(--slate)'}">${j<0?(-j)+' j':'J'+(j===0?'':'+'+j)}</td>
+    </tr>`}).join('')}</tbody></table>`:vide('Rien dans cette catégorie.')}
+  </div>`;
+  return tbl(aFaire,'À monter aujourd\'hui','Le brouillon doit être créé, puis relu et envoyé par Nicolas.')
+       + tbl(attente,'Brouillons montés, en attente d\'envoi','Expirent au bout de '+EXPIRATION+' jours sans envoi.')
+       + tbl(aVenir,'À venir','Échéances futures, rien à faire pour l\'instant.');
+}
+
+function vueSequences(){
+  const rows=faits.filter(f=>!['expire','bloque','termine'].includes(f.etape));
+  if(!rows.length)return vide('Aucune séquence en cours.');
+  return `<div class="panel"><div class="panel-head"><div><h2>Séquences en cours</h2>
+    <div class="sub">Le mail 2 part 14 jours après l'envoi réel du mail 1.</div></div></div>
+  <table><thead><tr><th>Dépt</th><th>Série</th><th>Épisode</th><th>Mail 1</th><th>Mail 2</th><th>Étape</th><th>Silence jusqu'au</th></tr></thead>
+  <tbody>${rows.map(r=>`<tr>
+    <td><span class="code">${r.code}</span> ${r.dept}</td>
+    <td>${chipSerie(r.serie)}</td>
+    <td class="muted">${fr(r.episode)}</td>
+    <td>${r.mail1_envoye_le?'envoyé le '+fr(r.mail1_envoye_le):'prévu '+fr(r.mail1_prevu)}</td>
+    <td>${r.mail2_envoye_le?'envoyé le '+fr(r.mail2_envoye_le):(r.mail2_prevu?'prévu '+fr(r.mail2_prevu):'<span class="muted">après le mail 1</span>')}</td>
+    <td>${st(r.etape)}</td>
+    <td class="muted">${r.silence_jusquau?fr(r.silence_jusquau):'—'}</td>
+  </tr>`).join('')}</tbody></table></div>`;
+}
+
+function vueCarte(){
+  const parCode={}; faits.forEach(f=>{
+    const rang={a_monter:6,mail2_a_monter:6,attente_envoi_mail1:5,attente_envoi_mail2:5,
+                a_venir:4,mail2_a_venir:4,silence:3,termine:2,bloque:1};
+    const r=rang[f.etape]||0;
+    if(!parCode[f.code]||r>parCode[f.code].r)parCode[f.code]={r,etape:f.etape,n:f.serie};
   });
-  function th(c,l){return `<th onclick="setSortCol('${c}')">${l} ${sortCol===c?(sortDir>0?'↑':'↓'):'↕'}</th>`}
-  const head=`${th('dept','Département')}${th('region','Région')}${th('eps','Épisodes')}${th('last','Dernier épisode')}${th('next','Prochain envoi')}${th('urgency','Statut')}<th>Historique</th>`;
-  const rows=sorted.map(r=>{
-    const last=r.episodes[0];
-    const next=r.nextDue;
-    const nextTxt=next?`J+${next.off} · ${frDate(next.date)}`:'—';
-    const btn=(r.episodes.length||(r.dates&&r.dates.length))
-      ?`<button class="btn-sm"${r.episodes.length?'':' style="background:var(--slate-light)"'} onclick="event.stopPropagation();showSidePanel(results.find(x=>x.dept.code==='${r.dept.code}'))">${r.episodes.length?(r.pending.length?'Historique':'Voir / annuler'):'Voir'}</button>`
-      :'';
-    return `<tr class="${r.episodes.length&&!r.pending.length?'done':''}" onclick="handleRowClick('${r.dept.code}')">
-      <td><span class="dept-tag"><span class="dept-num">${r.dept.code}</span> ${r.dept.nom}</span></td>
-      <td style="color:var(--slate-light);font-size:12px">${r.dept.region}</td>
-      <td><span class="mm-val">${r.episodes.length||'—'}</span></td>
-      <td>${last?frDate(last.dateObj):'—'}${last?` <span style="color:var(--slate-light);font-size:11px">(${last.cumul.toFixed(0)}mm)</span>`:''}</td>
-      <td>${nextTxt}</td>
-      <td>${deptBadge(r)}</td>
-      <td>${btn}</td>
-    </tr>`;
-  }).join('');
-  lv.innerHTML=`<div class="table-wrap fade-in"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
-}
-function setSortCol(c){if(sortCol===c)sortDir*=-1;else{sortCol=c;sortDir=(c==='urgency'||c==='eps'||c==='last')?-1:1;}renderListe();}
-function handleRowClick(code){const r=results.find(x=>x.dept.code===code);if(r&&((r.dates&&r.dates.length)||r.episodes.length))showSidePanel(r);}
-
-// ── CARTE ────────────────────────────────────────────────────────────────────
-function renderCarte(){
-  const cv=document.getElementById('carte-view');
-  if(!Object.keys(cachedData).length){cv.innerHTML=emptyState();return;}
-  const byCode={};results.forEach(r=>byCode[r.dept.code]=r);
+  const coul={6:'var(--red)',5:'#f97316',4:'#eab308',3:'#8b7fd4',2:'#22c55e',1:'#cbd5e1',0:'#d4ead9'};
   let dots='';
-  for(const dept of DEPTS){
-    const c=COORDS[dept.code];if(!c)continue;
-    const [cx,cy]=c;const r=byCode[dept.code];
-    const fill=urgColorFor(r);
-    const rad=r&&r.episodes.length?(10+Math.min(8,r.episodes.length*2.5)):9;
-    dots+=`<circle class="dept-shape" data-code="${dept.code}" cx="${cx}" cy="${cy}" r="${rad}" fill="${fill}" opacity="0.94"/>`;
-    dots+=`<text x="${cx}" y="${cy+3.5}" text-anchor="middle" font-size="8" fill="${r&&r.pending.length&&r.urgency>=3?'#fff':'#1a2c3d'}" font-family="Outfit,sans-serif" font-weight="700" pointer-events="none">${dept.code}</text>`;
+  for(const d of DEPTS){
+    const c=COORDS[d.code]; if(!c)continue;
+    const e=parCode[d.code];
+    const f=coul[e?e.r:0]||'#d4ead9';
+    dots+=`<circle cx="${c[0]}" cy="${c[1]}" r="10" fill="${f}" opacity=".94"><title>${d.code} ${d.nom}</title></circle>`;
+    dots+=`<text x="${c[0]}" y="${c[1]+3.5}" text-anchor="middle" font-size="8" font-weight="700"
+      fill="${e&&e.r>=5?'#fff':'#1a2c3d'}" font-family="Outfit,sans-serif" pointer-events="none">${d.code}</text>`;
   }
-  cv.innerHTML=`<div id="map-wrap" class="fade-in">
-    <svg id="france-svg" viewBox="120 90 460 480" xmlns="http://www.w3.org/2000/svg">
-      <text x="350" y="120" text-anchor="middle" font-family="Outfit,sans-serif" font-size="13" fill="#8395a8" font-weight="600">France métropolitaine · taille = nombre d'épisodes</text>
-      ${dots}
-    </svg>
-    <div class="map-legend">
-      <span class="legend-item"><span class="legend-dot" style="background:#d4ead9"></span>Aucun épisode</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#eab308"></span>Envoi à venir</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#f97316"></span>Sous 7 jours</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>À faire / en retard</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#9bd3ec"></span>Tout traité</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#b8abe8"></span>Verrou 30 j</span>
+  return `<div class="panel"><div class="panel-head"><div><h2>Carte</h2>
+    <div class="sub">Une pastille par département, couleur = état le plus avancé.</div></div></div>
+  <svg id="france-svg" viewBox="120 90 460 480" xmlns="http://www.w3.org/2000/svg">${dots}</svg>
+  <div class="map-legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#d4ead9"></span>Rien</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>À monter</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#f97316"></span>À envoyer</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#eab308"></span>À venir</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#8b7fd4"></span>Silence</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#22c55e"></span>Terminé</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#cbd5e1"></span>Bloqué</span>
+  </div></div>`;
+}
+
+// ───────────────────────────────────────────── historique et performance
+function vueHistorique(){
+  const camp=Object.entries(etat.campagnes||{}).map(([id,c])=>({id,...c}))
+    .filter(c=>c.envoye_le).sort((a,b)=>b.envoye_le.localeCompare(a.envoye_le));
+  if(!camp.length)return `<div class="panel">${vide(
+    'Aucune campagne envoyée pour l\'instant.<br><span style="font-size:13px;font-weight:400">'+
+    'Cette section se remplit toute seule : la tâche planifiée lit les statistiques dans Mailjet et les dépose dans etat.json.</span>')}</div>`;
+
+  const agr=l=>{const s={n:0,contacts:0,delivres:0,ouvertures:0,clics:0,desabos:0};
+    l.forEach(c=>{const x=c.stats||{};s.n++;s.contacts+=x.contacts||0;s.delivres+=x.delivres||0;
+      s.ouvertures+=x.ouvertures||0;s.clics+=x.clics||0;s.desabos+=x.desabos||0});return s};
+  const carte=(t,s)=>`<div class="simu-card"><div class="l">${t}</div>
+    <div class="n" style="color:var(--blue)">${pct(s.ouvertures,s.delivres)}</div>
+    <div class="d">${s.n} campagne(s) · ${nb(s.delivres)} délivrés<br>
+    clics ${pct(s.clics,s.delivres)} · désabos ${pct(s.desabos,s.delivres)}</div></div>`;
+
+  const m1=camp.filter(c=>c.etape==='mail1'), m2=camp.filter(c=>c.etape==='mail2');
+  const sa=camp.filter(c=>c.serie==='A'), sb=camp.filter(c=>c.serie==='B');
+
+  return `
+  <div class="panel"><div class="panel-head"><div><h2>Comparaisons</h2>
+    <div class="sub">Taux d'ouverture sur délivrés. Ce qui répond à « le mail 2 sert-il à quelque chose ».</div></div></div>
+    <div class="simu-grid">
+      ${carte('Mail 1 · J+7',agr(m1))}${carte('Mail 2 · J+21',agr(m2))}
+      ${carte('Série A · orage',agr(sa))}${carte('Série B · pluie persistante',agr(sb))}
     </div>
-  </div>`;
-  const tt=document.getElementById('tooltip');
-  document.querySelectorAll('.dept-shape').forEach(el=>{
-    const r=byCode[el.dataset.code];
-    el.addEventListener('mouseenter',e=>{
-      let info=`<b>${r?.dept.nom||''} (${el.dataset.code})</b><br>`;
-      if(!r||!r.episodes.length)info+='Aucun épisode';
-      else{
-        info+=`${r.episodes.length} épisode(s)<br>Dernier : ${frDate(r.episodes[0].dateObj)} (${r.episodes[0].cumul.toFixed(0)}mm)<br>`;
-        if(r.nextDue)info+=`Prochain envoi J+${r.nextDue.off} : ${frDate(r.nextDue.date)}`;
-        else if(r.lockedCount)info+=`Verrou 30 j actif — ${r.lockedCount} envoi(s) bloqué(s)`;
-        else info+='Tous les envois traités';
+  </div>
+  <div class="panel"><div class="panel-head"><div><h2>Campagnes envoyées</h2>
+    <div class="sub">Chiffres relevés dans Mailjet par la tâche planifiée.</div></div>
+    <button class="btn-sm" onclick="exportCSV()">Exporter en CSV</button></div>
+  <table><thead><tr>
+    <th>Envoyée le</th><th>Dépt</th><th>Série</th><th>Mail</th><th>Épisode</th>
+    <th class="num">Contacts</th><th class="num">Délivrés</th><th class="num">Ouvertures</th>
+    <th class="num">Clics</th><th class="num">Désabos</th>
+  </tr></thead><tbody>${camp.map(c=>{const s=c.stats||{};return `<tr>
+    <td>${fr(c.envoye_le)}</td>
+    <td><span class="code">${c.dept}</span> ${c.nom_dept||''}</td>
+    <td>${chipSerie(c.serie)}</td>
+    <td><span class="chip ${c.etape==='mail1'?'m1':'m2'}">${c.etape==='mail1'?'Mail 1':'Mail 2'}</span></td>
+    <td class="muted">${fr(c.episode)}</td>
+    <td class="num">${nb(s.contacts)}</td>
+    <td class="num">${nb(s.delivres)}</td>
+    <td class="num">${nb(s.ouvertures)} <span class="muted">${pct(s.ouvertures,s.delivres)}</span></td>
+    <td class="num">${nb(s.clics)} <span class="muted">${pct(s.clics,s.delivres)}</span></td>
+    <td class="num">${nb(s.desabos)}</td>
+  </tr>`}).join('')}</tbody></table></div>`;
+}
+
+function exportCSV(){
+  const camp=Object.entries(etat.campagnes||{}).map(([id,c])=>({id,...c})).filter(c=>c.envoye_le);
+  const e=['Campagne','Envoyee le','Dept','Nom','Serie','Mail','Episode','Contacts','Delivres','Ouvertures','Clics','Desabos'];
+  const l=camp.map(c=>{const s=c.stats||{};return [c.id,c.envoye_le,c.dept,c.nom_dept||'',c.serie,
+    c.etape,c.episode,s.contacts||'',s.delivres||'',s.ouvertures||'',s.clics||'',s.desabos||''].join(';')});
+  const csv='\uFEFF'+[e.join(';')].concat(l).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  a.download='veille-pluvio-campagnes-'+fmt(aujourdhui)+'.csv'; a.click();
+}
+
+// ───────────────────────────────────────────────────────────── simulation
+function vueSimulation(){
+  const prof=parseInt(document.getElementById('depth').value);
+  let seqA=0,seqB=0,total=0; const parMois={};
+  for(const d of DEPTS){
+    const m=meteo[d.code]; if(!m||m.erreur||!m.dates.length)continue;
+    let bloque=-1;
+    for(const t of declencheurs(m.p,m.dates)){
+      if(t.i<=bloque)continue;
+      total++; t.serie==='A'?seqA++:seqB++;
+      for(const off of [OFFSET_1,OFFSET_1+ECART_2]){
+        const k=fmt(plus(iso(m.dates[t.i]),off)).slice(0,7);
+        parMois[k]=(parMois[k]||0)+1;
       }
-      tt.innerHTML=info;tt.style.opacity='1';tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px';
-    });
-    el.addEventListener('mousemove',e=>{tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px'});
-    el.addEventListener('mouseleave',()=>{tt.style.opacity='0'});
-    el.addEventListener('click',()=>{if(r&&((r.dates&&r.dates.length)||r.episodes.length))showSidePanel(r)});
-  });
-}
-
-function emptyState(){return `<div class="empty"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0066A1" stroke-width="1.5" opacity=".4"><path d="M12 2C8.13 2 5 5.13 5 9c0 4.25 7 13 7 13s7-8.75 7-13c0-1.3-.36-2.52-.99-3.56"/></svg><div class="big">Cliquez sur « Actualiser » pour charger les données</div></div>`}
-
-// ── PANNEAU LATÉRAL : HISTORIQUE COMPLET ──────────────────────────────────────
-function showSidePanel(r){
-  openCode=r.dept.code;
-  const sp=document.getElementById('side-panel');
-  sp.classList.remove('hidden');
-  let epsHtml='';
-  if(!r.episodes.length){
-    const T=parseFloat(document.getElementById('threshold').value);
-    const p=r.precip||[],d=r.dates||[];
-    let maxRoll=0,maxRollEnd=-1,maxDay=0,maxDayIdx=-1;
-    for(let i=0;i<p.length;i++){
-      if(p[i]>maxDay){maxDay=p[i];maxDayIdx=i;}
-      let s=0;for(let k=Math.max(0,i-29);k<=i;k++)s+=p[k];
-      if(s>maxRoll){maxRoll=s;maxRollEnd=i;}
+      bloque=t.i+OFFSET_1+ECART_2+SILENCE;
     }
-    const total=p.reduce((a,b)=>a+b,0);
-    epsHtml=`<div class="ep-card">
-      <div class="ep-title">Aucun épisode de forte pluie</div>
-      <div class="ep-meta" style="margin-top:6px">Le seuil de ${T} mm n'a pas été atteint sur la période analysée.</div>
-      <div style="margin-top:12px;display:flex;flex-direction:column;gap:9px">
-        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--slate-light)">Cumul max · 30 j glissants</span><b>${maxRoll.toFixed(0)} mm${maxRollEnd>=0?` · ${frDate(d[maxRollEnd])}`:''}</b></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--slate-light)">Pic max · 24h</span><b>${maxDay.toFixed(0)} mm${maxDayIdx>=0?` · ${frDate(d[maxDayIdx])}`:''}</b></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--slate-light)">Cumul total sur la période</span><b>${total.toFixed(0)} mm</b></div>
-      </div>
-    </div>`;
-  }else{
-    r.episodes.forEach((ep,idx)=>{
-      const m=ep.mailing;
-      const st=m.st;
-      let actions='';
-      if(m.state==='sent')actions=`<button class="mini-btn mini-btn-undo" onclick="unmarkMail('${m.key}')">↩ Annuler</button>`;
-      else if(m.state==='abandonne')actions=`<button class="mini-btn mini-btn-undo" onclick="annulerAbandon('${m.key}')">↩ Reprendre</button>`;
-      else if(m.state==='locked')actions=`<span style="font-size:11px;color:var(--slate-light)">Libre le ${frDate(m.lockUntil)}</span>`;
-      else if(m.state==='expired')actions=`<span style="font-size:11px;color:var(--slate-light)">Abandonné</span>`;
-      else actions=`<button class="mini-btn mini-btn-do" onclick="marquerEnvoye('${m.key}')">Marquer envoyé</button><button class="mini-btn mini-btn-undo" onclick="abandonner('${m.key}')">Abandonner</button>`;
-      const ph=(ep.phenomenes&&ep.phenomenes.length)?`<div class="ep-meta">Phénomènes : ${ep.phenomenes.join(', ')}</div>`:'';
-      epsHtml+=`<div class="ep-card${m.state==='locked'?' locked':''}">
-        <div class="ep-head">
-          <div>
-            <div class="ep-title">Épisode du ${frDate(ep.dateObj)}</div>
-            <div class="ep-meta">${ep.cumul.toFixed(0)} mm cumulés sur ${ep.windowDays} j · pic ${ep.peak24.toFixed(0)} mm/24h</div>
-            ${ph}
-          </div>
-          <button class="mini-btn mini-btn-copy" onclick="copyEmailDraft('${r.dept.code}',${idx})">📋 Email</button>
-        </div>
-        <div class="mail-row">
-          <div class="mail-info"><b>J+${m.off}</b> · ${frDate(m.date)}<br><span class="badge badge-${st.cls}" style="margin-top:4px">${st.txt}</span></div>
-          <div class="mail-actions">${actions}</div>
-        </div>
-      </div>`;
-    });
   }
-  let evHtml='';
-  if(r.events&&r.events.length){
-    const items=r.events.slice().reverse().map(e=>`<span style="display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:12px;margin:0 5px 5px 0">${e.icon} ${frDate(e.date)} · ${e.label}</span>`).join('');
-    evHtml=`<div class="ep-card" style="background:#fbf7ff;border-color:#e9d5ff"><div class="ep-title" style="font-size:14px">⚠ Phénomènes marquants (${r.events.length})</div><div class="ep-meta" style="margin:4px 0 10px">Orages, grêle, neige… signalés par jour (estimation du modèle météo, non quantifiée).</div><div>${items}</div></div>`;
-  }
-  sp.innerHTML=`<div class="side-inner fade-in">
-    <div class="sp-header">
-      <button class="sp-close" onclick="closeSidePanel()">✕</button>
-      <h2>${r.dept.code} — ${r.dept.nom}</h2>
-      <p>${r.dept.region} · ${r.dept.pref} · ${r.episodes.length} épisode(s)</p>
+  const an=Math.round(total*365/prof), mails=an*2;
+  const mois=Object.entries(parMois).sort();
+  const max=Math.max(1,...mois.map(x=>x[1]));
+  return `
+  <div class="panel"><div class="panel-head"><div><h2>Simulation</h2>
+    <div class="sub">Effet des réglages sur ${prof} jours d'historique réel. Aucun effet sur ce qui part.</div></div></div>
+    <div class="simu-grid">
+      <div class="simu-card"><div class="l">Séquences sur la période</div>
+        <div class="n">${total}</div><div class="d">série A ${seqA} · série B ${seqB}</div></div>
+      <div class="simu-card"><div class="l">Projection annuelle</div>
+        <div class="n">${an}</div><div class="d">séquences par an, soit <b>${mails} campagnes</b></div></div>
+      <div class="simu-card"><div class="l">Par département</div>
+        <div class="n">${(an/DEPTS.length).toFixed(1).replace('.',',')}</div>
+        <div class="d">séquences par an en moyenne, soit ${(an/DEPTS.length*2).toFixed(1).replace('.',',')} mails par contact</div></div>
+      <div class="simu-card"><div class="l">Réglages testés</div>
+        <div class="n" style="font-size:19px">${PIC} mm · ${String(SEUIL_JOUR).replace('.',',')} mm · ${NB_JOURS} j</div>
+        <div class="d">pic 24 h · seuil jour de pluie · nombre de jours</div></div>
     </div>
-    <div class="sp-body">
-      ${r.error?'<p style="color:#ef4444;font-size:13px;margin-bottom:10px">⚠ Erreur de chargement des données.</p>':''}
-      <div style="margin-bottom:16px"><canvas id="chart-canvas" height="120"></canvas></div>
-      ${evHtml}
-      ${epsHtml}
+    <div class="bars">${mois.map(([m,v])=>`<div class="bar-wrap">
+      <div class="bar-val">${v}</div>
+      <div class="bar" style="height:${Math.round(v/max*70)}px"></div>
+      <div class="bar-lab">${m.slice(5)}/${m.slice(2,4)}</div></div>`).join('')}</div>
+    <div style="padding:6px 22px 20px;font-size:12px;color:var(--slate-light)">
+      Campagnes par mois d'envoi. Un creux suivi d'un pic vient du verrou, pas du climat :
+      les départements déclenchent ensemble, purgent leurs ${OFFSET_1+ECART_2+SILENCE} jours, puis ressortent ensemble.
     </div>
   </div>`;
-  drawMiniChart(r);
-}
-function closeSidePanel(){openCode=null;document.getElementById('side-panel').classList.add('hidden');if(miniChart){miniChart.destroy();miniChart=null;}}
-
-function drawMiniChart(r){
-  if(miniChart){miniChart.destroy();miniChart=null;}
-  const ctx=document.getElementById('chart-canvas');
-  if(!ctx||!r.dates||!r.dates.length)return;
-  const epDates=new Set(r.episodes.map(e=>e.date));
-  miniChart=new Chart(ctx,{type:'bar',data:{labels:r.dates.map(d=>d.slice(5)),datasets:[{data:r.precip,backgroundColor:r.dates.map(d=>epDates.has(d)?'rgba(239,68,68,0.9)':'rgba(0,102,161,0.45)'),borderRadius:2,barPercentage:1,categoryPercentage:1}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>r.dates[c[0].dataIndex],label:c=>`${c.raw.toFixed(1)} mm`}}},scales:{x:{ticks:{font:{size:8},maxTicksLimit:12},grid:{display:false}},y:{ticks:{font:{size:10}},title:{display:true,text:'mm/jour',font:{size:10}}}}}});
 }
 
-// ── ACTIONS ──────────────────────────────────────────────────────────────────
-function marquerEnvoye(key){
-  delete abandonStore[key];
-  sentStore[key]=fmtDate(today);saveStore();
-  showToast(`Envoi marqué comme traité (${frDate(today)}) — verrou 30 j armé`);
-  recompute();
-}
-window.marquerEnvoye=marquerEnvoye;
-
-// Abandon : on renonce à cet envoi sans qu'aucun mail ne parte. Contrairement à
-// « marquer envoyé », le verrou 30 j n'est PAS armé.
-function abandonner(key){
-  delete sentStore[key];
-  abandonStore[key]=fmtDate(today);saveStore();
-  showToast('Envoi abandonné — aucun mail parti, verrou non armé');
-  recompute();
-}
-window.abandonner=abandonner;
-
-function annulerAbandon(key){delete abandonStore[key];saveStore();showToast('Abandon annulé');recompute();}
-window.annulerAbandon=annulerAbandon;
-
-function abandonnerPlan(){
-  const n=lastPlan.length;
-  if(!n){showToast('Rien à abandonner');return;}
-  if(!confirm(`Abandonner les ${n} envoi(s) du plan du jour ?\n\nAucun mail ne part et le verrou 30 j ne sera pas armé.`))return;
-  lastPlan.forEach(p=>{delete sentStore[p.cle];abandonStore[p.cle]=fmtDate(today);});
-  saveStore();showToast(`${n} envoi(s) abandonné(s)`);recompute();
-}
-window.abandonnerPlan=abandonnerPlan;
-
-function markMail(key){marquerEnvoye(key);}   // ancien nom, conservé
-function unmarkMail(key){delete sentStore[key];saveStore();showToast('Statut « envoyé » retiré');recompute();}
-
-function bulkMarkPast(){
-  let n=0;
-  for(const r of results){
-    for(const ep of r.episodes){
-      const m=ep.mailing;
-      if(m&&m.state==='open'&&diffDays(today,m.date)<=0){sentStore[m.key]=fmtDate(m.date);n++;}
-    }
-  }
-  saveStore();showToast(n?`${n} envoi(s) passé(s) marqués comme traités`:'Aucun envoi passé à traiter');recompute();
-}
-
-function copyEmailDraft(code,idx){
-  const r=results.find(x=>x.dept.code===code);if(!r)return;
-  const ep=r.episodes[idx];if(!ep)return;
-  const ph=(ep.phenomenes&&ep.phenomenes.length)?` Phénomènes relevés : ${ep.phenomenes.join(', ').toLowerCase()}.`:'';
-  const txt=`Objet : Suite aux fortes pluies dans votre département — Diagnostic fuite d'eau\n\nBonjour,\n\nSuite aux fortes précipitations relevées sur le département ${r.dept.nom} autour du ${frDate(ep.dateObj)} (${ep.cumul.toFixed(0)} mm cumulés${ep.windowDays>1?` sur ${ep.windowDays} jours`:` en 24h`}), nous souhaitons vous informer que des infiltrations peuvent se déclarer dans les semaines suivant de tels épisodes.${ph}\n\nax'eau, spécialiste de la recherche de fuites et d'infiltrations, réalise un diagnostic non destructif et vous remet un rapport technique exploitable immédiatement.\n\nCordialement,\nL'équipe ax'eau\nwww.ax-eau.com`;
-  navigator.clipboard.writeText(txt).then(()=>showToast('Brouillon copié ✓')).catch(()=>showToast('Copie impossible ici'));
-}
-
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
-
-async function testApi(){
-  const box=document.getElementById('diag');box.style.display='block';
-  const depth=parseInt(document.getElementById('depth').value);
-  const endDate=fmtDate(today),startDate=fmtDate(addDays(today,-depth));
-  const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522&start_date=${startDate}&end_date=${endDate}&daily=precipitation_sum&timezone=Europe%2FParis`;
-  box.textContent='⏳ Test sur Paris (75)…\n'+url+'\n\n';
-  try{
-    const r=await Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timeout')),20000))]);
-    box.textContent+='Statut HTTP : '+r.status+' '+r.statusText+'\n';
-    const txt=await r.text();
-    box.textContent+='\nRéponse (extrait) :\n'+txt.slice(0,800);
-    const j=JSON.parse(txt);
-    if(j.daily&&j.daily.precipitation_sum){
-      const vals=j.daily.precipitation_sum.filter(v=>v!=null);
-      box.textContent+=`\n\n✅ ${vals.length} jours · pic ${Math.max(0,...vals).toFixed(1)} mm/j · cumul ${vals.reduce((a,b)=>a+b,0).toFixed(1)} mm`;
-    }
-  }catch(e){box.textContent+='\n❌ ERREUR : '+e.name+' — '+e.message+'\n\n(Normal dans l\'aperçu Claude : ouvrez le fichier .html hors de Claude.)';}
-}
-
-fetchAllData();
+lireControles();
+chargerTout(false);
 </script>
 </body>
 </html>
