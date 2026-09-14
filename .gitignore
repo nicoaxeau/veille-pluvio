@@ -1,0 +1,45 @@
+# LISTE BLANCHE — ce depot est PUBLIC.
+#
+# Tout est exclu par defaut. Seuls les fichiers explicitement nommes ci-dessous
+# entrent dans le depot. Un fichier ajoute au projet n'y entre donc pas tant
+# que quelqu'un ne l'a pas inscrit ici, volontairement.
+#
+# C'est l'inverse d'une liste noire, et c'est voulu : avec une liste noire,
+# oublier une ligne publie un fichier. Avec une liste blanche, oublier une
+# ligne ne publie rien.
+#
+# Ne JAMAIS inscrire ici : .env, BRIEF.md, extraction_vision.py,
+# jalon1_vision.py, montage_mailjet.py, verif_mailjet.py, les gabarits de
+# mail, rendu/. Ils contiennent des adresses email, des identifiants de
+# segments Vision, ou les textes commerciaux d'Ax'eau.
+
+# --- tout est exclu ---
+/*
+
+# --- sauf ceci ---
+!/.gitignore
+!/.gitattributes
+!/README.md
+
+# la detection et ses donnees de reference
+!/moteur.py
+!/depts.json
+!/libelles-departements.json
+
+# l'etat publie, et ce qui le fabrique et le controle
+!/etat.json
+!/maj_etat.py
+!/verif_etat.py
+
+# la non-regression entre moteur.py et index.html
+!/test_coherence.py
+
+# la page servie par GitHub Pages (Pages sert index.html a la racine)
+!/index.html
+
+# le workflow, et lui seul dans .github
+!/.github/
+/.github/*
+!/.github/workflows/
+/.github/workflows/*
+!/.github/workflows/veille.yml

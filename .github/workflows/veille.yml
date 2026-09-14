@@ -1,0 +1,118 @@
+name: Veille pluviometrique
+
+# MODE A BLANC. Le cron detecte, il ecrit etat.json, et c'est tout.
+#
+# Il n'appelle ni Mailjet ni Vision : aucun secret n'est declare dans ce
+# workflow, et il ne peut donc pas en utiliser. La seule sortie reseau est
+# Open-Meteo, API publique en lecture, sans identifiant.
+#
+# LE DEPOT EST PUBLIC. Les logs de ce workflow le sont aussi : on n'y ecrit
+# jamais d'adresse email. verif_etat.py refuse le commit s'il en trouve une
+# dans etat.json.
+
+on:
+  schedule:
+    # 11 h Paris. En heure d'ete « 0 9 * * * » UTC vaut 11 h ; a partir du
+    # 25 octobre 2026, passer a « 0 10 * * * ». Les deux lignes sont ecrites,
+    # une seule est active : decommenter l'autre le 25/10/2026.
+    - cron: "0 9 * * *"
+    # - cron: "0 10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veille
+  cancel-in-progress: false
+
+jobs:
+  veille:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Non-regression moteur.py contre index.html
+        # Les deux implementations doivent produire le meme texte. Si elles
+        # divergent, on ne publie pas un etat que la page interpreterait
+        # autrement.
+        run: python test_coherence.py
+
+      - name: Detection
+        run: python moteur.py > veille.json
+
+      - name: Mise a jour de etat.json
+        run: python maj_etat.py veille.json
+
+      - name: Controle avant commit — aucune adresse dans etat.json
+        # Garde-fou dur. S'il trouve un « @ » suivi d'un point, ou un champ
+        # au nom evoquant un destinataire, il sort en erreur et rien n'est
+        # commite.
+        run: python verif_etat.py
+
+      - name: Commit si etat.json a change
+        run: |
+          if git diff --quiet -- etat.json; then
+            echo "etat.json inchange, rien a commiter."
+            exit 0
+          fi
+          git config user.name  "veille-pluvio"
+          git config user.email "veille-pluvio@users.noreply.github.com"
+          git add etat.json
+          git commit -m "Veille du $(date -u +%Y-%m-%d) — detection automatique"
+          git push
+
+      - name: Ne pas garder la sortie brute
+        # veille.json ne contient pas d'adresse, mais il n'a pas a etre
+        # publie : il est regenere a chaque execution.
+        if: always()
+        run: rm -f veille.json
+
+  notifier:
+    # Notification d'echec. Se declenche uniquement si le job precedent
+    # tombe : moteur.py en erreur, divergence de non-regression, ou
+    # verif_etat.py qui refuse le commit.
+    needs: veille
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ouvrir une issue d'echec
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const titre = `Veille pluviometrique en echec — ${new Date().toISOString().slice(0,10)}`;
+            const corps = [
+              "La tache planifiee a echoue. Aucun etat n'a ete publie.",
+              "",
+              `Execution : ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              "",
+              "Causes possibles, par ordre de frequence :",
+              "- Open-Meteo indisponible ou trop de departements en erreur",
+              "- divergence entre moteur.py et index.html (test_coherence.py)",
+              "- verif_etat.py a refuse le commit : une adresse a ete trouvee dans etat.json",
+              "",
+              "La page continue d'afficher le dernier etat publie.",
+            ].join("\n");
+            const ouvertes = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: "open", labels: "veille-echec",
+            });
+            if (ouvertes.data.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: ouvertes.data[0].number, body: corps,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title: titre, body: corps, labels: ["veille-echec"],
+              });
+            }

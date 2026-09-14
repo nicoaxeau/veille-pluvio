@@ -1,236 +1,746 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""Moteur de veille pluviometrique Ax'eau - v2.
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ax'eau — Veille pluviométrique v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#0066A1;--blue-dark:#013a5e;--blue-light:#e8f4fd;
+  --cyan:#00b4d8;--cyan-light:#caf0f8;
+  --ink:#0f1c2e;--slate:#3a4a5e;--slate-light:#8395a8;--line:#e7eef5;
+  --white:#fff;--bg:#f4f8fc;
+  --green:#22c55e;--yellow:#eab308;--orange:#f97316;--red:#ef4444;--lock:#8b7fd4;--grey:#cbd5e1;
+  --serieA:#0ea5e9;--serieB:#7c3aed;
+  --r:18px;--shadow:0 10px 40px -12px rgba(1,58,94,.18);--shadow-sm:0 2px 12px rgba(1,58,94,.08);
+}
+body{font-family:'Outfit',sans-serif;background:
+  radial-gradient(1200px 600px at 100% -10%,rgba(0,180,216,.12),transparent),
+  radial-gradient(900px 500px at -10% 110%,rgba(0,102,161,.10),transparent),var(--bg);
+  color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:60px}
 
-Deux declencheurs independants, sur les 96 departements metropolitains :
-  Serie A - intensite    : un jour a PIC mm ou plus en 24 h
-  Serie B - persistance  : NB_JOURS jours de pluie (>= SEUIL_JOUR mm) sur 30 j glissants
+.header{padding:22px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-text h1{font-size:26px;font-weight:800;letter-spacing:-1px;background:linear-gradient(120deg,var(--blue),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.logo-text p{font-size:12px;color:var(--slate-light);font-weight:500;letter-spacing:.3px}
+.header-right{text-align:right}
+.header-right .date{color:var(--slate);font-size:14px;font-weight:600;text-transform:capitalize}
+.header-right .subtitle{color:var(--slate-light);font-size:11px;margin-top:2px}
 
-Une detection ouvre une SEQUENCE de deux mails :
-  mail 1 a J+7 apres l'episode
-  mail 2 a 14 jours apres l'ENVOI REEL du mail 1 (pas apres l'episode)
+.controls{margin:0 24px;background:rgba(255,255,255,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.6);border-radius:var(--r);padding:18px 24px;display:flex;flex-wrap:wrap;
+  align-items:flex-end;gap:26px;position:sticky;top:14px;z-index:100;box-shadow:var(--shadow)}
+.ctrl-group{display:flex;flex-direction:column;gap:7px;min-width:190px}
+.ctrl-label{font-size:11px;font-weight:700;color:var(--slate-light);text-transform:uppercase;letter-spacing:.7px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ctrl-label .pill{background:var(--blue);color:#fff;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700;letter-spacing:0}
+.ctrl-label .pill.b{background:var(--serieB)}
+.ctrl-sub{font-size:10px;color:var(--slate-light);font-weight:400;margin-top:-3px}
+.slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;background:var(--line);outline:none;cursor:pointer}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--blue);box-shadow:0 2px 8px rgba(0,102,161,.4);cursor:pointer;transition:transform .15s}
+.slider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.slider.b::-webkit-slider-thumb{border-color:var(--serieB)}
+.slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--blue);cursor:pointer}
+select{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;border:1.5px solid var(--line);border-radius:12px;padding:9px 14px;color:var(--slate);outline:none;cursor:pointer;background:#fff}
+select:focus,select:hover{border-color:var(--blue)}
+.btn{font-family:'Outfit',sans-serif;background:var(--blue);color:#fff;border:0;border-radius:12px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:var(--shadow-sm)}
+.btn:hover{background:var(--blue-dark)}
+.btn.ghost{background:#fff;color:var(--blue);border:1.5px solid var(--line)}
+.btn.spinning{opacity:.55;pointer-events:none}
+.btn-sm{font-family:'Outfit',sans-serif;background:#eef3f8;border:1px solid #cfdce8;color:var(--blue-dark);padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer}
+.btn-sm:hover{background:#dfeaf5}
 
-Regles :
-  - une seule sequence a la fois par departement
-  - apres l'envoi du mail 2, silence de SILENCE jours
-  - un mail 1 monte mais jamais envoye expire au bout de EXPIRATION jours
+#progress-wrap{margin:14px 24px 0;display:none}
+#progress-track{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+#progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .25s}
+#progress-label{font-size:12px;color:var(--slate-light);margin-top:6px;font-weight:500}
 
-Lecture seule. N'envoie rien, ne programme rien. Sortie JSON sur stdout.
-"""
-import json, os, sys, time, datetime as dt, urllib.request, urllib.parse
+.banner{margin:16px 24px 0;padding:12px 18px;border-radius:14px;font-size:13px;font-weight:600;display:none}
+.banner.warn{background:#fef3c7;color:#92400e;border:1px solid #fde68a;display:block}
+.banner.err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;display:block}
+.banner.ok{background:#dcfce7;color:#166534;border:1px solid #bbf7d0;display:block}
 
-# ---------------------------------------------------------------- parametres
-HOST        = os.environ.get("VP_HOST", "historical-forecast-api.open-meteo.com")
-PIC         = float(os.environ.get("VP_PIC", 30))        # serie A, mm/24 h
-SEUIL_JOUR  = float(os.environ.get("VP_SEUIL_JOUR", 1))  # serie B, mm pour compter un jour de pluie
-NB_JOURS    = int(os.environ.get("VP_NB_JOURS", 15))     # serie B, jours dans la fenetre
-FENETRE     = 30                                          # fenetre glissante, jours
-OFFSET_1    = 7                                           # mail 1 a J+7
-ECART_2     = 14                                          # mail 2 a envoi reel du mail 1 + 14
-SILENCE     = 30                                          # apres le mail 2
-EXPIRATION  = int(os.environ.get("VP_EXPIRATION", 21))    # mail 1 monte non envoye
-PROFONDEUR  = int(os.environ.get("VP_PROFONDEUR", 92))
-LOT         = 12
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:18px 24px 0}
+.kpi{background:#fff;border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow-sm);border:1px solid var(--line)}
+.kpi .n{font-size:30px;font-weight:800;line-height:1;letter-spacing:-1px}
+.kpi .l{font-size:11px;color:var(--slate-light);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:7px}
 
-AUJOURDHUI  = dt.date.fromisoformat(os.environ["VP_DATE"]) if os.environ.get("VP_DATE") else dt.date.today()
+.tabs{display:flex;gap:6px;margin:22px 24px 0;flex-wrap:wrap}
+.tab{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;color:var(--slate);cursor:pointer;background:rgba(255,255,255,.6);border:1px solid transparent;user-select:none}
+.tab:hover{background:#fff}
+.tab.active{background:var(--blue);color:#fff;box-shadow:var(--shadow-sm)}
 
-# ---------------------------------------------------------------- etat
-# Cle de sequence : "CODE|AAAA-MM-JJ|A" ou "|B"
-# etapes : detecte / mail1_monte / mail1_envoye / mail2_monte / mail2_envoye / abandonne
-ETAT = {"sequences": {}}
-_p = os.environ.get("VP_ETAT")
-if _p and os.path.exists(_p):
-    ETAT = json.load(open(_p, encoding="utf-8"))
-    ETAT.setdefault("sequences", {})
-SEQ = ETAT["sequences"]
+.panel{margin:16px 24px 0;background:#fff;border-radius:var(--r);box-shadow:var(--shadow-sm);border:1px solid var(--line);overflow:hidden}
+.panel-head{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.panel-head h2{font-size:16px;font-weight:700}
+.panel-head .sub{font-size:12px;color:var(--slate-light);font-weight:500;margin-top:2px}
 
-DEPTS = json.load(open(os.environ.get("VP_DEPTS", "depts.json"), encoding="utf-8"))
-DEBUT, FIN = AUJOURDHUI - dt.timedelta(days=PROFONDEUR), AUJOURDHUI
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:11px 14px;font-size:10.5px;font-weight:700;color:var(--slate-light);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--line);white-space:nowrap;background:#fbfdff}
+td{padding:11px 14px;border-bottom:1px solid #f2f7fb;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fbfdff}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+th.num{text-align:right}
 
+.chip{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+.chip.A{background:#e0f2fe;color:#075985}
+.chip.B{background:#ede9fe;color:#5b21b6}
+.chip.m1{background:#e0f2fe;color:#075985}
+.chip.m2{background:#fef3c7;color:#92400e}
+.st{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px}
+.dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.code{font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums}
+.muted{color:var(--slate-light);font-weight:500}
+.pheno{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;white-space:nowrap}
+tr.apercu td{background:#fbfdff;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--slate);font-style:italic;padding-top:0;padding-bottom:11px}
+tr.apercu .ap-l{font-style:normal;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--slate-light);margin-right:9px}
+tr.apercu:hover td{background:#fbfdff}
+.empty{padding:52px 20px;text-align:center;color:var(--slate-light)}
+.empty .big{font-size:15px;font-weight:600;margin-top:12px}
 
-def charger(lot):
-    q = urllib.parse.urlencode({
-        "latitude":  ",".join(f"{d['lat']}"  for d in lot),
-        "longitude": ",".join(f"{d['lon']}" for d in lot),
-        "start_date": DEBUT.isoformat(), "end_date": FIN.isoformat(),
-        "daily": "precipitation_sum,weather_code", "timezone": "Europe/Paris"})
-    with urllib.request.urlopen(f"https://{HOST}/v1/forecast?{q}", timeout=60) as r:
-        data = json.load(r)
-    return data if isinstance(data, list) else [data]
+#france-svg{width:100%;height:auto;display:block;max-height:70vh}
+.map-legend{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:10px 20px 22px;font-size:12px;color:var(--slate);font-weight:600}
+.legend-item{display:flex;align-items:center;gap:7px}
+.legend-dot{width:11px;height:11px;border-radius:50%}
 
+.simu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;padding:20px 22px}
+.simu-card{border:1px solid var(--line);border-radius:14px;padding:16px}
+.simu-card .n{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.simu-card .l{font-size:11px;color:var(--slate-light);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:6px}
+.simu-card .d{font-size:12px;color:var(--slate);margin-top:8px;line-height:1.5}
+.bars{display:flex;align-items:flex-end;gap:5px;height:110px;padding:20px 22px 0}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bar{width:100%;background:linear-gradient(180deg,var(--cyan),var(--blue));border-radius:5px 5px 0 0;min-height:2px}
+.bar-lab{font-size:9.5px;color:var(--slate-light);font-weight:600}
+.bar-val{font-size:10px;font-weight:700;color:var(--slate)}
 
-# Codes WMO -> (libelle complet pour l'outil, mot repris dans le mail ou None).
-# 96 et 99 ramenes a "orage" : la grêle est modélisée, pas observée.
-PHENO = {95: ("Orage", "orage"), 96: ("Orage avec grêle", "orage"), 99: ("Orage avec forte grêle", "orage"),
-         80: ("Averses", "averses"), 81: ("Averses fortes", "averses"), 82: ("Averse violente", "averses"),
-         66: ("Pluie verglaçante", None), 67: ("Pluie verglaçante forte", None),
-         75: ("Neige forte", None), 85: ("Chutes de neige", None), 86: ("Fortes chutes de neige", None),
-         63: ("Pluie continue", None), 65: ("Pluie forte", None), 61: ("Pluie faible", None),
-         51: ("Bruine", None), 53: ("Bruine", None), 55: ("Bruine forte", None)}
+.foot{margin:24px;font-size:11.5px;color:var(--slate-light);line-height:1.7}
+code{background:#eef3f8;padding:1px 6px;border-radius:5px;font-size:11.5px}
+</style>
+</head>
+<body>
 
-MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet",
-        "août", "septembre", "octobre", "novembre", "décembre"]
+<div class="header">
+  <div class="logo">
+    <svg width="46" height="46" viewBox="0 0 44 44" fill="none" style="filter:drop-shadow(0 6px 14px rgba(0,102,161,.35))">
+      <path d="M22 4C22 4 8 19 8 27a14 14 0 0 0 28 0C36 19 22 4 22 4z" fill="url(#g)"/>
+      <defs><linearGradient id="g" x1="8" y1="4" x2="36" y2="41"><stop stop-color="#00b4d8"/><stop offset="1" stop-color="#0066A1"/></linearGradient></defs>
+    </svg>
+    <div class="logo-text">
+      <h1>Veille pluviométrique</h1>
+      <p>Ax'eau · deux séries · séquence à deux mails</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="date" id="today-date">—</div>
+    <div class="subtitle" id="etat-src">état non chargé</div>
+  </div>
+</div>
 
+<div class="controls">
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>Série A · pic 24 h</span><span class="pill" id="valPic">30</span></div>
+    <input type="range" class="slider" id="pic" min="10" max="80" step="1" value="30">
+    <div class="ctrl-sub">un seul jour à ce niveau suffit</div>
+  </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>Série B · jour de pluie</span><span class="pill b" id="valSeuil">1</span></div>
+    <input type="range" class="slider b" id="seuilJour" min="0.1" max="5" step="0.1" value="1">
+    <div class="ctrl-sub">mm à partir desquels un jour compte</div>
+  </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>Série B · nb de jours</span><span class="pill b" id="valNb">15</span></div>
+    <input type="range" class="slider b" id="nbJours" min="5" max="25" step="1" value="15">
+    <div class="ctrl-sub">sur une fenêtre glissante de 30 j</div>
+  </div>
+  <div class="ctrl-group" style="min-width:150px">
+    <div class="ctrl-label"><span>Profondeur</span></div>
+    <select id="depth">
+      <option value="92">3 mois</option>
+      <option value="180">6 mois</option>
+      <option value="365">12 mois</option>
+    </select>
+    <div class="ctrl-sub" id="depth-warn">—</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:2px">
+    <button class="btn" id="btn-refresh" onclick="chargerTout(true)">Actualiser</button>
+    <button class="btn ghost" onclick="reinit()">Réglages par défaut</button>
+  </div>
+</div>
 
-def bloc_meteo(r, dept_en):
-    """Phrase exacte injectee dans %%BLOC_METEO%% du template."""
-    def jour_long(s):
-        d = dt.date.fromisoformat(s)
-        return f"{d.day} {MOIS[d.month - 1]}"
-    if r["serie"] == "B":
-        return f"Sur les 30 derniers jours, {r['jours_pluie']} jours de pluie ont été relevés {dept_en}."
-    mot = PHENO.get(r.get("wmo", -1), (None, None))[1]
-    mm = str(r["pic24_mm"]).replace(".", ",")
-    if mot == "orage":
-        return f"L'orage du {jour_long(r['pic_date'])} a laissé {mm} mm en 24 heures {dept_en}."
-    if mot == "averses":
-        return f"Les averses du {jour_long(r['pic_date'])} ont laissé {mm} mm en 24 heures {dept_en}."
-    return f"Le {jour_long(r['pic_date'])}, {mm} mm de pluie sont tombés en 24 heures {dept_en}."
+<div id="progress-wrap">
+  <div id="progress-track"><div id="progress-bar"></div></div>
+  <div id="progress-label"></div>
+</div>
 
+<div class="banner" id="banner"></div>
 
-def declencheurs(p, dates, codes=None):
-    """Jours declencheurs, par serie. Renvoie [(index, serie, detail), ...] chronologique."""
-    out = []
-    for i, v in enumerate(p):
-        if v >= PIC:
-            c = codes[i] if codes and i < len(codes) and codes[i] is not None else -1
-            out.append((i, "A", {"pic24_mm": round(v, 1), "pic_date": dates[i], "wmo": c,
-                                 "phenomene": PHENO.get(c, (None, None))[0]}))
-    for i in range(len(p)):
-        deb = max(0, i - (FENETRE - 1))
-        n = sum(1 for k in range(deb, i + 1) if p[k] >= SEUIL_JOUR)
-        if n >= NB_JOURS:
-            out.append((i, "B", {"jours_pluie": n, "seuil_jour_mm": SEUIL_JOUR,
-                                 "debut_fenetre": dates[deb]}))
-    out.sort(key=lambda x: (x[0], x[1]))
-    return out
+<div class="kpis" id="kpis"></div>
 
+<div class="tabs">
+  <div class="tab active" data-t="afaire" onclick="onglet('afaire')">À faire</div>
+  <div class="tab" data-t="sequences" onclick="onglet('sequences')">Séquences en cours</div>
+  <div class="tab" data-t="carte" onclick="onglet('carte')">Carte</div>
+  <div class="tab" data-t="historique" onclick="onglet('historique')">Historique &amp; performance</div>
+  <div class="tab" data-t="simulation" onclick="onglet('simulation')">Simulation</div>
+</div>
 
-def jour(d):
-    return (d - AUJOURDHUI).days
+<div id="vue"></div>
 
+<div class="foot">
+  Détection identique à <code>moteur.py</code>. Cette page ne pilote rien : l'avancement des séquences et les
+  statistiques viennent de <code>etat.json</code>, écrit par la tâche planifiée. Aucune clé API n'est présente
+  dans cette page. Source météo : <code>historical-forecast-api.open-meteo.com</code>.
+</div>
 
-def traiter(dept, p, dates, codes=None):
-    """Deroule la chronologie d'un departement et renvoie ses sequences."""
-    faits = []
-    libre_a_partir_de = None   # index de date avant lequel aucune nouvelle sequence
-    for i, serie, detail in declencheurs(p, dates, codes):
-        episode = dt.date.fromisoformat(dates[i])
-        cle = f"{dept['code']}|{dates[i]}|{serie}"
-        connue = SEQ.get(cle)
+<script>
+const DEPTS=[
+  {code:"01",nom:"Ain",pref:"Bourg-en-Bresse",lat:46.2050,lon:5.2277,region:"Auvergne-Rhône-Alpes"},
+  {code:"02",nom:"Aisne",pref:"Laon",lat:49.5644,lon:3.6244,region:"Hauts-de-France"},
+  {code:"03",nom:"Allier",pref:"Moulins",lat:46.5647,lon:3.3328,region:"Auvergne-Rhône-Alpes"},
+  {code:"04",nom:"Alpes-de-Haute-Provence",pref:"Digne-les-Bains",lat:44.0921,lon:6.2358,region:"PACA"},
+  {code:"05",nom:"Hautes-Alpes",pref:"Gap",lat:44.5594,lon:6.0773,region:"PACA"},
+  {code:"06",nom:"Alpes-Maritimes",pref:"Nice",lat:43.7102,lon:7.2620,region:"PACA"},
+  {code:"07",nom:"Ardèche",pref:"Privas",lat:44.7355,lon:4.5989,region:"Auvergne-Rhône-Alpes"},
+  {code:"08",nom:"Ardennes",pref:"Charleville-Mézières",lat:49.7699,lon:4.7197,region:"Grand Est"},
+  {code:"09",nom:"Ariège",pref:"Foix",lat:42.9659,lon:1.6053,region:"Occitanie"},
+  {code:"10",nom:"Aube",pref:"Troyes",lat:48.2973,lon:4.0744,region:"Grand Est"},
+  {code:"11",nom:"Aude",pref:"Carcassonne",lat:43.2130,lon:2.3491,region:"Occitanie"},
+  {code:"12",nom:"Aveyron",pref:"Rodez",lat:44.3500,lon:2.5750,region:"Occitanie"},
+  {code:"13",nom:"Bouches-du-Rhône",pref:"Marseille",lat:43.2965,lon:5.3698,region:"PACA"},
+  {code:"14",nom:"Calvados",pref:"Caen",lat:49.1829,lon:-0.3707,region:"Normandie"},
+  {code:"15",nom:"Cantal",pref:"Aurillac",lat:44.9261,lon:2.4400,region:"Auvergne-Rhône-Alpes"},
+  {code:"16",nom:"Charente",pref:"Angoulême",lat:45.6498,lon:0.1561,region:"Nouvelle-Aquitaine"},
+  {code:"17",nom:"Charente-Maritime",pref:"La Rochelle",lat:46.1591,lon:-1.1520,region:"Nouvelle-Aquitaine"},
+  {code:"18",nom:"Cher",pref:"Bourges",lat:47.0810,lon:2.3983,region:"Centre-Val de Loire"},
+  {code:"19",nom:"Corrèze",pref:"Tulle",lat:45.2667,lon:1.7667,region:"Nouvelle-Aquitaine"},
+  {code:"2A",nom:"Corse-du-Sud",pref:"Ajaccio",lat:41.9192,lon:8.7386,region:"Corse"},
+  {code:"2B",nom:"Haute-Corse",pref:"Bastia",lat:42.7008,lon:9.4503,region:"Corse"},
+  {code:"21",nom:"Côte-d'Or",pref:"Dijon",lat:47.3220,lon:5.0415,region:"Bourgogne-Franche-Comté"},
+  {code:"22",nom:"Côtes-d'Armor",pref:"Saint-Brieuc",lat:48.5134,lon:-2.7657,region:"Bretagne"},
+  {code:"23",nom:"Creuse",pref:"Guéret",lat:46.1684,lon:1.8684,region:"Nouvelle-Aquitaine"},
+  {code:"24",nom:"Dordogne",pref:"Périgueux",lat:45.1845,lon:0.7211,region:"Nouvelle-Aquitaine"},
+  {code:"25",nom:"Doubs",pref:"Besançon",lat:47.2378,lon:6.0241,region:"Bourgogne-Franche-Comté"},
+  {code:"26",nom:"Drôme",pref:"Valence",lat:44.9334,lon:4.8924,region:"Auvergne-Rhône-Alpes"},
+  {code:"27",nom:"Eure",pref:"Évreux",lat:49.0238,lon:1.1511,region:"Normandie"},
+  {code:"28",nom:"Eure-et-Loir",pref:"Chartres",lat:48.4536,lon:1.4880,region:"Centre-Val de Loire"},
+  {code:"29",nom:"Finistère",pref:"Quimper",lat:47.9960,lon:-4.0975,region:"Bretagne"},
+  {code:"30",nom:"Gard",pref:"Nîmes",lat:43.8367,lon:4.3601,region:"Occitanie"},
+  {code:"31",nom:"Haute-Garonne",pref:"Toulouse",lat:43.6047,lon:1.4442,region:"Occitanie"},
+  {code:"32",nom:"Gers",pref:"Auch",lat:43.6455,lon:0.5853,region:"Occitanie"},
+  {code:"33",nom:"Gironde",pref:"Bordeaux",lat:44.8378,lon:-0.5792,region:"Nouvelle-Aquitaine"},
+  {code:"34",nom:"Hérault",pref:"Montpellier",lat:43.6119,lon:3.8772,region:"Occitanie"},
+  {code:"35",nom:"Ille-et-Vilaine",pref:"Rennes",lat:48.1173,lon:-1.6778,region:"Bretagne"},
+  {code:"36",nom:"Indre",pref:"Châteauroux",lat:46.8130,lon:1.6914,region:"Centre-Val de Loire"},
+  {code:"37",nom:"Indre-et-Loire",pref:"Tours",lat:47.3941,lon:0.6848,region:"Centre-Val de Loire"},
+  {code:"38",nom:"Isère",pref:"Grenoble",lat:45.1885,lon:5.7245,region:"Auvergne-Rhône-Alpes"},
+  {code:"39",nom:"Jura",pref:"Lons-le-Saunier",lat:46.6740,lon:5.5540,region:"Bourgogne-Franche-Comté"},
+  {code:"40",nom:"Landes",pref:"Mont-de-Marsan",lat:43.8895,lon:-0.5020,region:"Nouvelle-Aquitaine"},
+  {code:"41",nom:"Loir-et-Cher",pref:"Blois",lat:47.5860,lon:1.3359,region:"Centre-Val de Loire"},
+  {code:"42",nom:"Loire",pref:"Saint-Étienne",lat:45.4397,lon:4.3872,region:"Auvergne-Rhône-Alpes"},
+  {code:"43",nom:"Haute-Loire",pref:"Le Puy-en-Velay",lat:45.0432,lon:3.8853,region:"Auvergne-Rhône-Alpes"},
+  {code:"44",nom:"Loire-Atlantique",pref:"Nantes",lat:47.2184,lon:-1.5536,region:"Pays de la Loire"},
+  {code:"45",nom:"Loiret",pref:"Orléans",lat:47.9029,lon:1.9039,region:"Centre-Val de Loire"},
+  {code:"46",nom:"Lot",pref:"Cahors",lat:44.4479,lon:1.4405,region:"Occitanie"},
+  {code:"47",nom:"Lot-et-Garonne",pref:"Agen",lat:44.2022,lon:0.6218,region:"Nouvelle-Aquitaine"},
+  {code:"48",nom:"Lozère",pref:"Mende",lat:44.5194,lon:3.4997,region:"Occitanie"},
+  {code:"49",nom:"Maine-et-Loire",pref:"Angers",lat:47.4784,lon:-0.5632,region:"Pays de la Loire"},
+  {code:"50",nom:"Manche",pref:"Saint-Lô",lat:49.1153,lon:-1.0872,region:"Normandie"},
+  {code:"51",nom:"Marne",pref:"Châlons-en-Champagne",lat:48.9575,lon:4.3659,region:"Grand Est"},
+  {code:"52",nom:"Haute-Marne",pref:"Chaumont",lat:48.1111,lon:5.1375,region:"Grand Est"},
+  {code:"53",nom:"Mayenne",pref:"Laval",lat:48.0733,lon:-0.7706,region:"Pays de la Loire"},
+  {code:"54",nom:"Meurthe-et-Moselle",pref:"Nancy",lat:48.6921,lon:6.1844,region:"Grand Est"},
+  {code:"55",nom:"Meuse",pref:"Bar-le-Duc",lat:48.7725,lon:5.1608,region:"Grand Est"},
+  {code:"56",nom:"Morbihan",pref:"Vannes",lat:47.6586,lon:-2.7595,region:"Bretagne"},
+  {code:"57",nom:"Moselle",pref:"Metz",lat:49.1193,lon:6.1757,region:"Grand Est"},
+  {code:"58",nom:"Nièvre",pref:"Nevers",lat:46.9895,lon:3.1572,region:"Bourgogne-Franche-Comté"},
+  {code:"59",nom:"Nord",pref:"Lille",lat:50.6292,lon:3.0573,region:"Hauts-de-France"},
+  {code:"60",nom:"Oise",pref:"Beauvais",lat:49.4295,lon:2.0850,region:"Hauts-de-France"},
+  {code:"61",nom:"Orne",pref:"Alençon",lat:48.4302,lon:0.0934,region:"Normandie"},
+  {code:"62",nom:"Pas-de-Calais",pref:"Arras",lat:50.2921,lon:2.7782,region:"Hauts-de-France"},
+  {code:"63",nom:"Puy-de-Dôme",pref:"Clermont-Ferrand",lat:45.7772,lon:3.0870,region:"Auvergne-Rhône-Alpes"},
+  {code:"64",nom:"Pyrénées-Atlantiques",pref:"Pau",lat:43.2951,lon:-0.3708,region:"Nouvelle-Aquitaine"},
+  {code:"65",nom:"Hautes-Pyrénées",pref:"Tarbes",lat:43.2328,lon:0.0781,region:"Occitanie"},
+  {code:"66",nom:"Pyrénées-Orientales",pref:"Perpignan",lat:42.6986,lon:2.8954,region:"Occitanie"},
+  {code:"67",nom:"Bas-Rhin",pref:"Strasbourg",lat:48.5734,lon:7.7521,region:"Grand Est"},
+  {code:"68",nom:"Haut-Rhin",pref:"Colmar",lat:48.0793,lon:7.3585,region:"Grand Est"},
+  {code:"69",nom:"Rhône",pref:"Lyon",lat:45.7640,lon:4.8357,region:"Auvergne-Rhône-Alpes"},
+  {code:"70",nom:"Haute-Saône",pref:"Vesoul",lat:47.6189,lon:6.1558,region:"Bourgogne-Franche-Comté"},
+  {code:"71",nom:"Saône-et-Loire",pref:"Mâcon",lat:46.3068,lon:4.8280,region:"Bourgogne-Franche-Comté"},
+  {code:"72",nom:"Sarthe",pref:"Le Mans",lat:47.9960,lon:0.1966,region:"Pays de la Loire"},
+  {code:"73",nom:"Savoie",pref:"Chambéry",lat:45.5646,lon:5.9178,region:"Auvergne-Rhône-Alpes"},
+  {code:"74",nom:"Haute-Savoie",pref:"Annecy",lat:45.8992,lon:6.1294,region:"Auvergne-Rhône-Alpes"},
+  {code:"75",nom:"Paris",pref:"Paris",lat:48.8566,lon:2.3522,region:"Île-de-France"},
+  {code:"76",nom:"Seine-Maritime",pref:"Rouen",lat:49.4432,lon:1.0993,region:"Normandie"},
+  {code:"77",nom:"Seine-et-Marne",pref:"Melun",lat:48.5404,lon:2.6596,region:"Île-de-France"},
+  {code:"78",nom:"Yvelines",pref:"Versailles",lat:48.8014,lon:2.1301,region:"Île-de-France"},
+  {code:"79",nom:"Deux-Sèvres",pref:"Niort",lat:46.3238,lon:-0.4653,region:"Nouvelle-Aquitaine"},
+  {code:"80",nom:"Somme",pref:"Amiens",lat:49.8942,lon:2.2957,region:"Hauts-de-France"},
+  {code:"81",nom:"Tarn",pref:"Albi",lat:43.9293,lon:2.1501,region:"Occitanie"},
+  {code:"82",nom:"Tarn-et-Garonne",pref:"Montauban",lat:44.0179,lon:1.3521,region:"Occitanie"},
+  {code:"83",nom:"Var",pref:"Toulon",lat:43.1242,lon:5.9280,region:"PACA"},
+  {code:"84",nom:"Vaucluse",pref:"Avignon",lat:43.9493,lon:4.8055,region:"PACA"},
+  {code:"85",nom:"Vendée",pref:"La Roche-sur-Yon",lat:46.6702,lon:-1.4270,region:"Pays de la Loire"},
+  {code:"86",nom:"Vienne",pref:"Poitiers",lat:46.5802,lon:0.3404,region:"Nouvelle-Aquitaine"},
+  {code:"87",nom:"Haute-Vienne",pref:"Limoges",lat:45.8336,lon:1.2611,region:"Nouvelle-Aquitaine"},
+  {code:"88",nom:"Vosges",pref:"Épinal",lat:48.1741,lon:6.4514,region:"Grand Est"},
+  {code:"89",nom:"Yonne",pref:"Auxerre",lat:47.7980,lon:3.5673,region:"Bourgogne-Franche-Comté"},
+  {code:"90",nom:"Territoire de Belfort",pref:"Belfort",lat:47.6382,lon:6.8635,region:"Bourgogne-Franche-Comté"},
+  {code:"91",nom:"Essonne",pref:"Évry",lat:48.6333,lon:2.4436,region:"Île-de-France"},
+  {code:"92",nom:"Hauts-de-Seine",pref:"Nanterre",lat:48.8924,lon:2.2047,region:"Île-de-France"},
+  {code:"93",nom:"Seine-Saint-Denis",pref:"Bobigny",lat:48.9094,lon:2.4449,region:"Île-de-France"},
+  {code:"94",nom:"Val-de-Marne",pref:"Créteil",lat:48.7902,lon:2.4558,region:"Île-de-France"},
+  {code:"95",nom:"Val-d'Oise",pref:"Cergy",lat:49.0362,lon:2.0756,region:"Île-de-France"},
+];
+const COORDS={
+  "01":[492,310],"02":[370,175],"03":[385,335],"04":[510,430],"05":[520,420],"06":[540,450],"07":[470,390],"08":[395,155],"09":[390,490],"10":[385,230],"11":[415,490],"12":[420,420],"13":[480,480],"14":[260,165],"15":[415,380],"16":[295,365],"17":[265,365],"18":[375,290],"19":[355,380],"2A":[545,535],"2B":[555,510],"21":[435,270],"22":[185,195],"23":[355,345],"24":[315,395],"25":[490,270],"26":[480,400],"27":[285,185],"28":[305,235],"29":[150,215],"30":[455,455],"31":[370,480],"32":[345,465],"33":[280,415],"34":[440,470],"35":[220,230],"36":[340,305],"37":[305,280],"38":[490,370],"39":[460,285],"40":[290,455],"41":[325,270],"42":[455,350],"43":[450,380],"44":[240,280],"45":[345,255],"46":[375,420],"47":[320,430],"48":[440,425],"49":[270,275],"50":[225,170],"51":[385,205],"52":[430,230],"53":[255,245],"54":[470,195],"55":[430,195],"56":[200,250],"57":[490,185],"58":[415,285],"59":[345,120],"60":[330,178],"61":[270,215],"62":[325,125],"63":[420,358],"64":[295,490],"65":[330,490],"66":[400,505],"67":[510,200],"68":[520,225],"69":[465,335],"70":[475,250],"71":[450,305],"72":[285,250],"73":[510,345],"74":[520,325],"75":[348,195],"76":[290,160],"77":[362,212],"78":[322,200],"79":[285,315],"80":[330,152],"81":[400,455],"82":[370,448],"83":[510,470],"84":[487,452],"85":[250,310],"86":[305,325],"87":[330,360],"88":[475,220],"89":[395,255],"90":[500,248],"91":[342,213],"92":[336,200],"93":[356,196],"94":[352,210],"95":[336,188]
+};
 
-        if not connue and libre_a_partir_de is not None and episode < libre_a_partir_de:
-            faits.append({"code": dept["code"], "dept": dept["nom"], "region": dept["region"],
-                          "cle": cle, "etape": "bloque", "episode": dates[i], "serie": serie,
-                          "libre_le": libre_a_partir_de.isoformat(), **detail})
-            continue
+const DEPT_EN={"01": "dans l'Ain", "02": "dans l'Aisne", "03": "dans l'Allier", "04": "dans les Alpes-de-Haute-Provence", "05": "dans les Hautes-Alpes", "06": "dans les Alpes-Maritimes", "07": "en Ardèche", "08": "dans les Ardennes", "09": "en Ariège", "10": "dans l'Aube", "11": "dans l'Aude", "12": "dans l'Aveyron", "13": "dans les Bouches-du-Rhône", "14": "dans le Calvados", "15": "dans le Cantal", "16": "en Charente", "17": "en Charente-Maritime", "18": "dans le Cher", "19": "en Corrèze", "2A": "en Corse-du-Sud", "2B": "en Haute-Corse", "21": "en Côte-d'Or", "22": "dans les Côtes-d'Armor", "23": "en Creuse", "24": "en Dordogne", "25": "dans le Doubs", "26": "dans la Drôme", "27": "dans l'Eure", "28": "en Eure-et-Loir", "29": "dans le Finistère", "30": "dans le Gard", "31": "en Haute-Garonne", "32": "dans le Gers", "33": "en Gironde", "34": "dans l'Hérault", "35": "en Ille-et-Vilaine", "36": "dans l'Indre", "37": "en Indre-et-Loire", "38": "en Isère", "39": "dans le Jura", "40": "dans les Landes", "41": "en Loir-et-Cher", "42": "dans la Loire", "43": "en Haute-Loire", "44": "en Loire-Atlantique", "45": "dans le Loiret", "46": "dans le Lot", "47": "en Lot-et-Garonne", "48": "en Lozère", "49": "en Maine-et-Loire", "50": "dans la Manche", "51": "dans la Marne", "52": "en Haute-Marne", "53": "en Mayenne", "54": "en Meurthe-et-Moselle", "55": "dans la Meuse", "56": "dans le Morbihan", "57": "en Moselle", "58": "dans la Nièvre", "59": "dans le Nord", "60": "dans l'Oise", "61": "dans l'Orne", "62": "dans le Pas-de-Calais", "63": "dans le Puy-de-Dôme", "64": "dans les Pyrénées-Atlantiques", "65": "dans les Hautes-Pyrénées", "66": "dans les Pyrénées-Orientales", "67": "dans le Bas-Rhin", "68": "dans le Haut-Rhin", "69": "dans le Rhône", "70": "en Haute-Saône", "71": "en Saône-et-Loire", "72": "dans la Sarthe", "73": "en Savoie", "74": "en Haute-Savoie", "75": "à Paris", "76": "en Seine-Maritime", "77": "en Seine-et-Marne", "78": "dans les Yvelines", "79": "dans les Deux-Sèvres", "80": "dans la Somme", "81": "dans le Tarn", "82": "en Tarn-et-Garonne", "83": "dans le Var", "84": "dans le Vaucluse", "85": "en Vendée", "86": "dans la Vienne", "87": "en Haute-Vienne", "88": "dans les Vosges", "89": "dans l'Yonne", "90": "dans le Territoire de Belfort", "91": "dans l'Essonne", "92": "dans les Hauts-de-Seine", "93": "en Seine-Saint-Denis", "94": "dans le Val-de-Marne", "95": "dans le Val-d'Oise"};
 
-        m1_prevu = episode + dt.timedelta(days=OFFSET_1)
-        base = {"code": dept["code"], "dept": dept["nom"], "region": dept["region"],
-                "cle": cle, "serie": serie, "episode": dates[i],
-                "mail1_prevu": m1_prevu.isoformat(), **detail}
+// Codes WMO. `mail` = ce que le mail ose écrire ; null = formulation neutre.
+// 96 et 99 sont ramenés à « orage » : la grêle est modélisée, pas observée.
+const PHENO={95:['Orage','orage'],96:['Orage avec grêle','orage'],99:['Orage avec forte grêle','orage'],
+  80:['Averses','averses'],81:['Averses fortes','averses'],82:['Averse violente','averses'],
+  66:['Pluie verglaçante',null],67:['Pluie verglaçante forte',null],
+  75:['Neige forte',null],85:['Chutes de neige',null],86:['Fortes chutes de neige',null],
+  63:['Pluie continue',null],65:['Pluie forte',null],61:['Pluie faible',null],
+  51:['Bruine',null],53:['Bruine',null],55:['Bruine forte',null]};
 
-        if not connue:
-            if jour(m1_prevu) < -EXPIRATION:
-                faits.append({**base, "etape": "expire"})
-                continue
-            faits.append({**base, "etape": "a_monter" if jour(m1_prevu) <= 0 else "a_venir",
-                          "jours": jour(m1_prevu)})
-            libre_a_partir_de = m1_prevu + dt.timedelta(days=ECART_2 + SILENCE)
-            continue
+// ───────────────────────────────────────────────────────────── paramètres
+const FENETRE=30, OFFSET_1=7, ECART_2=14, SILENCE=30, EXPIRATION=21;
+const ETAT_URL='./etat.json';
 
-        e = connue.get("etape")
-        base.update({k: v for k, v in connue.items() if k not in ("etape",)})
+let PIC=30, SEUIL_JOUR=1, NB_JOURS=15;
+let meteo={}, etat={sequences:{},campagnes:{},detection_cron:null}, faits=[], tab='afaire';
 
-        if e == "abandonne":
-            faits.append({**base, "etape": "abandonne"})
-            continue                                  # n'arme pas le verrou
+const aujourdhui=new Date(); aujourdhui.setHours(0,0,0,0);
+const fmt=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().split('T')[0];
+const plus=(d,n)=>{const r=new Date(d);r.setDate(r.getDate()+n);return r};
+const jours=d=>Math.round((d-aujourdhui)/864e5);
+const iso=s=>{const [a,m,j]=s.split('-').map(Number);return new Date(a,m-1,j)};
+const fr=s=>!s?'—':iso(s).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});
+const nb=n=>(n==null?'—':n.toLocaleString('fr-FR'));
+const pct=(a,b)=>(!b?'—':(100*a/b).toFixed(1).replace('.',',')+' %');
 
-        if e == "mail1_monte":
-            age = -jour(dt.date.fromisoformat(connue["mail1_monte_le"]))
-            if age > EXPIRATION:
-                faits.append({**base, "etape": "expire_non_envoye", "age_jours": age})
-                libre_a_partir_de = None
-            else:
-                faits.append({**base, "etape": "attente_envoi_mail1", "age_jours": age})
-                libre_a_partir_de = m1_prevu + dt.timedelta(days=ECART_2 + SILENCE)
-            continue
+document.getElementById('today-date').textContent=
+  aujourdhui.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-        if e == "mail1_envoye":
-            envoi1 = dt.date.fromisoformat(connue["mail1_envoye_le"])
-            m2 = envoi1 + dt.timedelta(days=ECART_2)
-            faits.append({**base, "etape": "mail2_a_monter" if jour(m2) <= 0 else "mail2_a_venir",
-                          "mail2_prevu": m2.isoformat(), "jours": jour(m2)})
-            libre_a_partir_de = m2 + dt.timedelta(days=SILENCE)
-            continue
+// ───────────────────────────────────────────────────────────── contrôles
+function lireControles(){
+  PIC=parseFloat(document.getElementById('pic').value);
+  SEUIL_JOUR=parseFloat(document.getElementById('seuilJour').value);
+  NB_JOURS=parseInt(document.getElementById('nbJours').value);
+  document.getElementById('valPic').textContent=PIC;
+  document.getElementById('valSeuil').textContent=String(SEUIL_JOUR).replace('.',',');
+  document.getElementById('valNb').textContent=NB_JOURS;
+}
+['pic','seuilJour','nbJours'].forEach(id=>
+  document.getElementById(id).addEventListener('input',()=>{lireControles();recalculer()}));
+document.getElementById('depth').addEventListener('change',()=>{meteo={};chargerTout(true)});
+function reinit(){
+  document.getElementById('pic').value=30;
+  document.getElementById('seuilJour').value=1;
+  document.getElementById('nbJours').value=15;
+  lireControles();recalculer();
+}
 
-        if e == "mail2_monte":
-            envoi1 = dt.date.fromisoformat(connue["mail1_envoye_le"])
-            m2 = envoi1 + dt.timedelta(days=ECART_2)
-            faits.append({**base, "etape": "attente_envoi_mail2", "mail2_prevu": m2.isoformat()})
-            libre_a_partir_de = m2 + dt.timedelta(days=SILENCE)
-            continue
+// ───────────────────────────────────────────────────────────── météo
+const dors=ms=>new Promise(r=>setTimeout(r,ms));
+async function lot(batch,d1,d2,essai=0){
+  const la=batch.map(d=>d.lat.toFixed(4)).join(','), lo=batch.map(d=>d.lon.toFixed(4)).join(',');
+  const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}`+
+            `&start_date=${d1}&end_date=${d2}&daily=precipitation_sum,weather_code&timezone=Europe%2FParis`;
+  try{
+    const r=await Promise.race([fetch(url),new Promise((_,x)=>setTimeout(()=>x(new Error('Timeout')),20000))]);
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    let j=await r.json(); if(!Array.isArray(j))j=[j];
+    batch.forEach((dept,i)=>{
+      const l=j[i];
+      meteo[dept.code]=(l&&l.daily&&l.daily.precipitation_sum)
+        ? {dates:l.daily.time,p:l.daily.precipitation_sum.map(v=>v??0),
+           c:(l.daily.weather_code||[]).map(v=>v??-1)}
+        : {dates:[],p:[],c:[],erreur:'données absentes'};
+    });
+  }catch(e){
+    if(essai<2){await dors(800*Math.pow(2,essai));return lot(batch,d1,d2,essai+1)}
+    if(batch.length>1){const m=Math.ceil(batch.length/2);
+      await lot(batch.slice(0,m),d1,d2,0); await lot(batch.slice(m),d1,d2,0); return}
+    meteo[batch[0].code]={dates:[],p:[],erreur:e.message};
+  }
+}
 
-        if e == "mail2_envoye":
-            envoi2 = dt.date.fromisoformat(connue["mail2_envoye_le"])
-            fin = envoi2 + dt.timedelta(days=SILENCE)
-            faits.append({**base, "etape": "silence" if jour(fin) < 0 else "termine",
-                          "silence_jusquau": fin.isoformat()})
-            libre_a_partir_de = fin
-            continue
+async function chargerEtat(){
+  try{
+    const r=await fetch(ETAT_URL+'?t='+Date.now());
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const e=await r.json();
+    etat={sequences:e.sequences||{},campagnes:e.campagnes||{},
+          detection_cron:e.detection_cron||null,maj:e.maj,parametres:e.parametres};
+    document.getElementById('etat-src').textContent=
+      'état du '+(e.maj?new Date(e.maj).toLocaleString('fr-FR'):'?')+' · '+
+      Object.keys(etat.sequences).length+' séquence(s)';
+    return true;
+  }catch(e){
+    etat={sequences:{},campagnes:{},detection_cron:null};
+    document.getElementById('etat-src').textContent='etat.json absent — affichage de la détection seule';
+    return false;
+  }
+}
 
-        faits.append({**base, "etape": e or "inconnu"})
-    return faits
+async function chargerTout(force){
+  const b=document.getElementById('btn-refresh'); b.classList.add('spinning');
+  const prof=parseInt(document.getElementById('depth').value);
+  document.getElementById('depth-warn').textContent=prof<92?'⚠ moins de 3 mois : verrou peu fiable':'historique complet';
+  document.getElementById('progress-wrap').style.display='block';
+  if(force)meteo={};
+  await chargerEtat();
+  const d2=fmt(aujourdhui), d1=fmt(plus(aujourdhui,-prof));
+  const reste=DEPTS.filter(d=>!meteo[d.code]);
+  if(reste.length){
+    const T=24, lots=[]; for(let i=0;i<reste.length;i+=T)lots.push(reste.slice(i,i+T));
+    let fini=0;
+    await Promise.all(lots.map(async l=>{
+      await lot(l,d1,d2); fini+=l.length;
+      document.getElementById('progress-bar').style.width=Math.round(fini/reste.length*100)+'%';
+      document.getElementById('progress-label').textContent=fini+' / '+reste.length+' départements';
+    }));
+  }
+  const err=Object.values(meteo).filter(m=>m.erreur).length;
+  const ban=document.getElementById('banner');
+  if(err>=DEPTS.length){ban.className='banner err';ban.textContent='Échec du chargement météo. Les appels passent sur GitHub Pages, pas dans un aperçu local.'}
+  else if(err){ban.className='banner warn';ban.textContent=err+' département(s) en erreur. Le balayage est partiel, ne pas le présenter comme complet.'}
+  else{ban.className='banner';ban.style.display='none'}
+  document.getElementById('progress-bar').style.width='100%';
+  setTimeout(()=>document.getElementById('progress-wrap').style.display='none',1500);
+  b.classList.remove('spinning');
+  recalculer();
+}
 
+// ───────────────────── détection : réplique exacte de moteur.py
+function declencheurs(p,dates,codes){
+  const out=[];
+  for(let i=0;i<p.length;i++) if(p[i]>=PIC)
+    out.push({i,serie:'A',pic24_mm:Math.round(p[i]*10)/10,pic_date:dates[i],wmo:(codes&&codes[i]!=null)?codes[i]:-1});
+  for(let i=0;i<p.length;i++){
+    const deb=Math.max(0,i-(FENETRE-1));
+    let n=0; for(let k=deb;k<=i;k++) if(p[k]>=SEUIL_JOUR)n++;
+    if(n>=NB_JOURS) out.push({i,serie:'B',jours_pluie:n,debut_fenetre:dates[deb]});
+  }
+  out.sort((a,b)=>a.i-b.i||a.serie.localeCompare(b.serie));
+  return out;
+}
 
-def main():
-    tout, erreurs = [], []
-    for b in range(0, len(DEPTS), LOT):
-        lot = DEPTS[b:b + LOT]
-        blocs, msg = None, None
-        for essai in range(4):
-            try:
-                blocs = charger(lot); break
-            except Exception as ex:
-                msg = str(ex); time.sleep(2 + 3 * essai)
-        if blocs is None:
-            erreurs.append({"depts": [d["code"] for d in lot], "erreur": msg}); continue
-        for d, blk in zip(lot, blocs):
-            daily = blk.get("daily") or {}
-            dates = daily.get("time", [])
-            p = [v or 0.0 for v in daily.get("precipitation_sum", [])]
-            codes = daily.get("weather_code", [])
-            if not dates:
-                erreurs.append({"depts": [d["code"]], "erreur": "pas de donnees"}); continue
-            tout.extend(traiter(d, p, dates, codes))
+function traiter(dept,p,dates,codes){
+  const res=[]; let libre=null;
+  for(const t of declencheurs(p,dates,codes)){
+    const episode=iso(dates[t.i]);
+    const cle=dept.code+'|'+dates[t.i]+'|'+t.serie;
+    const su=etat.sequences[cle];
+    const detail=t.serie==='A'
+      ? {pic24_mm:t.pic24_mm,pic_date:t.pic_date,wmo:t.wmo}
+      : {jours_pluie:t.jours_pluie,debut_fenetre:t.debut_fenetre};
+    if(!su&&libre&&episode<libre){
+      res.push({code:dept.code,dept:dept.nom,region:dept.region,cle,serie:t.serie,
+                episode:dates[t.i],etape:'bloque',libre_le:fmt(libre),...detail});
+      continue;
+    }
+    const m1=plus(episode,OFFSET_1);
+    const base={code:dept.code,dept:dept.nom,region:dept.region,cle,serie:t.serie,
+                episode:dates[t.i],mail1_prevu:fmt(m1),...detail};
+    if(!su){
+      if(jours(m1)<-EXPIRATION){res.push({...base,etape:'expire'});continue}
+      res.push({...base,etape:jours(m1)<=0?'a_monter':'a_venir',jours:jours(m1)});
+      libre=plus(m1,ECART_2+SILENCE); continue;
+    }
+    const e=su.etape; Object.assign(base,su); base.etape=e;
+    if(e==='abandonne'){res.push({...base,etape:'abandonne'});continue}
+    if(e==='mail1_monte'){
+      const age=-jours(iso(su.mail1_monte_le));
+      if(age>EXPIRATION){res.push({...base,etape:'expire_non_envoye',age});libre=null}
+      else{res.push({...base,etape:'attente_envoi_mail1',age});libre=plus(m1,ECART_2+SILENCE)}
+      continue;
+    }
+    if(e==='mail1_envoye'||e==='mail2_monte'){
+      const m2=plus(iso(su.mail1_envoye_le),ECART_2);
+      const et=e==='mail2_monte'?'attente_envoi_mail2':(jours(m2)<=0?'mail2_a_monter':'mail2_a_venir');
+      res.push({...base,etape:et,mail2_prevu:fmt(m2),jours:jours(m2)});
+      libre=plus(m2,SILENCE); continue;
+    }
+    if(e==='mail2_envoye'){
+      const fin=plus(iso(su.mail2_envoye_le),SILENCE);
+      res.push({...base,etape:jours(fin)<0?'silence':'termine',silence_jusquau:fmt(fin)});
+      libre=fin; continue;
+    }
+    res.push({...base,etape:e||'inconnu'});
+  }
+  return res;
+}
 
-    libelles = {}
-    _lp = os.environ.get("VP_LIBELLES", "libelles-departements.json")
-    if os.path.exists(_lp):
-        libelles = {x["code"]: x["DEPT_EN"] for x in json.load(open(_lp, encoding="utf-8"))}
-    for f in tout:
-        if f.get("etape") not in ("bloque",):
-            f["bloc_meteo"] = bloc_meteo(f, libelles.get(f["code"], "dans le " + f["dept"]))
+function recalculer(){
+  faits=[];
+  for(const d of DEPTS){
+    const m=meteo[d.code]; if(!m||m.erreur||!m.dates.length)continue;
+    faits.push(...traiter(d,m.p,m.dates,m.c));
+  }
+  rendre();
+}
 
-    par = {}
-    for f in tout:
-        par.setdefault(f["etape"], []).append(f)
-    for k in par:
-        par[k].sort(key=lambda r: (r.get("mail1_prevu", ""), r["code"]))
+// ───────────────────────────────────────────────────────────── rendu
+const ETIQ={a_monter:['Mail 1 à monter','var(--red)'],mail2_a_monter:['Mail 2 à monter','var(--orange)'],
+  a_venir:['Mail 1 à venir','var(--yellow)'],mail2_a_venir:['Mail 2 à venir','var(--yellow)'],
+  attente_envoi_mail1:['Mail 1 monté, à envoyer','var(--orange)'],
+  attente_envoi_mail2:['Mail 2 monté, à envoyer','var(--orange)'],
+  silence:['Silence','var(--lock)'],termine:['Terminé','var(--green)'],
+  bloque:['Bloqué','var(--grey)'],expire:['Expiré','var(--grey)'],
+  expire_non_envoye:['Expiré non envoyé','var(--grey)'],abandonne:['Abandonné','var(--grey)']};
+const st=e=>{const [l,c]=ETIQ[e]||[e,'var(--slate)'];
+  return `<span class="st"><span class="dot" style="background:${c}"></span>${l}</span>`};
+const chipSerie=s=>`<span class="chip ${s}">Série ${s}</span>`;
+const fait=r=>r.serie==='A'
+  ? `<b>${String(r.pic24_mm).replace('.',',')} mm</b> le ${fr(r.pic_date).slice(0,5)}`
+  : `<b>${r.jours_pluie} jours</b> de pluie sur 30`;
+const phenoLab=c=>{const x=PHENO[c];return x?x[0]:null};
+const phenoMail=c=>{const x=PHENO[c];return x?x[1]:null};
+const MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+// Seul le 1er prend « er ». Du 2 au 31 le nombre reste nu.
+const dateLongue=s=>{const d=iso(s);return (d.getDate()===1?'1er':d.getDate())+' '+MOIS[d.getMonth()]};
+const mm=v=>Number.isInteger(v)?String(v):String(v).replace('.',',');
+// Phrase exacte que le mail écrira — %%BLOC_METEO%%
+function blocMeteo(r){
+  const ou=DEPT_EN[r.code]||('dans le '+r.dept);
+  // Forme DATEE : « sur les 30 derniers jours » est relatif au moment de la
+  // lecture, alors que le mail part 7 puis 21 jours apres la fin de la fenetre.
+  if(r.serie==='B')
+    return `Entre le ${dateLongue(r.debut_fenetre)} et le ${dateLongue(r.episode)}, ${r.jours_pluie} jours de pluie ont été relevés ${ou}.`;
+  const p=phenoMail(r.wmo);
+  if(p==='orage')  return `L'orage du ${dateLongue(r.pic_date)} a laissé ${mm(r.pic24_mm)} mm en 24 heures ${ou}.`;
+  if(p==='averses')return `Les averses du ${dateLongue(r.pic_date)} ont laissé ${mm(r.pic24_mm)} mm en 24 heures ${ou}.`;
+  return `Le ${dateLongue(r.pic_date)}, ${mm(r.pic24_mm)} mm de pluie sont tombés en 24 heures ${ou}.`;
+}
+const par=e=>faits.filter(f=>f.etape===e);
 
-    print(json.dumps({
-        "date": AUJOURDHUI.isoformat(), "source": HOST,
-        "parametres": {"pic_mm": PIC, "seuil_jour_mm": SEUIL_JOUR, "nb_jours": NB_JOURS,
-                       "fenetre_j": FENETRE, "mail1_offset_j": OFFSET_1,
-                       "mail2_ecart_j": ECART_2, "silence_j": SILENCE,
-                       "expiration_j": EXPIRATION, "profondeur_j": PROFONDEUR},
-        "a_faire_aujourdhui": par.get("a_monter", []) + par.get("mail2_a_monter", []),
-        "en_attente_envoi": par.get("attente_envoi_mail1", []) + par.get("attente_envoi_mail2", []),
-        "a_venir": par.get("a_venir", []) + par.get("mail2_a_venir", []),
-        "bloques": par.get("bloque", []), "silence": par.get("silence", []),
-        "expires": par.get("expire", []) + par.get("expire_non_envoye", []),
-        "abandonnes": par.get("abandonne", []), "termines": par.get("termine", []),
-        "erreurs": erreurs}, ensure_ascii=False, indent=1))
+function rendre(){
+  const aFaire=[...par('a_monter'),...par('mail2_a_monter')];
+  const attente=[...par('attente_envoi_mail1'),...par('attente_envoi_mail2')];
+  const aVenir=[...par('a_venir'),...par('mail2_a_venir')];
+  const camp=Object.values(etat.campagnes||{});
+  document.getElementById('kpis').innerHTML=[
+    ['À faire',aFaire.length,'var(--red)'],
+    ['En attente d\'envoi',attente.length,'var(--orange)'],
+    ['À venir',aVenir.length,'var(--yellow)'],
+    ['Sous silence',par('silence').length,'var(--lock)'],
+    ['Bloqués',par('bloque').length,'var(--grey)'],
+    ['Campagnes parties',camp.length,'var(--green)']
+  ].map(([l,n,c])=>`<div class="kpi"><div class="n" style="color:${c}">${n}</div><div class="l">${l}</div></div>`).join('');
+  coherence();
+  const v=document.getElementById('vue');
+  if(tab==='afaire')v.innerHTML=vueAFaire(aFaire,attente,aVenir);
+  else if(tab==='sequences')v.innerHTML=vueSequences();
+  else if(tab==='carte')v.innerHTML=vueCarte();
+  else if(tab==='historique')v.innerHTML=vueHistorique();
+  else v.innerHTML=vueSimulation();
+}
 
+function coherence(){
+  if(!etat.detection_cron)return;
+  const mien=new Set(faits.filter(f=>!['bloque','expire'].includes(f.etape)).map(f=>f.cle));
+  const sien=new Set(Object.keys(etat.detection_cron));
+  const manque=[...sien].filter(k=>!mien.has(k)), trop=[...mien].filter(k=>!sien.has(k));
+  if(manque.length||trop.length){
+    const b=document.getElementById('banner');
+    b.className='banner warn';
+    b.textContent='Divergence page / tâche planifiée : '+trop.length+' détection(s) ici absente(s) du cron, '+
+      manque.length+' du cron absente(s) ici. Vérifier que les réglages correspondent.';
+  }
+}
 
-main()
+function onglet(t){tab=t;document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.t===t));rendre()}
+
+function vide(txt){return `<div class="empty"><div class="big">${txt}</div></div>`}
+
+function vueAFaire(aFaire,attente,aVenir){
+  const tbl=(rows,titre,sub)=>`
+  <div class="panel"><div class="panel-head"><div><h2>${titre}</h2><div class="sub">${sub}</div></div>
+    <span class="muted">${rows.length} ligne(s)</span></div>
+  ${rows.length?`<table><thead><tr>
+    <th>Dépt</th><th>Série</th><th>Fait déclencheur</th><th>Phénomène</th><th>Épisode</th><th>Étape</th><th>Échéance</th><th class="num">Retard</th>
+  </tr></thead><tbody>${rows.sort((a,b)=>(a.mail2_prevu||a.mail1_prevu).localeCompare(b.mail2_prevu||b.mail1_prevu)).map(r=>{
+    const ech=r.mail2_prevu||r.mail1_prevu, j=jours(iso(ech));
+    return `<tr>
+      <td><span class="code">${r.code}</span> ${r.dept}</td>
+      <td>${chipSerie(r.serie)}</td>
+      <td>${fait(r)}</td>
+      <td>${r.serie==='A'?(phenoLab(r.wmo)?`<span class="pheno">${phenoLab(r.wmo)}</span>`:'<span class="muted">—</span>'):'<span class="muted">n/a</span>'}</td>
+      <td class="muted">${fr(r.episode)}</td>
+      <td>${st(r.etape)}</td>
+      <td>${fr(ech)}</td>
+      <td class="num" style="color:${j<0?'var(--red)':'var(--slate)'}">${j<0?(-j)+' j':'J'+(j===0?'':'+'+j)}</td>
+    </tr>
+    <tr class="apercu"><td colspan="8"><span class="ap-l">Phrase du mail</span> ${blocMeteo(r)}</td></tr>`}).join('')}</tbody></table>`:vide('Rien dans cette catégorie.')}
+  </div>`;
+  return tbl(aFaire,'À monter aujourd\'hui','Le brouillon doit être créé, puis relu et envoyé par Nicolas.')
+       + tbl(attente,'Brouillons montés, en attente d\'envoi','Expirent au bout de '+EXPIRATION+' jours sans envoi.')
+       + tbl(aVenir,'À venir','Échéances futures, rien à faire pour l\'instant.');
+}
+
+function vueSequences(){
+  const rows=faits.filter(f=>!['expire','bloque','termine'].includes(f.etape));
+  if(!rows.length)return vide('Aucune séquence en cours.');
+  return `<div class="panel"><div class="panel-head"><div><h2>Séquences en cours</h2>
+    <div class="sub">Le mail 2 part 14 jours après l'envoi réel du mail 1.</div></div></div>
+  <table><thead><tr><th>Dépt</th><th>Série</th><th>Épisode</th><th>Mail 1</th><th>Mail 2</th><th>Étape</th><th>Silence jusqu'au</th></tr></thead>
+  <tbody>${rows.map(r=>`<tr>
+    <td><span class="code">${r.code}</span> ${r.dept}</td>
+    <td>${chipSerie(r.serie)}</td>
+    <td class="muted">${fr(r.episode)}</td>
+    <td>${r.mail1_envoye_le?'envoyé le '+fr(r.mail1_envoye_le):'prévu '+fr(r.mail1_prevu)}</td>
+    <td>${r.mail2_envoye_le?'envoyé le '+fr(r.mail2_envoye_le):(r.mail2_prevu?'prévu '+fr(r.mail2_prevu):'<span class="muted">après le mail 1</span>')}</td>
+    <td>${st(r.etape)}</td>
+    <td class="muted">${r.silence_jusquau?fr(r.silence_jusquau):'—'}</td>
+  </tr>`).join('')}</tbody></table></div>`;
+}
+
+function vueCarte(){
+  const parCode={}; faits.forEach(f=>{
+    const rang={a_monter:6,mail2_a_monter:6,attente_envoi_mail1:5,attente_envoi_mail2:5,
+                a_venir:4,mail2_a_venir:4,silence:3,termine:2,bloque:1};
+    const r=rang[f.etape]||0;
+    if(!parCode[f.code]||r>parCode[f.code].r)parCode[f.code]={r,etape:f.etape,n:f.serie};
+  });
+  const coul={6:'var(--red)',5:'#f97316',4:'#eab308',3:'#8b7fd4',2:'#22c55e',1:'#cbd5e1',0:'#d4ead9'};
+  let dots='';
+  for(const d of DEPTS){
+    const c=COORDS[d.code]; if(!c)continue;
+    const e=parCode[d.code];
+    const f=coul[e?e.r:0]||'#d4ead9';
+    dots+=`<circle cx="${c[0]}" cy="${c[1]}" r="10" fill="${f}" opacity=".94"><title>${d.code} ${d.nom}</title></circle>`;
+    dots+=`<text x="${c[0]}" y="${c[1]+3.5}" text-anchor="middle" font-size="8" font-weight="700"
+      fill="${e&&e.r>=5?'#fff':'#1a2c3d'}" font-family="Outfit,sans-serif" pointer-events="none">${d.code}</text>`;
+  }
+  return `<div class="panel"><div class="panel-head"><div><h2>Carte</h2>
+    <div class="sub">Une pastille par département, couleur = état le plus avancé.</div></div></div>
+  <svg id="france-svg" viewBox="120 90 460 480" xmlns="http://www.w3.org/2000/svg">${dots}</svg>
+  <div class="map-legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#d4ead9"></span>Rien</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>À monter</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#f97316"></span>À envoyer</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#eab308"></span>À venir</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#8b7fd4"></span>Silence</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#22c55e"></span>Terminé</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#cbd5e1"></span>Bloqué</span>
+  </div></div>`;
+}
+
+// ───────────────────────────────────────────── historique et performance
+function vueHistorique(){
+  const camp=Object.entries(etat.campagnes||{}).map(([id,c])=>({id,...c}))
+    .filter(c=>c.envoye_le).sort((a,b)=>b.envoye_le.localeCompare(a.envoye_le));
+  if(!camp.length)return `<div class="panel">${vide(
+    'Aucune campagne envoyée pour l\'instant.<br><span style="font-size:13px;font-weight:400">'+
+    'Cette section se remplit toute seule : la tâche planifiée lit les statistiques dans Mailjet et les dépose dans etat.json.</span>')}</div>`;
+
+  const agr=l=>{const s={n:0,contacts:0,delivres:0,ouvertures:0,clics:0,desabos:0};
+    l.forEach(c=>{const x=c.stats||{};s.n++;s.contacts+=x.contacts||0;s.delivres+=x.delivres||0;
+      s.ouvertures+=x.ouvertures||0;s.clics+=x.clics||0;s.desabos+=x.desabos||0});return s};
+  const carte=(t,s)=>`<div class="simu-card"><div class="l">${t}</div>
+    <div class="n" style="color:var(--blue)">${pct(s.ouvertures,s.delivres)}</div>
+    <div class="d">${s.n} campagne(s) · ${nb(s.delivres)} délivrés<br>
+    clics ${pct(s.clics,s.delivres)} · désabos ${pct(s.desabos,s.delivres)}</div></div>`;
+
+  const m1=camp.filter(c=>c.etape==='mail1'), m2=camp.filter(c=>c.etape==='mail2');
+  const sa=camp.filter(c=>c.serie==='A'), sb=camp.filter(c=>c.serie==='B');
+
+  return `
+  <div class="panel"><div class="panel-head"><div><h2>Comparaisons</h2>
+    <div class="sub">Taux d'ouverture sur délivrés. Ce qui répond à « le mail 2 sert-il à quelque chose ».</div></div></div>
+    <div class="simu-grid">
+      ${carte('Mail 1 · J+7',agr(m1))}${carte('Mail 2 · J+21',agr(m2))}
+      ${carte('Série A · orage',agr(sa))}${carte('Série B · pluie persistante',agr(sb))}
+    </div>
+  </div>
+  <div class="panel"><div class="panel-head"><div><h2>Campagnes envoyées</h2>
+    <div class="sub">Chiffres relevés dans Mailjet par la tâche planifiée.</div></div>
+    <button class="btn-sm" onclick="exportCSV()">Exporter en CSV</button></div>
+  <table><thead><tr>
+    <th>Envoyée le</th><th>Dépt</th><th>Série</th><th>Mail</th><th>Épisode</th>
+    <th class="num">Contacts</th><th class="num">Délivrés</th><th class="num">Ouvertures</th>
+    <th class="num">Clics</th><th class="num">Désabos</th>
+  </tr></thead><tbody>${camp.map(c=>{const s=c.stats||{};return `<tr>
+    <td>${fr(c.envoye_le)}</td>
+    <td><span class="code">${c.dept}</span> ${c.nom_dept||''}</td>
+    <td>${chipSerie(c.serie)}</td>
+    <td><span class="chip ${c.etape==='mail1'?'m1':'m2'}">${c.etape==='mail1'?'Mail 1':'Mail 2'}</span></td>
+    <td class="muted">${fr(c.episode)}</td>
+    <td class="num">${nb(s.contacts)}</td>
+    <td class="num">${nb(s.delivres)}</td>
+    <td class="num">${nb(s.ouvertures)} <span class="muted">${pct(s.ouvertures,s.delivres)}</span></td>
+    <td class="num">${nb(s.clics)} <span class="muted">${pct(s.clics,s.delivres)}</span></td>
+    <td class="num">${nb(s.desabos)}</td>
+  </tr>`}).join('')}</tbody></table></div>`;
+}
+
+function exportCSV(){
+  const camp=Object.entries(etat.campagnes||{}).map(([id,c])=>({id,...c})).filter(c=>c.envoye_le);
+  const e=['Campagne','Envoyee le','Dept','Nom','Serie','Mail','Episode','Contacts','Delivres','Ouvertures','Clics','Desabos'];
+  const l=camp.map(c=>{const s=c.stats||{};return [c.id,c.envoye_le,c.dept,c.nom_dept||'',c.serie,
+    c.etape,c.episode,s.contacts||'',s.delivres||'',s.ouvertures||'',s.clics||'',s.desabos||''].join(';')});
+  const csv='\uFEFF'+[e.join(';')].concat(l).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  a.download='veille-pluvio-campagnes-'+fmt(aujourdhui)+'.csv'; a.click();
+}
+
+// ───────────────────────────────────────────────────────────── simulation
+function vueSimulation(){
+  const prof=parseInt(document.getElementById('depth').value);
+  let seqA=0,seqB=0,total=0; const parMois={};
+  for(const d of DEPTS){
+    const m=meteo[d.code]; if(!m||m.erreur||!m.dates.length)continue;
+    let bloque=-1;
+    for(const t of declencheurs(m.p,m.dates,m.c)){
+      if(t.i<=bloque)continue;
+      total++; t.serie==='A'?seqA++:seqB++;
+      for(const off of [OFFSET_1,OFFSET_1+ECART_2]){
+        const k=fmt(plus(iso(m.dates[t.i]),off)).slice(0,7);
+        parMois[k]=(parMois[k]||0)+1;
+      }
+      bloque=t.i+OFFSET_1+ECART_2+SILENCE;
+    }
+  }
+  const an=Math.round(total*365/prof), mails=an*2;
+  const mois=Object.entries(parMois).sort();
+  const max=Math.max(1,...mois.map(x=>x[1]));
+  return `
+  <div class="panel"><div class="panel-head"><div><h2>Simulation</h2>
+    <div class="sub">Effet des réglages sur ${prof} jours d'historique réel. Aucun effet sur ce qui part.</div></div></div>
+    <div class="simu-grid">
+      <div class="simu-card"><div class="l">Séquences sur la période</div>
+        <div class="n">${total}</div><div class="d">série A ${seqA} · série B ${seqB}</div></div>
+      <div class="simu-card"><div class="l">Projection annuelle</div>
+        <div class="n">${an}</div><div class="d">séquences par an, soit <b>${mails} campagnes</b></div></div>
+      <div class="simu-card"><div class="l">Par département</div>
+        <div class="n">${(an/DEPTS.length).toFixed(1).replace('.',',')}</div>
+        <div class="d">séquences par an en moyenne, soit ${(an/DEPTS.length*2).toFixed(1).replace('.',',')} mails par contact</div></div>
+      <div class="simu-card"><div class="l">Réglages testés</div>
+        <div class="n" style="font-size:19px">${PIC} mm · ${String(SEUIL_JOUR).replace('.',',')} mm · ${NB_JOURS} j</div>
+        <div class="d">pic 24 h · seuil jour de pluie · nombre de jours</div></div>
+    </div>
+    <div class="bars">${mois.map(([m,v])=>`<div class="bar-wrap">
+      <div class="bar-val">${v}</div>
+      <div class="bar" style="height:${Math.round(v/max*70)}px"></div>
+      <div class="bar-lab">${m.slice(5)}/${m.slice(2,4)}</div></div>`).join('')}</div>
+    <div style="padding:6px 22px 20px;font-size:12px;color:var(--slate-light)">
+      Campagnes par mois d'envoi. Un creux suivi d'un pic vient du verrou, pas du climat :
+      les départements déclenchent ensemble, purgent leurs ${OFFSET_1+ECART_2+SILENCE} jours, puis ressortent ensemble.
+    </div>
+  </div>`;
+}
+
+lireControles();
+chargerTout(false);
+</script>
+</body>
+</html>
