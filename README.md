@@ -55,6 +55,22 @@ sans serveur.
 interpolations normalisées, et échoue si elles divergent d'un caractère. Le
 workflow le lance avant toute publication d'état.
 
+## La bascule en mode réel
+
+`etat.json` porte un champ `bascule`, à `null` tant que le cron tourne à blanc.
+
+Quand il sera posé à une date, **tout déclencheur dont le mail 1 était dû avant
+cette date est marqué `abandonne`**, jamais `a_monter` : écrire à propos d'un
+orage vieux de deux semaines n'a pas de sens.
+
+L'abandon **n'arme aucun verrou**. Le prochain épisode réel de ces départements
+repart donc normalement, sans attendre les 51 jours du cycle.
+
+`moteur.py` et `index.html` lisent la même valeur dans le même fichier — une
+seule source de vérité, sans quoi les deux implémentations divergeraient dès le
+premier jour. `maj_etat.py` affiche combien de déclencheurs ont été abandonnés
+et lesquels.
+
 ## La tâche planifiée
 
 `.github/workflows/veille.yml`, tous les jours à 11 h de Paris.

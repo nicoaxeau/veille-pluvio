@@ -204,6 +204,35 @@ def main():
                                "pic_date": "2026-08-20"}, lib)
         v("code WMO %d ramene a « orage »" % wmo, p.startswith("L'orage du"), p[:40])
 
+    # --- 6. La regle de bascule, presente et symetrique -------------------
+    # Ajoutee le 14/09/2026. Un declencheur dont le mail 1 etait du avant le
+    # passage en reel doit etre abandonne des deux cotes, sans armer de verrou.
+    print("")
+    py_src = io.open(os.path.join(RACINE, "moteur.py"), encoding="utf-8").read()
+    js_src = io.open(os.path.join(RACINE, PAGE), encoding="utf-8").read()
+
+    for libelle, dans_py, dans_js in (
+        ("la date de bascule est lue dans etat.json",
+         'ETAT.get("bascule")' in py_src, "e.bascule" in js_src),
+        ("un declencheur anterieur est marque abandonne",
+         '"etape": "abandonne"' in py_src, "etape:'abandonne'" in js_src),
+        ("le motif nomme la bascule",
+         "anterieur a la bascule" in py_src, "anterieur a la bascule" in js_src),
+        ("l'abandon n'arme aucun verrou",
+         "n'arme pas le verrou" in py_src, "n'arme aucun verrou" in js_src),
+    ):
+        v(libelle, dans_py and dans_js,
+          "python %s, page %s" % ("oui" if dans_py else "NON",
+                                  "oui" if dans_js else "NON"))
+
+    # L'abandon ne doit jamais poser libre_a_partir_de : on verifie que la
+    # branche se termine par un continue sans affectation de verrou.
+    i = py_src.find('"etape": "abandonne",')
+    bloc = py_src[i:i + 400] if i > 0 else ""
+    v("branche d'abandon sans armement de verrou",
+      bool(bloc) and "libre_a_partir_de" not in bloc.split("continue")[0],
+      "verifie sur la branche de moteur.py")
+
     print("")
     print("RESULTAT : " + ("moteur.py et index.html sont alignes"
                            if OK else "AU MOINS UN ECART — ne pas livrer"))

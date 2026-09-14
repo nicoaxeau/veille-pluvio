@@ -1,6 +1,7 @@
 {
  "version": 2,
- "maj": "2026-09-14T10:10:59+00:00",
+ "maj": "2026-09-14T12:46:06+00:00",
+ "bascule": null,
  "parametres": {
   "pic_mm": 30.0,
   "seuil_jour_mm": 1.0,

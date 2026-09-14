@@ -47,6 +47,11 @@ jobs:
         run: python test_coherence.py
 
       - name: Detection
+        # VP_ETAT fait lire etat.json au moteur : il y trouve les sequences en
+        # cours et la date de bascule. Sans lui, il repartirait de zero a
+        # chaque execution et proposerait de monter des mails deja traites.
+        env:
+          VP_ETAT: etat.json
         run: python moteur.py > veille.json
 
       - name: Mise a jour de etat.json

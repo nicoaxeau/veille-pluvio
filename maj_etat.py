@@ -44,7 +44,7 @@ ETAPES_IGNOREES = ("bloque", "expire")
 
 # Champs retenus par declencheur. Volontairement court : la page n'utilise
 # que les cles, le reste ne sert qu'au diagnostic.
-CHAMPS = ("dept", "serie", "episode", "etape")
+CHAMPS = ("dept", "serie", "episode", "etape", "motif")
 
 
 def charger_veille(source):
@@ -109,6 +109,24 @@ def main():
     for f in detection.values():
         par_etape[f.get("etape", "?")] = par_etape.get(f.get("etape", "?"), 0) + 1
 
+    # --- Bascule : ce qui a ete ecarte parce qu'anterieur au passage reel --
+    # Un declencheur dont le mail 1 etait du avant la bascule est abandonne
+    # par moteur.py. On le dit ici explicitement : combien, et lesquels.
+    bascule = etat.get("bascule")
+    abandonnes = sorted(cle for cle, f in detection.items()
+                        if f.get("etape") == "abandonne"
+                        and "bascule" in (f.get("motif") or ""))
+    print("OK    | bascule                %s"
+          % (bascule if bascule else "aucune, le cron tourne A BLANC"))
+    if bascule:
+        print("OK    | abandonnes a la bascule %d" % len(abandonnes))
+        for cle in abandonnes:
+            f = detection[cle]
+            print("        %-22s %-24s serie %s, episode %s"
+                  % (cle, f.get("dept", "?"), f.get("serie", "?"), f.get("episode", "?")))
+        if abandonnes:
+            print("        Aucun verrou n'est arme : le prochain episode reel de ces")
+            print("        departements repartira normalement.")
     print("OK    | date de detection      %s" % veille.get("date"))
     print("OK    | declencheurs retenus   %d" % len(detection))
     for e, n in sorted(par_etape.items()):

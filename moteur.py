@@ -44,6 +44,19 @@ if _p and os.path.exists(_p):
     ETAT.setdefault("sequences", {})
 SEQ = ETAT["sequences"]
 
+# Date de bascule en mode reel, lue dans etat.json. Null tant que le cron
+# tourne a blanc.
+#
+# Tout declencheur dont le mail 1 etait du AVANT cette date est marque
+# "abandonne" et non "a_monter" : ecrire a propos d'un orage vieux de deux
+# semaines n'a pas de sens. L'abandon n'arme aucun verrou, donc le prochain
+# episode reel du departement repart normalement.
+#
+# La page lit la meme valeur dans le meme fichier : une seule source de verite,
+# sans quoi les deux implementations divergeraient des le premier jour.
+_b = ETAT.get("bascule")
+BASCULE = dt.date.fromisoformat(_b) if _b else None
+
 DEPTS = json.load(open(os.environ.get("VP_DEPTS", "depts.json"), encoding="utf-8"))
 DEBUT, FIN = AUJOURDHUI - dt.timedelta(days=PROFONDEUR), AUJOURDHUI
 
@@ -147,6 +160,10 @@ def traiter(dept, p, dates, codes=None):
                 "mail1_prevu": m1_prevu.isoformat(), **detail}
 
         if not connue:
+            if BASCULE and m1_prevu < BASCULE:
+                faits.append({**base, "etape": "abandonne",
+                              "motif": "anterieur a la bascule du " + BASCULE.isoformat()})
+                continue                          # n'arme pas le verrou
             if jour(m1_prevu) < -EXPIRATION:
                 faits.append({**base, "etape": "expire"})
                 continue

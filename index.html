@@ -314,7 +314,7 @@ const FENETRE=30, OFFSET_1=7, ECART_2=14, SILENCE=30, EXPIRATION=21;
 const ETAT_URL='./etat.json';
 
 let PIC=30, SEUIL_JOUR=1, NB_JOURS=15;
-let meteo={}, etat={sequences:{},campagnes:{},detection_cron:null}, faits=[], tab='afaire';
+let meteo={}, etat={sequences:{},campagnes:{},detection_cron:null,bascule:null}, faits=[], tab='afaire';
 
 const aujourdhui=new Date(); aujourdhui.setHours(0,0,0,0);
 const fmt=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().split('T')[0];
@@ -378,7 +378,8 @@ async function chargerEtat(){
     if(!r.ok)throw new Error('HTTP '+r.status);
     const e=await r.json();
     etat={sequences:e.sequences||{},campagnes:e.campagnes||{},
-          detection_cron:e.detection_cron||null,maj:e.maj,parametres:e.parametres};
+          detection_cron:e.detection_cron||null,maj:e.maj,parametres:e.parametres,
+          bascule:e.bascule||null};
     document.getElementById('etat-src').textContent=
       'état du '+(e.maj?new Date(e.maj).toLocaleString('fr-FR'):'?')+' · '+
       Object.keys(etat.sequences).length+' séquence(s)';
@@ -433,6 +434,13 @@ function declencheurs(p,dates,codes){
   return out;
 }
 
+// Le mail 1 d'un episode tombe-t-il avant la date de bascule ?
+// Meme calcul que moteur.py : episode + OFFSET_1 compare a la bascule.
+function m1Avant(episode,bascule){
+  const m1=plus(episode,OFFSET_1);
+  return fmt(m1) < bascule;
+}
+
 function traiter(dept,p,dates,codes){
   const res=[]; let libre=null;
   for(const t of declencheurs(p,dates,codes)){
@@ -442,6 +450,15 @@ function traiter(dept,p,dates,codes){
     const detail=t.serie==='A'
       ? {pic24_mm:t.pic24_mm,pic_date:t.pic_date,wmo:t.wmo}
       : {jours_pluie:t.jours_pluie,debut_fenetre:t.debut_fenetre};
+    // Bascule : un declencheur dont le mail 1 etait du avant le passage en
+    // reel est abandonne, pas monte. Meme regle que moteur.py, meme source :
+    // le champ « bascule » de etat.json. L'abandon n'arme aucun verrou.
+    if(!su&&etat.bascule&&m1Avant(episode,etat.bascule)){
+      res.push({code:dept.code,dept:dept.nom,region:dept.region,cle,serie:t.serie,
+                episode:dates[t.i],etape:'abandonne',
+                motif:'anterieur a la bascule du '+etat.bascule,...detail});
+      continue;
+    }
     if(!su&&libre&&episode<libre){
       res.push({code:dept.code,dept:dept.nom,region:dept.region,cle,serie:t.serie,
                 episode:dates[t.i],etape:'bloque',libre_le:fmt(libre),...detail});
