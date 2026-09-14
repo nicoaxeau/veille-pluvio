@@ -39,9 +39,19 @@ AUJOURDHUI  = dt.date.fromisoformat(os.environ["VP_DATE"]) if os.environ.get("VP
 # etapes : detecte / mail1_monte / mail1_envoye / mail2_monte / mail2_envoye / abandonne
 ETAT = {"sequences": {}}
 _p = os.environ.get("VP_ETAT")
-if _p and os.path.exists(_p):
+if _p:
+    # Un chemin fourni mais introuvable etait ignore en silence : le moteur
+    # repartait d'un etat vide et reproposait des departements deja traites,
+    # a chaque tour. Une panne silencieuse qui produit des envois en double
+    # est pire qu'un run rouge : on echoue franchement.
+    if not os.path.exists(_p):
+        sys.exit("VP_ETAT pointe sur un fichier introuvable : %r. "
+                 "Le moteur refuse de tourner avec un etat vide." % _p)
     ETAT = json.load(open(_p, encoding="utf-8"))
     ETAT.setdefault("sequences", {})
+elif os.environ.get("VP_EXIGE_ETAT"):
+    sys.exit("VP_EXIGE_ETAT est pose mais VP_ETAT est absent. "
+             "Le moteur refuse de tourner avec un etat vide.")
 SEQ = ETAT["sequences"]
 
 # Date de bascule en mode reel, lue dans etat.json. Null tant que le cron

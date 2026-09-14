@@ -31,6 +31,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    # Pose pour tout le job : le controle d'environnement et la detection
+    # doivent voir exactement la meme valeur.
+    env:
+      VP_ETAT: etat.json
+      VP_EXIGE_ETAT: "1"
+
     steps:
       - name: Recuperer le depot
         uses: actions/checkout@v4
@@ -40,6 +46,22 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Controle de l'environnement — VP_ETAT
+        # CONTROLE DUR. Sans etat, le moteur repartirait de zero a chaque tour
+        # et reproposerait en boucle des departements deja traites. Une panne
+        # silencieuse qui produit des envois en double est pire qu'un run
+        # rouge : on echoue avant d'avoir rien fait.
+        run: |
+          if [ -z "${VP_ETAT:-}" ]; then
+            echo "ECHEC : VP_ETAT n'est pas defini."
+            exit 1
+          fi
+          if [ ! -f "$VP_ETAT" ]; then
+            echo "ECHEC : VP_ETAT pointe sur un fichier introuvable : $VP_ETAT"
+            exit 1
+          fi
+          python -c "import json,io,sys; d=json.load(io.open('$VP_ETAT',encoding='utf-8'));             print('OK    | %s lisible, version %s, bascule %r' % ('$VP_ETAT', d.get('version'), d.get('bascule')));             sys.exit(0 if d.get('version') == 2 else 1)"
+
       - name: Non-regression moteur.py contre index.html
         # Les deux implementations doivent produire le meme texte. Si elles
         # divergent, on ne publie pas un etat que la page interpreterait
@@ -47,11 +69,7 @@ jobs:
         run: python test_coherence.py
 
       - name: Detection
-        # VP_ETAT fait lire etat.json au moteur : il y trouve les sequences en
-        # cours et la date de bascule. Sans lui, il repartirait de zero a
-        # chaque execution et proposerait de monter des mails deja traites.
-        env:
-          VP_ETAT: etat.json
+        # VP_ETAT et VP_EXIGE_ETAT sont poses au niveau du job, plus haut.
         run: python moteur.py > veille.json
 
       - name: Mise a jour de etat.json
