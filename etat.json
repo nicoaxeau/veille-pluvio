@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-09-18T13:34:10+00:00",
+ "maj": "2026-09-19T12:56:27+00:00",
  "bascule": null,
  "parametres": {
   "pic_mm": 30.0,
@@ -16,18 +16,6 @@
  "sequences": {},
  "campagnes": {},
  "detection_cron": {
-  "05|2026-08-21|A": {
-   "dept": "Hautes-Alpes",
-   "serie": "A",
-   "episode": "2026-08-21",
-   "etape": "a_monter"
-  },
-  "10|2026-08-21|A": {
-   "dept": "Aube",
-   "serie": "A",
-   "episode": "2026-08-21",
-   "etape": "a_monter"
-  },
   "12|2026-08-28|A": {
    "dept": "Aveyron",
    "serie": "A",
@@ -56,12 +44,6 @@
    "dept": "Eure-et-Loir",
    "serie": "A",
    "episode": "2026-08-27",
-   "etape": "a_monter"
-  },
-  "2A|2026-08-21|A": {
-   "dept": "Corse-du-Sud",
-   "serie": "A",
-   "episode": "2026-08-21",
    "etape": "a_monter"
   },
   "39|2026-08-24|A": {
@@ -100,28 +82,22 @@
    "episode": "2026-08-27",
    "etape": "a_monter"
   },
-  "73|2026-08-21|A": {
+  "73|2026-09-09|A": {
    "dept": "Savoie",
    "serie": "A",
-   "episode": "2026-08-21",
+   "episode": "2026-09-09",
    "etape": "a_monter"
   },
-  "74|2026-08-21|A": {
+  "74|2026-08-28|A": {
    "dept": "Haute-Savoie",
    "serie": "A",
-   "episode": "2026-08-21",
+   "episode": "2026-08-28",
    "etape": "a_monter"
   },
   "81|2026-08-24|A": {
    "dept": "Tarn",
    "serie": "A",
    "episode": "2026-08-24",
-   "etape": "a_monter"
-  },
-  "83|2026-08-21|A": {
-   "dept": "Var",
-   "serie": "A",
-   "episode": "2026-08-21",
    "etape": "a_monter"
   },
   "86|2026-08-24|A": {
