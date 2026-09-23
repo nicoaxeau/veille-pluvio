@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-09-22T13:56:16+00:00",
+ "maj": "2026-09-23T14:06:44+00:00",
  "bascule": null,
  "parametres": {
   "pic_mm": 30.0,
@@ -32,12 +32,6 @@
    "dept": "Eure-et-Loir",
    "serie": "A",
    "episode": "2026-08-27",
-   "etape": "a_monter"
-  },
-  "52|2026-08-25|A": {
-   "dept": "Haute-Marne",
-   "serie": "A",
-   "episode": "2026-08-25",
    "etape": "a_monter"
   },
   "58|2026-08-27|A": {
