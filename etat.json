@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-09-24T14:04:04+00:00",
+ "maj": "2026-09-25T14:27:32+00:00",
  "bascule": null,
  "parametres": {
   "pic_mm": 30.0,
@@ -22,40 +22,10 @@
    "episode": "2026-08-28",
    "etape": "a_monter"
   },
-  "14|2026-08-27|A": {
-   "dept": "Calvados",
-   "serie": "A",
-   "episode": "2026-08-27",
-   "etape": "a_monter"
-  },
-  "28|2026-08-27|A": {
-   "dept": "Eure-et-Loir",
-   "serie": "A",
-   "episode": "2026-08-27",
-   "etape": "a_monter"
-  },
-  "58|2026-08-27|A": {
-   "dept": "Nièvre",
-   "serie": "A",
-   "episode": "2026-08-27",
-   "etape": "a_monter"
-  },
-  "63|2026-08-27|A": {
-   "dept": "Puy-de-Dôme",
-   "serie": "A",
-   "episode": "2026-08-27",
-   "etape": "a_monter"
-  },
   "70|2026-08-28|A": {
    "dept": "Haute-Saône",
    "serie": "A",
    "episode": "2026-08-28",
-   "etape": "a_monter"
-  },
-  "72|2026-08-27|A": {
-   "dept": "Sarthe",
-   "serie": "A",
-   "episode": "2026-08-27",
    "etape": "a_monter"
   },
   "73|2026-09-09|A": {
@@ -68,12 +38,6 @@
    "dept": "Haute-Savoie",
    "serie": "A",
    "episode": "2026-08-28",
-   "etape": "a_monter"
-  },
-  "93|2026-08-27|A": {
-   "dept": "Seine-Saint-Denis",
-   "serie": "A",
-   "episode": "2026-08-27",
    "etape": "a_monter"
   },
   "95|2026-08-28|A": {
