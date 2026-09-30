@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-09-29T15:24:50+00:00",
+ "maj": "2026-09-30T15:41:11+00:00",
  "bascule": null,
  "parametres": {
   "pic_mm": 30.0,
@@ -16,6 +16,12 @@
  "sequences": {},
  "campagnes": {},
  "detection_cron": {
+  "07|2026-09-30|A": {
+   "dept": "Ardèche",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "a_venir"
+  },
   "73|2026-09-09|A": {
    "dept": "Savoie",
    "serie": "A",
