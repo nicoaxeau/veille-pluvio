@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-09-30T15:41:11+00:00",
+ "maj": "2026-10-01T16:02:43+00:00",
  "bascule": null,
  "parametres": {
   "pic_mm": 30.0,
@@ -20,6 +20,18 @@
    "dept": "Ardèche",
    "serie": "A",
    "episode": "2026-09-30",
+   "etape": "a_venir"
+  },
+  "19|2026-10-01|A": {
+   "dept": "Corrèze",
+   "serie": "A",
+   "episode": "2026-10-01",
+   "etape": "a_venir"
+  },
+  "30|2026-10-01|A": {
+   "dept": "Gard",
+   "serie": "A",
+   "episode": "2026-10-01",
    "etape": "a_venir"
   },
   "73|2026-09-09|A": {
