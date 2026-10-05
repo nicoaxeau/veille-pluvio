@@ -12,11 +12,16 @@ name: Veille pluviometrique
 
 on:
   schedule:
-    # 11 h Paris. En heure d'ete « 0 9 * * * » UTC vaut 11 h ; a partir du
-    # 25 octobre 2026, passer a « 0 10 * * * ». Les deux lignes sont ecrites,
+    # 11 h 17 Paris en heure d'ete : « 17 9 * * * » UTC. A partir du
+    # 25 octobre 2026, passer a « 17 10 * * * ». Les deux lignes sont ecrites,
     # une seule est active : decommenter l'autre le 25/10/2026.
-    - cron: "0 9 * * *"
-    # - cron: "0 10 * * *"
+    #
+    # Minute 17 et non 0 : GitHub retarde davantage les taches programmees en
+    # debut d'heure, la plus chargee. Mesure du 15/09 au 01/10/2026 a la
+    # minute 0 : retard median 5 h 07, jusqu'a 8 h 22. L'horaire ecrit ici
+    # est un horaire de depart AU PLUS TOT, pas une heure d'execution.
+    - cron: "17 9 * * *"
+    # - cron: "17 10 * * *"
   workflow_dispatch:
 
 permissions:
@@ -100,19 +105,40 @@ jobs:
         run: rm -f veille.json
 
   notifier:
-    # Notification d'echec. Se declenche uniquement si le job precedent
-    # tombe : moteur.py en erreur, divergence de non-regression, ou
-    # verif_etat.py qui refuse le commit.
+    # Alerte si le job precedent a ECHOUE ou a ete ANNULE.
+    #
+    # Le 17/09/2026, la detection a depasse ses 15 minutes : GitHub a annule le
+    # job, et un job annule n'est pas en echec. Avec « if: failure() », cette
+    # alerte a ete sautee : une journee perdue sans que personne le sache.
+    #
+    # On teste donc explicitement le resultat du job precedent. « always() »
+    # garantit que cette condition est evaluee quel que soit ce resultat ;
+    # « cancelled() » ne suffirait pas, il dit si TOUT le run a ete annule,
+    # pas si le job precedent a depasse son delai.
     needs: veille
-    if: failure()
+    if: always() && (needs.veille.result == 'failure' || needs.veille.result == 'cancelled')
     runs-on: ubuntu-latest
     steps:
       - name: Ouvrir une issue d'echec
         uses: actions/github-script@v7
+        env:
+          RESULTAT: ${{ needs.veille.result }}
         with:
           script: |
-            const titre = `Veille pluviometrique en echec — ${new Date().toISOString().slice(0,10)}`;
-            const corps = [
+            const annule = process.env.RESULTAT === "cancelled";
+            const titre = `Veille pluviometrique ${annule ? "annulee" : "en echec"} — ${new Date().toISOString().slice(0,10)}`;
+            const corps = annule ? [
+              "**La tache planifiee a ete ANNULEE. Aucun etat n'a ete publie aujourd'hui.**",
+              "",
+              `Execution : ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              "",
+              "Cause la plus probable : le job a depasse ses 15 minutes (timeout-minutes),",
+              "en general parce qu'Open-Meteo repondait lentement, comme le 17/09/2026.",
+              "Sinon : annulation manuelle depuis l'onglet Actions.",
+              "",
+              "Le prochain tour planifie reprendra normalement.",
+              "La page continue d'afficher le dernier etat publie.",
+            ].join("\n") : [
               "La tache planifiee a echoue. Aucun etat n'a ete publie.",
               "",
               `Execution : ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
