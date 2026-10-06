@@ -43,6 +43,25 @@ lecture, sans identifiant.
 | `index.html` | la page de suivi, servie par GitHub Pages |
 | `etat.json` | états et compteurs agrégés. Jamais de détail par destinataire |
 | `depts.json`, `libelles-departements.json` | données de référence des 96 départements |
+| `stations.json` | la liste figée des 96 stations Météo-France, une par département |
+| `test_stations.py` | contrôle de `stations.json` |
+
+## La station de chaque département
+
+Le passage aux observations de Météo-France est en cours, sur la branche
+`meteofrance`. `stations.json` n'est encore lu par aucun programme.
+
+Chaque département a **une station** : la station Météo-France la plus proche
+de la préfecture, **dans le département**, qui mesure la pluie. Le mail ne doit
+jamais citer une mesure prise ailleurs.
+
+La liste est **figée** : elle n'est jamais recalculée. Une station silencieuse
+3 jours de suite déclenchera une alerte ; la remplacer est un commit relu, qui
+renseigne le champ `remplace` (numéro, nom et motif de l'ancienne station).
+
+`test_stations.py` vérifie la liste : 96 stations, une par département, chacune
+dans son département (en Corse, par le numéro de commune), à moins de 15 km de
+la préfecture, sous 1 000 m d'altitude, sans aucune adresse email.
 
 ## Deux implémentations, un seul texte
 

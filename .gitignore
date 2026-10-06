@@ -26,6 +26,10 @@
 !/depts.json
 !/libelles-departements.json
 
+# la liste figee des 96 stations Meteo-France, et son controle
+!/stations.json
+!/test_stations.py
+
 # l'etat publie, et ce qui le fabrique et le controle
 !/etat.json
 !/maj_etat.py
