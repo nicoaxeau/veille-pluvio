@@ -26,6 +26,10 @@
 !/depts.json
 !/libelles-departements.json
 
+# le controle du moteur, et les sequences attendues sur la reference
+!/test_moteur.py
+!/sequences-reference.json
+
 # la liste figee des 96 stations Meteo-France, et son controle
 !/stations.json
 !/test_stations.py

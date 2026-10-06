@@ -21,9 +21,14 @@ Ce qui n'est PAS touche en mode a blanc :
 AUCUNE ADRESSE EMAIL n'entre ici : le depot est public. verif_etat.py le
 verifie avant chaque commit.
 
+Un departement sans la donnee du jour (fichier Meteo-France en retard ou
+absent, station silencieuse) est en erreur pour la journee. Au-dela de
+MAX_DEPTS_EN_ERREUR, le tour echoue et etat.json n'est pas touche.
+
 Usage :
     python moteur.py > veille.json && python maj_etat.py veille.json
     python moteur.py | python maj_etat.py -
+    python maj_etat.py veille.json autre/etat.json     (tests : jamais le vrai)
 """
 import datetime as dt
 import io, json, os, sys
@@ -64,19 +69,22 @@ def main():
     print("")
 
     veille = charger_veille(sys.argv[1])
+    chemin_etat = sys.argv[2] if len(sys.argv) > 2 else ETAT
 
     erreurs = veille.get("erreurs") or []
     depts_en_erreur = sum(len(e.get("depts") or []) for e in erreurs)
     if depts_en_erreur > MAX_DEPTS_EN_ERREUR:
-        print("ECHEC | %d departements en erreur chez Open-Meteo (max %d)."
+        print("ECHEC | %d departements sans la donnee du jour (max %d)."
               % (depts_en_erreur, MAX_DEPTS_EN_ERREUR))
         print("        Le balayage est trop partiel pour etre publie. etat.json")
         print("        n'est pas modifie.")
         return 1
     if erreurs:
-        print("ALERTE| %d departement(s) en erreur, balayage partiel." % depts_en_erreur)
+        print("ALERTE| %d departement(s) en erreur, balayage partiel :" % depts_en_erreur)
+        for e in erreurs:
+            print("        %s : %s" % (", ".join(e.get("depts") or []), e.get("erreur")))
 
-    etat = json.load(io.open(ETAT, encoding="utf-8"))
+    etat = json.load(io.open(chemin_etat, encoding="utf-8"))
     avant = json.dumps(etat, ensure_ascii=False, sort_keys=True)
 
     # --- Les declencheurs vus par le cron --------------------------------
@@ -102,7 +110,7 @@ def main():
         etat["mode"] = "a_blanc"
 
     apres = json.dumps(etat, ensure_ascii=False, sort_keys=True)
-    io.open(ETAT, "w", encoding="utf-8", newline="\n").write(
+    io.open(chemin_etat, "w", encoding="utf-8", newline="\n").write(
         json.dumps(etat, ensure_ascii=False, indent=1) + "\n")
 
     par_etape = {}
@@ -133,7 +141,7 @@ def main():
         print("        %-22s %d" % (e, n))
     print("OK    | sequences inchangees   %d" % len(etat.get("sequences") or {}))
     print("OK    | campagnes inchangees   %d" % len(etat.get("campagnes") or {}))
-    print("OK    | etat.json              %d octets" % os.path.getsize(ETAT))
+    print("OK    | etat.json              %d octets" % os.path.getsize(chemin_etat))
     print("")
     print("etat.json %s." % ("modifie" if avant != apres else "inchange"))
     return 0

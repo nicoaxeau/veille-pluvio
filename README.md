@@ -36,9 +36,11 @@ lecture, sans identifiant.
 
 | Fichier | Rôle |
 |---|---|
-| `moteur.py` | détection et machine à états. Lecture seule, sortie JSON sur stdout |
+| `moteur.py` | détection et machine à états, sur `pluie.json`. Lecture seule, sortie JSON sur stdout |
+| `test_moteur.py` | contrôle du moteur, dont la simulation sur la référence |
+| `sequences-reference.json` | les 236 séquences attendues sur `pluie-reference.json` |
 | `maj_etat.py` | écrit `etat.json` à partir de la sortie du moteur |
-| `verif_etat.py` | garde-fou : refuse le commit si `etat.json` contient une adresse |
+| `verif_etat.py` | garde-fou : refuse le commit si `etat.json`, `pluie.json` ou `stations.json` contient une adresse |
 | `test_coherence.py` | non-régression entre `moteur.py` et `index.html` |
 | `index.html` | la page de suivi, servie par GitHub Pages |
 | `etat.json` | états et compteurs agrégés. Jamais de détail par destinataire |
@@ -53,8 +55,8 @@ lecture, sans identifiant.
 ## La station de chaque département
 
 Le passage aux observations de Météo-France est en cours, sur la branche
-`meteofrance`. `stations.json` est lu par l'extraction ; le moteur et la page
-n'utilisent pas encore Météo-France.
+`meteofrance`. L'extraction lit `stations.json` et produit `pluie.json`, que lit
+le moteur ; la page n'utilise pas encore Météo-France.
 
 Chaque département a **une station** : la station Météo-France la plus proche
 de la préfecture, **dans le département**, qui mesure la pluie. Le mail ne doit
@@ -88,6 +90,13 @@ stations de `stations.json`, sur les 400 derniers jours.
   l'extraction signale la station.
 - L'adresse des fichiers est trouvée à chaque tour par l'API de data.gouv.fr :
   leur nom porte les années, et changera en janvier.
+
+Le moteur lit `pluie.json`. Un jour `null` ne déclenche rien, ne compte pas
+comme jour de pluie, et met le département en erreur pour la journée. La
+phrase de série A cite le jour le plus fort de l'épisode, déjà connu au mail 1
+(J+5), arrondi au millimètre, la demie vers le haut : « Le 30 septembre, 146 mm
+de pluie sont tombés en 24 heures dans l'Hérault. » Au-delà de 20 départements
+sans la donnée du jour, `maj_etat.py` ne publie pas.
 
 `pluie-reference.json` est la même extraction, figée sur les fichiers publiés
 le 06/10/2026. Les tests s'appuient dessus ; elle ne change jamais.

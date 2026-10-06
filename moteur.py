@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Moteur de veille pluviometrique Ax'eau - v2.
+"""Moteur de veille pluviometrique Ax'eau - v3, observations Meteo-France.
 
-Deux declencheurs independants, sur les 96 departements metropolitains :
-  Serie A - intensite    : un jour a PIC mm ou plus en 24 h
-  Serie B - persistance  : NB_JOURS jours de pluie (>= SEUIL_JOUR mm) sur 30 j glissants
+Deux declencheurs independants, sur les 96 departements metropolitains, calcules
+a UNE station par departement : la station Meteo-France la plus proche de la
+prefecture, dans le departement (stations.json, liste figee).
+  Serie A - intensite    : un jour a PIC mm ou plus en 24 h a cette station
+  Serie B - persistance  : NB_JOURS jours de pluie (>= SEUIL_JOUR mm) sur 30 j
+                           glissants a cette station
+
+La pluie est lue dans pluie.json, produit chaque matin par
+extraction_meteofrance.py. La journee J de Meteo-France va de 06 h UTC le jour
+J a 06 h UTC le jour J+1 : les dates sont reprises telles quelles.
+
+Un jour sans donnee (null) ne declenche rien, ne compte pas comme jour de
+pluie, et met le departement en erreur pour ce jour. Jamais 0 : un jour sans
+donnee est une erreur, pas un jour sec.
 
 Une detection ouvre une SEQUENCE de deux mails :
   mail 1 a J+7 apres l'episode
@@ -15,12 +26,15 @@ Regles :
   - apres l'envoi du mail 2, silence de SILENCE jours
   - un mail 1 monte mais jamais envoye expire au bout de EXPIRATION jours
 
+La phrase de serie A cite le jour le plus fort de l'episode, parmi les jours
+consecutifs a PIC mm ou plus, deja connu au moment du mail 1. Valeurs arrondies
+au millimetre, la demie vers le haut.
+
 Lecture seule. N'envoie rien, ne programme rien. Sortie JSON sur stdout.
 """
-import json, os, sys, time, datetime as dt, urllib.request, urllib.parse
+import json, math, os, sys, datetime as dt
 
 # ---------------------------------------------------------------- parametres
-HOST        = os.environ.get("VP_HOST", "historical-forecast-api.open-meteo.com")
 PIC         = float(os.environ.get("VP_PIC", 30))        # serie A, mm/24 h
 SEUIL_JOUR  = float(os.environ.get("VP_SEUIL_JOUR", 1))  # serie B, mm pour compter un jour de pluie
 NB_JOURS    = int(os.environ.get("VP_NB_JOURS", 15))     # serie B, jours dans la fenetre
@@ -30,7 +44,16 @@ ECART_2     = 14                                          # mail 2 a envoi reel 
 SILENCE     = 30                                          # apres le mail 2
 EXPIRATION  = int(os.environ.get("VP_EXPIRATION", 21))    # mail 1 monte non envoye
 PROFONDEUR  = int(os.environ.get("VP_PROFONDEUR", 92))
-LOT         = 12
+# Meteo-France publie la pluie du jour J le matin du jour J+2.
+DELAI_PUBLICATION = 2
+# Au mail 1, a J+7, les journees connues vont donc jusqu'a J+5.
+CONNU_AU_MAIL1 = OFFSET_1 - DELAI_PUBLICATION
+
+PLUIE       = os.environ.get("VP_PLUIE", "pluie.json")
+SOURCE      = "Météo-France, Données climatologiques de base - quotidiennes (pluie.json)"
+# Decision de Nicolas du 06/10/2026 : la licence impose la source ET la date de
+# mise a jour. La date est celle du fichier Meteo-France qui a servi.
+MENTION     = "Données pluviométriques : Météo-France, mise à jour du %s"
 
 AUJOURDHUI  = dt.date.fromisoformat(os.environ["VP_DATE"]) if os.environ.get("VP_DATE") else dt.date.today()
 
@@ -68,76 +91,88 @@ _b = ETAT.get("bascule")
 BASCULE = dt.date.fromisoformat(_b) if _b else None
 
 DEPTS = json.load(open(os.environ.get("VP_DEPTS", "depts.json"), encoding="utf-8"))
-DEBUT, FIN = AUJOURDHUI - dt.timedelta(days=PROFONDEUR), AUJOURDHUI
-
-
-def charger(lot):
-    q = urllib.parse.urlencode({
-        "latitude":  ",".join(f"{d['lat']}"  for d in lot),
-        "longitude": ",".join(f"{d['lon']}" for d in lot),
-        "start_date": DEBUT.isoformat(), "end_date": FIN.isoformat(),
-        "daily": "precipitation_sum,weather_code", "timezone": "Europe/Paris"})
-    with urllib.request.urlopen(f"https://{HOST}/v1/forecast?{q}", timeout=60) as r:
-        data = json.load(r)
-    return data if isinstance(data, list) else [data]
-
-
-# Codes WMO -> (libelle complet pour l'outil, mot repris dans le mail ou None).
-# 96 et 99 ramenes a "orage" : la grêle est modélisée, pas observée.
-PHENO = {95: ("Orage", "orage"), 96: ("Orage avec grêle", "orage"), 99: ("Orage avec forte grêle", "orage"),
-         80: ("Averses", "averses"), 81: ("Averses fortes", "averses"), 82: ("Averse violente", "averses"),
-         66: ("Pluie verglaçante", None), 67: ("Pluie verglaçante forte", None),
-         75: ("Neige forte", None), 85: ("Chutes de neige", None), 86: ("Fortes chutes de neige", None),
-         63: ("Pluie continue", None), 65: ("Pluie forte", None), 61: ("Pluie faible", None),
-         51: ("Bruine", None), 53: ("Bruine", None), 55: ("Bruine forte", None)}
+DEBUT = AUJOURDHUI - dt.timedelta(days=PROFONDEUR)
 
 MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet",
         "août", "septembre", "octobre", "novembre", "décembre"]
 
 
+# ---------------------------------------------------------------- redaction
 def _mm(v):
-    """Millimetres a la francaise. Une valeur entiere ne porte pas de decimale.
+    """Millimetres arrondis au millimetre, la demie vers le haut.
 
-    43.8 -> 43,8    34.0 -> 34    108.8 -> 108,8    91.0 -> 91
+    146.0 -> 146    72.4 -> 72    212.5 -> 213
+
+    Meme regle que Math.round dans la page. round() de Python arrondirait
+    212.5 a 212 (au pair) : les deux implementations divergeraient.
     """
-    return f"{v:.0f}" if abs(v - round(v)) < 1e-9 else f"{v:.1f}".replace(".", ",")
+    return str(int(math.floor(v + 0.5)))
+
+
+def jour_long(s):
+    """« 30 septembre », « 1er octobre ». Seul le 1er prend « er »."""
+    d = dt.date.fromisoformat(s)
+    return f"{'1er' if d.day == 1 else d.day} {MOIS[d.month - 1]}"
+
+
+def date_paris(iso_utc):
+    """Date a Paris d'un instant UTC. Heure d'ete du dernier dimanche de mars au
+    dernier dimanche d'octobre, a 01 h UTC. Meme regle que l'extraction."""
+    t = dt.datetime.strptime(iso_utc, "%Y-%m-%dT%H:%M:%SZ")
+
+    def dernier_dimanche(annee, mois):
+        d = dt.date(annee, mois, 31)
+        return d - dt.timedelta(days=(d.weekday() + 1) % 7)
+
+    ete = (dt.datetime.combine(dernier_dimanche(t.year, 3), dt.time(1)) <= t
+           < dt.datetime.combine(dernier_dimanche(t.year, 10), dt.time(1)))
+    return (t + dt.timedelta(hours=2 if ete else 1)).date()
+
+
+def mention(publie_le):
+    """Mention de source du mail, datee de la publication du fichier
+    Meteo-France qui a servi a la phrase. None si la date est inconnue."""
+    if not publie_le:
+        return None
+    d = date_paris(publie_le)
+    return MENTION % f"{'1er' if d.day == 1 else d.day} {MOIS[d.month - 1]} {d.year}"
 
 
 def bloc_meteo(r, dept_en):
     """Phrase exacte injectee dans %%BLOC_METEO%% du template.
+
+    Serie A : une seule forme, sans « orage » ni « averses » : Meteo-France ne
+    les fournit pas de facon fiable. Le jour et la valeur sont ceux du jour le
+    plus fort de l'episode (cite_date, cite_mm).
 
     Serie B : forme DATEE. « Sur les 30 derniers jours » est relatif au moment
     de la lecture, alors que le mail part 7 puis 21 jours apres la fin de la
     fenetre observee : au mail 2 le recouvrement tombe a 30 % et la phrase
     devient fausse. Les deux bornes sont donnees explicitement.
     """
-    def jour_long(s):
-        d = dt.date.fromisoformat(s)
-        # Seul le 1er prend « er ». Du 2 au 31 le nombre reste nu.
-        return f"{'1er' if d.day == 1 else d.day} {MOIS[d.month - 1]}"
     if r["serie"] == "B":
         return (f"Entre le {jour_long(r['debut_fenetre'])} et le {jour_long(r['episode'])}, "
                 f"{r['jours_pluie']} jours de pluie ont été relevés {dept_en}.")
-    mot = PHENO.get(r.get("wmo", -1), (None, None))[1]
-    mm = _mm(r["pic24_mm"])
-    if mot == "orage":
-        return f"L'orage du {jour_long(r['pic_date'])} a laissé {mm} mm en 24 heures {dept_en}."
-    if mot == "averses":
-        return f"Les averses du {jour_long(r['pic_date'])} ont laissé {mm} mm en 24 heures {dept_en}."
-    return f"Le {jour_long(r['pic_date'])}, {mm} mm de pluie sont tombés en 24 heures {dept_en}."
+    return (f"Le {jour_long(r['cite_date'])}, {_mm(r['cite_mm'])} mm de pluie "
+            f"sont tombés en 24 heures {dept_en}.")
 
 
-def declencheurs(p, dates, codes=None):
-    """Jours declencheurs, par serie. Renvoie [(index, serie, detail), ...] chronologique."""
+# ---------------------------------------------------------------- detection
+def declencheurs(p, dates):
+    """Jours declencheurs, par serie. Renvoie [(index, serie, detail), ...] chronologique.
+
+    p : pluie du jour en mm, None quand il n'y a pas de donnee. Un jour sans
+    donnee ne declenche rien, et ne compte pas comme jour de pluie.
+    """
     out = []
     for i, v in enumerate(p):
-        if v >= PIC:
-            c = codes[i] if codes and i < len(codes) and codes[i] is not None else -1
-            out.append((i, "A", {"pic24_mm": round(v, 1), "pic_date": dates[i], "wmo": c,
-                                 "phenomene": PHENO.get(c, (None, None))[0]}))
+        if v is not None and v >= PIC:
+            out.append((i, "A", {"pic24_mm": round(v, 1), "pic_date": dates[i]}))
     for i in range(len(p)):
+        if p[i] is None:
+            continue
         deb = max(0, i - (FENETRE - 1))
-        n = sum(1 for k in range(deb, i + 1) if p[k] >= SEUIL_JOUR)
+        n = sum(1 for k in range(deb, i + 1) if p[k] is not None and p[k] >= SEUIL_JOUR)
         if n >= NB_JOURS:
             out.append((i, "B", {"jours_pluie": n, "seuil_jour_mm": SEUIL_JOUR,
                                  "debut_fenetre": dates[deb]}))
@@ -145,18 +180,38 @@ def declencheurs(p, dates, codes=None):
     return out
 
 
+def jour_cite(p, dates, i, libre=None):
+    """Le jour que cite le mail : le plus fort des jours consecutifs a PIC mm ou
+    plus autour du declenchement i, sans remonter dans le verrou precedent
+    (libre = premier jour libre du departement), et deja connu au moment du
+    mail 1. Un jour sans donnee interrompt l'episode. A egalite, le plus tot.
+    Renvoie (date, valeur)."""
+    fort = lambda k: p[k] is not None and p[k] >= PIC
+    k0 = i
+    while k0 > 0 and fort(k0 - 1) and (libre is None or dt.date.fromisoformat(dates[k0 - 1]) >= libre):
+        k0 -= 1
+    k1 = i
+    while k1 + 1 < len(p) and k1 + 1 <= i + CONNU_AU_MAIL1 and fort(k1 + 1):
+        k1 += 1
+    best = max(range(k0, k1 + 1), key=lambda k: (p[k], -k))
+    return dates[best], p[best]
+
+
 def jour(d):
     return (d - AUJOURDHUI).days
 
 
-def traiter(dept, p, dates, codes=None):
+def traiter(dept, p, dates):
     """Deroule la chronologie d'un departement et renvoie ses sequences."""
     faits = []
-    libre_a_partir_de = None   # index de date avant lequel aucune nouvelle sequence
-    for i, serie, detail in declencheurs(p, dates, codes):
+    libre_a_partir_de = None   # date avant laquelle aucune nouvelle sequence
+    for i, serie, detail in declencheurs(p, dates):
         episode = dt.date.fromisoformat(dates[i])
         cle = f"{dept['code']}|{dates[i]}|{serie}"
         connue = SEQ.get(cle)
+        if serie == "A":
+            detail = dict(detail)
+            detail["cite_date"], detail["cite_mm"] = jour_cite(p, dates, i, libre_a_partir_de)
 
         if not connue and libre_a_partir_de is not None and episode < libre_a_partir_de:
             faits.append({"code": dept["code"], "dept": dept["nom"], "region": dept["region"],
@@ -226,26 +281,69 @@ def traiter(dept, p, dates, codes=None):
     return faits
 
 
+def simuler(p, dates, depuis=0, jusqu_a=None):
+    """Ce que compte l'onglet Simulation de la page : les sequences qu'auraient
+    ouvertes les declencheurs, mails partis a l'heure. Demarrage a froid a
+    l'indice depuis, aucun verrou herite ; declencheurs retenus jusqu'a l'indice
+    jusqu_a inclus. Un departement est libre a l'episode + 51 jours."""
+    jusqu_a = len(p) - 1 if jusqu_a is None else jusqu_a
+    seqs, libre = [], None
+    for i, serie, detail in declencheurs(p, dates):
+        if i < depuis or i > jusqu_a:
+            continue
+        e = dt.date.fromisoformat(dates[i])
+        if libre is not None and e < libre:
+            continue
+        x = {"episode": dates[i], "serie": serie, **detail}
+        if serie == "A":
+            x["cite_date"], x["cite_mm"] = jour_cite(p, dates, i, libre)
+        seqs.append(x)
+        libre = e + dt.timedelta(days=OFFSET_1 + ECART_2 + SILENCE)
+    return seqs
+
+
+# ---------------------------------------------------------------- donnees
+def lire_pluie(chemin=PLUIE):
+    """pluie.json -> (document, dates). Les null restent None."""
+    doc = json.load(open(chemin, encoding="utf-8"))
+    d0, d1 = dt.date.fromisoformat(doc["debut"]), dt.date.fromisoformat(doc["fin"])
+    dates = [(d0 + dt.timedelta(days=k)).isoformat() for k in range((d1 - d0).days + 1)]
+    return doc, dates
+
+
 def main():
-    tout, erreurs = [], []
-    for b in range(0, len(DEPTS), LOT):
-        lot = DEPTS[b:b + LOT]
-        blocs, msg = None, None
-        for essai in range(4):
-            try:
-                blocs = charger(lot); break
-            except Exception as ex:
-                msg = str(ex); time.sleep(2 + 3 * essai)
-        if blocs is None:
-            erreurs.append({"depts": [d["code"] for d in lot], "erreur": msg}); continue
-        for d, blk in zip(lot, blocs):
-            daily = blk.get("daily") or {}
-            dates = daily.get("time", [])
-            p = [v or 0.0 for v in daily.get("precipitation_sum", [])]
-            codes = daily.get("weather_code", [])
-            if not dates:
-                erreurs.append({"depts": [d["code"]], "erreur": "pas de donnees"}); continue
-            tout.extend(traiter(d, p, dates, codes))
+    # Sortie JSON en UTF-8 sur toutes les plateformes : la console Windows ecrit
+    # sinon en cp1252, et les accents de la phrase deviennent illisibles.
+    sys.stdout.reconfigure(encoding="utf-8")
+    doc, dates_tout = lire_pluie()
+    # Fenetre de detection : PROFONDEUR jours, jusqu'au dernier jour publie.
+    debut = max(DEBUT.isoformat(), dates_tout[0])
+    fin = min(AUJOURDHUI.isoformat(), dates_tout[-1])
+    i0, i1 = dates_tout.index(debut), dates_tout.index(fin)
+    dates = dates_tout[i0:i1 + 1]
+    # Le jour qui devrait etre publie aujourd'hui. Un departement qui ne l'a
+    # pas est en erreur pour la journee : fichier en retard ou absent, ou
+    # station silencieuse. Il sera rattrape au tour suivant.
+    attendu = (AUJOURDHUI - dt.timedelta(days=DELAI_PUBLICATION)).isoformat()
+
+    tout, erreurs, sans_donnee = [], [], {}
+    for d in DEPTS:
+        s = (doc.get("stations") or {}).get(d["code"])
+        if not s:
+            erreurs.append({"depts": [d["code"]], "erreur": "station absente de pluie.json"})
+            continue
+        p = s["rr"][i0:i1 + 1]
+        manquants = [j for j, v in zip(dates, p) if v is None]
+        if manquants:
+            sans_donnee[d["code"]] = manquants
+        if attendu > dates[-1] or p[dates.index(attendu)] is None:
+            erreurs.append({"depts": [d["code"]],
+                            "erreur": "pas de donnee le %s (fichier %s, station silencieuse depuis %s j)"
+                                      % (attendu, s.get("etat"), s.get("silence_j"))})
+        m = mention(s.get("publie_le"))
+        for f in traiter(d, p, dates):
+            f["mention"] = m
+            tout.append(f)
 
     libelles = {}
     _lp = os.environ.get("VP_LIBELLES", "libelles-departements.json")
@@ -262,18 +360,21 @@ def main():
         par[k].sort(key=lambda r: (r.get("mail1_prevu", ""), r["code"]))
 
     print(json.dumps({
-        "date": AUJOURDHUI.isoformat(), "source": HOST,
+        "date": AUJOURDHUI.isoformat(), "source": SOURCE,
+        "donnees": {"debut": dates[0], "fin": dates[-1], "attendu": attendu,
+                    "mention": doc.get("mention")},
         "parametres": {"pic_mm": PIC, "seuil_jour_mm": SEUIL_JOUR, "nb_jours": NB_JOURS,
                        "fenetre_j": FENETRE, "mail1_offset_j": OFFSET_1,
                        "mail2_ecart_j": ECART_2, "silence_j": SILENCE,
-                       "expiration_j": EXPIRATION, "profondeur_j": PROFONDEUR},
+                       "expiration_j": EXPIRATION, "profondeur_j": PROFONDEUR,
+                       "connu_au_mail1_j": CONNU_AU_MAIL1},
         "a_faire_aujourdhui": par.get("a_monter", []) + par.get("mail2_a_monter", []),
         "en_attente_envoi": par.get("attente_envoi_mail1", []) + par.get("attente_envoi_mail2", []),
         "a_venir": par.get("a_venir", []) + par.get("mail2_a_venir", []),
         "bloques": par.get("bloque", []), "silence": par.get("silence", []),
         "expires": par.get("expire", []) + par.get("expire_non_envoye", []),
         "abandonnes": par.get("abandonne", []), "termines": par.get("termine", []),
-        "erreurs": erreurs}, ensure_ascii=False, indent=1))
+        "erreurs": erreurs, "sans_donnee": sans_donnee}, ensure_ascii=False, indent=1))
 
 
 if __name__ == "__main__":

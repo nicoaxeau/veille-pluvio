@@ -1,28 +1,35 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Garde-fou de etat.json avant tout commit. LE DEPOT EST PUBLIC.
+"""Garde-fou des fichiers publies, avant tout commit. LE DEPOT EST PUBLIC.
 
 Regle absolue : aucune adresse email ne doit figurer dans le depot. Ce script
 est ce qui nous protege du jour ou quelqu'un ajoutera un champ sans y penser.
 
-Controle dur : aucune chaine de etat.json, cle ou valeur, a quelque profondeur
-que ce soit, ne contient un « @ » suivi d'un point. S'il en trouve une, le
-script sort en erreur et le workflow ne commite pas.
+Fichiers controles : etat.json, pluie.json et stations.json, ceux que le
+workflow commite.
 
-Controle d'alerte : les champs de « campagnes » sont compares a une liste
-blanche. Un champ inconnu ne fait pas echouer, mais il est signale : c'est
-souvent le signe qu'on a recopie une reponse Mailjet telle quelle au lieu de
-n'en extraire que les compteurs agreges.
+Controle dur : aucune chaine, cle ou valeur, a quelque profondeur que ce soit,
+ne contient un « @ » suivi d'un point. Aucun champ ne porte un nom evoquant un
+destinataire. S'il en trouve, le script sort en erreur et le workflow ne
+commite pas.
 
-Aucun acces reseau. Sortie : code 0 si etat.json peut etre commite, 1 sinon.
+Controle d'alerte, dans etat.json : les champs de « campagnes » sont compares a
+une liste blanche. Un champ inconnu ne fait pas echouer, mais il est signale :
+c'est souvent le signe qu'on a recopie une reponse Mailjet telle quelle au lieu
+de n'en extraire que les compteurs agreges.
+
+Aucun acces reseau. Sortie : code 0 si tout peut etre commite, 1 sinon.
 
 Usage :
-    python verif_etat.py
-    python verif_etat.py chemin/vers/etat.json
+    python verif_etat.py                       (les trois fichiers)
+    python verif_etat.py chemin/vers/un.json [autre.json ...]
 """
 import io, json, os, re, sys
 
 sys.stdout.reconfigure(encoding="utf-8")
+
+RACINE = os.path.dirname(os.path.abspath(__file__))
+FICHIERS = ("etat.json", "pluie.json", "stations.json")
 
 # « un @ suivi d'un point » — volontairement large.
 ADRESSE = re.compile(r"@[^\s@]*\.")
@@ -53,26 +60,22 @@ def parcourir(noeud, chemin=""):
         yield chemin, noeud
 
 
-def main():
-    chemin = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "etat.json")
-
-    print("Controle de %s avant commit. LE DEPOT EST PUBLIC." % os.path.basename(chemin))
-    print("")
-
+def verifier(chemin):
+    nom = os.path.basename(chemin)
+    print("--- %s" % nom)
     if not os.path.exists(chemin):
         print("ECHEC | fichier introuvable : %s" % chemin)
-        return 1
+        return False
     try:
-        etat = json.load(io.open(chemin, encoding="utf-8"))
+        doc = json.load(io.open(chemin, encoding="utf-8"))
     except ValueError as e:
         print("ECHEC | JSON illisible : %s" % e)
-        return 1
+        return False
 
     dur = True
 
     # --- Controle dur : aucune adresse, nulle part -----------------------
-    trouvees = [(c, t) for c, t in parcourir(etat) if ADRESSE.search(t)]
+    trouvees = [(c, t) for c, t in parcourir(doc) if ADRESSE.search(t)]
     if trouvees:
         dur = False
         print("ECHEC | %d chaine(s) contenant un « @ » suivi d'un point :" % len(trouvees))
@@ -85,7 +88,7 @@ def main():
         print("OK    | aucune chaine ne contient un « @ » suivi d'un point")
 
     # --- Controle dur : aucun nom de champ evoquant un destinataire ------
-    suspects = sorted({c for c, t in parcourir(etat)
+    suspects = sorted({c for c, t in parcourir(doc)
                        if any(n in c.lower() for n in NOMS_SUSPECTS)})
     if suspects:
         dur = False
@@ -95,38 +98,44 @@ def main():
     else:
         print("OK    | aucun champ au nom evoquant un destinataire")
 
-    # --- Alerte : champs hors liste blanche ------------------------------
-    inconnus, stats_inconnues = set(), set()
-    for cid, c in (etat.get("campagnes") or {}).items():
-        if not isinstance(c, dict):
-            continue
-        inconnus |= set(c) - CHAMPS_CAMPAGNE
-        s = c.get("stats")
-        if isinstance(s, dict):
-            stats_inconnues |= set(s) - CHAMPS_STATS
-    if inconnus or stats_inconnues:
-        print("ALERTE| champ(s) hors liste blanche, a verifier :")
-        for x in sorted(inconnus):
-            print("        campagnes/*/%s" % x)
-        for x in sorted(stats_inconnues):
-            print("        campagnes/*/stats/%s" % x)
-        print("        Ne mettre dans etat.json que ce dont la page a besoin :")
-        print("        departement, serie, dates, identifiants, compteurs agreges.")
-    else:
-        print("OK    | tous les champs de campagnes sont en liste blanche")
+    # --- Alerte : champs de campagne hors liste blanche ------------------
+    if isinstance(doc, dict) and "campagnes" in doc:
+        inconnus, stats_inconnues = set(), set()
+        for cid, c in (doc.get("campagnes") or {}).items():
+            if not isinstance(c, dict):
+                continue
+            inconnus |= set(c) - CHAMPS_CAMPAGNE
+            s = c.get("stats")
+            if isinstance(s, dict):
+                stats_inconnues |= set(s) - CHAMPS_STATS
+        if inconnus or stats_inconnues:
+            print("ALERTE| champ(s) hors liste blanche, a verifier :")
+            for x in sorted(inconnus):
+                print("        campagnes/*/%s" % x)
+            for x in sorted(stats_inconnues):
+                print("        campagnes/*/stats/%s" % x)
+            print("        Ne mettre dans etat.json que ce dont la page a besoin :")
+            print("        departement, serie, dates, identifiants, compteurs agreges.")
+        else:
+            print("OK    | tous les champs de campagnes sont en liste blanche")
+        print("        version %s   maj %s" % (doc.get("version"), doc.get("maj")))
+        print("        %d sequence(s), %d campagne(s), %d detection(s) du cron"
+              % (len(doc.get("sequences") or {}), len(doc.get("campagnes") or {}),
+                 len(doc.get("detection_cron") or {})))
+    print("        %d octets" % os.path.getsize(chemin))
+    return dur
 
-    # --- Information ------------------------------------------------------
-    print("")
-    print("  version %s   maj %s" % (etat.get("version"), etat.get("maj")))
-    print("  %d sequence(s), %d campagne(s), %d detection(s) du cron"
-          % (len(etat.get("sequences") or {}), len(etat.get("campagnes") or {}),
-             len(etat.get("detection_cron") or {})))
-    print("  %d octets" % os.path.getsize(chemin))
 
+def main():
+    chemins = sys.argv[1:] or [os.path.join(RACINE, f) for f in FICHIERS]
+    print("Controle des fichiers publies avant commit. LE DEPOT EST PUBLIC.")
     print("")
-    print("RESULTAT : " + ("etat.json peut etre commite"
-                           if dur else "COMMIT REFUSE"))
-    return 0 if dur else 1
+    tous = True
+    for c in chemins:
+        tous = verifier(c) and tous
+        print("")
+    print("RESULTAT : " + ("les fichiers peuvent etre commites" if tous else "COMMIT REFUSE"))
+    return 0 if tous else 1
 
 
 if __name__ == "__main__":
