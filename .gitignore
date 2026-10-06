@@ -30,6 +30,12 @@
 !/stations.json
 !/test_stations.py
 
+# l'extraction Meteo-France, ce qu'elle produit, sa reference figee, son controle
+!/extraction_meteofrance.py
+!/pluie.json
+!/pluie-reference.json
+!/test_extraction.py
+
 # l'etat publie, et ce qui le fabrique et le controle
 !/etat.json
 !/maj_etat.py

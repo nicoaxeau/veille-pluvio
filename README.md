@@ -45,11 +45,16 @@ lecture, sans identifiant.
 | `depts.json`, `libelles-departements.json` | données de référence des 96 départements |
 | `stations.json` | la liste figée des 96 stations Météo-France, une par département |
 | `test_stations.py` | contrôle de `stations.json` |
+| `extraction_meteofrance.py` | télécharge les fichiers Météo-France et produit `pluie.json` |
+| `pluie.json` | la pluie quotidienne des 96 stations sur 400 jours, avec la source et la mention |
+| `pluie-reference.json` | la même extraction, figée sur les fichiers du 06/10/2026, pour les tests |
+| `test_extraction.py` | contrôle de l'extraction et de la référence |
 
 ## La station de chaque département
 
 Le passage aux observations de Météo-France est en cours, sur la branche
-`meteofrance`. `stations.json` n'est encore lu par aucun programme.
+`meteofrance`. `stations.json` est lu par l'extraction ; le moteur et la page
+n'utilisent pas encore Météo-France.
 
 Chaque département a **une station** : la station Météo-France la plus proche
 de la préfecture, **dans le département**, qui mesure la pluie. Le mail ne doit
@@ -62,6 +67,34 @@ renseigne le champ `remplace` (numéro, nom et motif de l'ancienne station).
 `test_stations.py` vérifie la liste : 96 stations, une par département, chacune
 dans son département (en Corse, par le numéro de commune), à moins de 15 km de
 la préfecture, sous 1 000 m d'altitude, sans aucune adresse email.
+
+## Les données Météo-France
+
+`extraction_meteofrance.py` produit `pluie.json` : la pluie quotidienne des 96
+stations de `stations.json`, sur les 400 derniers jours.
+
+- **Source** : Météo-France, « Données climatologiques de base - quotidiennes »,
+  [data.gouv.fr](https://www.data.gouv.fr/datasets/donnees-climatologiques-de-base-quotidiennes),
+  Licence Ouverte 2.0. La licence impose de citer la source et la date de mise
+  à jour : `pluie.json` porte la mention à reprendre, par exemple
+  « Données pluviométriques : Météo-France, mise à jour du 6 octobre 2026 ».
+- **Journée Météo-France** : de 06 h UTC le jour J à 06 h UTC le jour J+1. Les
+  dates sont reprises telles quelles, sans conversion.
+- **Un jour sans donnée est écrit `null`, jamais 0** : c'est une erreur, pas un
+  jour sec.
+- Pour chaque station : l'état du fichier de son département (`a_jour`,
+  `en_retard`, `absent`), sa date de publication, son dernier jour de pluie
+  publié, et le nombre de jours de silence de la station. À partir de 3 jours,
+  l'extraction signale la station.
+- L'adresse des fichiers est trouvée à chaque tour par l'API de data.gouv.fr :
+  leur nom porte les années, et changera en janvier.
+
+`pluie-reference.json` est la même extraction, figée sur les fichiers publiés
+le 06/10/2026. Les tests s'appuient dessus ; elle ne change jamais.
+
+`test_extraction.py` vérifie l'extraction sur des fichiers fabriqués (valeur
+vide, ligne manquante, fichier en retard, absent ou illisible, station muette)
+et la référence, sur des valeurs relevées à la main dans les fichiers bruts.
 
 ## Deux implémentations, un seul texte
 
