@@ -42,7 +42,8 @@ lecture, sans identifiant.
 | `maj_etat.py` | écrit `etat.json` à partir de la sortie du moteur |
 | `verif_etat.py` | garde-fou : refuse le commit si `etat.json`, `pluie.json` ou `stations.json` contient une adresse |
 | `test_coherence.py` | non-régression entre `moteur.py` et `index.html` |
-| `index.html` | la page de suivi, servie par GitHub Pages |
+| `index.html` | la page de suivi, servie par GitHub Pages. Lit `pluie.json`, `stations.json` et `etat.json` sur le site lui-même |
+| `detection.js` | le calcul de la page, réplique exacte de `moteur.py` |
 | `etat.json` | états et compteurs agrégés. Jamais de détail par destinataire |
 | `depts.json`, `libelles-departements.json` | données de référence des 96 départements |
 | `stations.json` | la liste figée des 96 stations Météo-France, une par département |
@@ -55,8 +56,8 @@ lecture, sans identifiant.
 ## La station de chaque département
 
 Le passage aux observations de Météo-France est en cours, sur la branche
-`meteofrance`. L'extraction lit `stations.json` et produit `pluie.json`, que lit
-le moteur ; la page n'utilise pas encore Météo-France.
+`meteofrance`. L'extraction lit `stations.json` et produit `pluie.json`, que
+lisent le moteur et la page.
 
 Chaque département a **une station** : la station Météo-France la plus proche
 de la préfecture, **dans le département**, qui mesure la pluie. Le mail ne doit
@@ -108,13 +109,20 @@ et la référence, sur des valeurs relevées à la main dans les fichiers bruts.
 ## Deux implémentations, un seul texte
 
 La détection existe en Python dans `moteur.py` et en JavaScript dans
-`index.html` — la page recalcule tout côté navigateur pour rester lisible
-sans serveur.
+`detection.js`, que charge `index.html` — la page recalcule tout côté
+navigateur pour rester lisible sans serveur. `detection.js` ne touche ni à la
+page ni au réseau : des fonctions pures, que les tests peuvent faire tourner
+hors navigateur.
 
 **Toute modification de l'une doit être reportée sur l'autre.**
-`test_coherence.py` compare les quatre phrases produites de chaque côté,
-interpolations normalisées, et échoue si elles divergent d'un caractère. Le
-workflow le lance avant toute publication d'état.
+`test_coherence.py` est réécrit à l'étape 5 du passage à Météo-France : il fera
+tourner `detection.js` sous Node et exigera le même résultat que le moteur, à
+l'unité. Le workflow le lance avant toute publication d'état.
+
+La page ouvre ses données par `fetch` : elle doit être servie par un serveur
+web. Un double-clic sur `index.html` ne permet pas de lire les fichiers. En
+local : `python -m http.server 8000 --bind 127.0.0.1` dans ce dossier, puis
+`http://127.0.0.1:8000` dans le navigateur.
 
 ## La bascule en mode réel
 

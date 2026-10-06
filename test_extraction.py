@@ -206,6 +206,9 @@ def reference():
     v("source : Meteo-France, data.gouv.fr, Licence Ouverte 2.0",
       doc["source"]["producteur"] == "Météo-France" and doc["source"]["licence"] == "Licence Ouverte 2.0"
       and "data.gouv.fr/datasets/donnees-climatologiques-de-base-quotidiennes" in doc["source"]["url"], "")
+    v("lien de la licence : la page Licence Ouverte 2.0 de data.gouv.fr",
+      doc["source"]["licence_url"] == "https://www.data.gouv.fr/pages/legal/licences/etalab-2.0",
+      doc["source"]["licence_url"])
     v("journee Meteo-France declaree", doc["journee"] == "de 06 h UTC le jour J à 06 h UTC le jour J+1", "")
     v("96 fichiers a jour, publies le 06/10/2026",
       all(s["etat"] == "a_jour" and s["publie_le"].startswith("2026-10-06") for s in st.values()), "")

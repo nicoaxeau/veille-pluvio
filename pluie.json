@@ -1,7 +1,7 @@
 {
  "version": 1,
  "mention": "Données pluviométriques : Météo-France, mise à jour du 6 octobre 2026",
- "source": {"producteur": "Météo-France", "jeu": "Données climatologiques de base - quotidiennes", "url": "https://www.data.gouv.fr/datasets/donnees-climatologiques-de-base-quotidiennes", "licence": "Licence Ouverte 2.0", "licence_url": "https://www.etalab.gouv.fr/licence-ouverte-open-licence/"},
+ "source": {"producteur": "Météo-France", "jeu": "Données climatologiques de base - quotidiennes", "url": "https://www.data.gouv.fr/datasets/donnees-climatologiques-de-base-quotidiennes", "licence": "Licence Ouverte 2.0", "licence_url": "https://www.data.gouv.fr/pages/legal/licences/etalab-2.0"},
  "journee": "de 06 h UTC le jour J à 06 h UTC le jour J+1",
  "debut": "2025-08-31",
  "fin": "2026-10-04",

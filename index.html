@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ax'eau — Veille pluviométrique v2</title>
+<title>Ax'eau — Veille pluviométrique v3</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -51,11 +51,6 @@ select:focus,select:hover{border-color:var(--blue)}
 .btn-sm{font-family:'Outfit',sans-serif;background:#eef3f8;border:1px solid #cfdce8;color:var(--blue-dark);padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer}
 .btn-sm:hover{background:#dfeaf5}
 
-#progress-wrap{margin:14px 24px 0;display:none}
-#progress-track{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
-#progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .25s}
-#progress-label{font-size:12px;color:var(--slate-light);margin-top:6px;font-weight:500}
-
 .banner{margin:16px 24px 0;padding:12px 18px;border-radius:14px;font-size:13px;font-weight:600;display:none}
 .banner.warn{background:#fef3c7;color:#92400e;border:1px solid #fde68a;display:block}
 .banner.err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;display:block}
@@ -93,7 +88,6 @@ th.num{text-align:right}
 .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
 .code{font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums}
 .muted{color:var(--slate-light);font-weight:500}
-.pheno{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;white-space:nowrap}
 tr.apercu td{background:#fbfdff;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--slate);font-style:italic;padding-top:0;padding-bottom:11px}
 tr.apercu .ap-l{font-style:normal;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--slate-light);margin-right:9px}
 tr.apercu:hover td{background:#fbfdff}
@@ -118,6 +112,13 @@ tr.apercu:hover td{background:#fbfdff}
 
 .foot{margin:24px;font-size:11.5px;color:var(--slate-light);line-height:1.7}
 code{background:#eef3f8;padding:1px 6px;border-radius:5px;font-size:11.5px}
+
+.source{margin:14px 24px 0;padding:12px 18px;border-radius:14px;background:#fff;border:1px solid var(--line);
+  font-size:12.5px;color:var(--slate);line-height:1.6;box-shadow:var(--shadow-sm);display:none}
+.source b{color:var(--ink);font-weight:700}
+.source a{color:var(--blue);font-weight:600}
+.ctrl-data{font-size:14px;font-weight:700;color:var(--slate)}
+.station{font-size:12px;font-weight:600;color:var(--slate);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -155,14 +156,10 @@ code{background:#eef3f8;padding:1px 6px;border-radius:5px;font-size:11.5px}
     <input type="range" class="slider b" id="nbJours" min="5" max="25" step="1" value="15">
     <div class="ctrl-sub">sur une fenêtre glissante de 30 j</div>
   </div>
-  <div class="ctrl-group" style="min-width:150px">
-    <div class="ctrl-label"><span>Profondeur</span></div>
-    <select id="depth">
-      <option value="92">3 mois</option>
-      <option value="180">6 mois</option>
-      <option value="365">12 mois</option>
-    </select>
-    <div class="ctrl-sub" id="depth-warn">—</div>
+  <div class="ctrl-group" style="min-width:200px">
+    <div class="ctrl-label"><span>Données Météo-France</span></div>
+    <div class="ctrl-data" id="donnees">—</div>
+    <div class="ctrl-sub" id="donnees-sub">—</div>
   </div>
   <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:2px">
     <button class="btn" id="btn-refresh" onclick="chargerTout(true)">Actualiser</button>
@@ -170,10 +167,7 @@ code{background:#eef3f8;padding:1px 6px;border-radius:5px;font-size:11.5px}
   </div>
 </div>
 
-<div id="progress-wrap">
-  <div id="progress-track"><div id="progress-bar"></div></div>
-  <div id="progress-label"></div>
-</div>
+<div class="source" id="source"></div>
 
 <div class="banner" id="banner"></div>
 
@@ -190,11 +184,14 @@ code{background:#eef3f8;padding:1px 6px;border-radius:5px;font-size:11.5px}
 <div id="vue"></div>
 
 <div class="foot">
-  Détection identique à <code>moteur.py</code>. Cette page ne pilote rien : l'avancement des séquences et les
-  statistiques viennent de <code>etat.json</code>, écrit par la tâche planifiée. Aucune clé API n'est présente
-  dans cette page. Source météo : <code>historical-forecast-api.open-meteo.com</code>.
+  Détection partagée avec <code>moteur.py</code> : le calcul vit dans <code>detection.js</code>, réplique exacte du
+  moteur. Cette page ne pilote rien : l'avancement des séquences et les statistiques viennent de
+  <code>etat.json</code>, écrit par la tâche planifiée. Les observations viennent de <code>pluie.json</code>,
+  extrait chaque matin des fichiers publiés par Météo-France ; la mention de source figure en haut de page.
+  Aucune clé API n'est présente dans cette page.
 </div>
 
+<script src="detection.js"></script>
 <script>
 const DEPTS=[
   {code:"01",nom:"Ain",pref:"Bourg-en-Bresse",lat:46.2050,lon:5.2277,region:"Auvergne-Rhône-Alpes"},
@@ -300,209 +297,165 @@ const COORDS={
 
 const DEPT_EN={"01": "dans l'Ain", "02": "dans l'Aisne", "03": "dans l'Allier", "04": "dans les Alpes-de-Haute-Provence", "05": "dans les Hautes-Alpes", "06": "dans les Alpes-Maritimes", "07": "en Ardèche", "08": "dans les Ardennes", "09": "en Ariège", "10": "dans l'Aube", "11": "dans l'Aude", "12": "dans l'Aveyron", "13": "dans les Bouches-du-Rhône", "14": "dans le Calvados", "15": "dans le Cantal", "16": "en Charente", "17": "en Charente-Maritime", "18": "dans le Cher", "19": "en Corrèze", "2A": "en Corse-du-Sud", "2B": "en Haute-Corse", "21": "en Côte-d'Or", "22": "dans les Côtes-d'Armor", "23": "en Creuse", "24": "en Dordogne", "25": "dans le Doubs", "26": "dans la Drôme", "27": "dans l'Eure", "28": "en Eure-et-Loir", "29": "dans le Finistère", "30": "dans le Gard", "31": "en Haute-Garonne", "32": "dans le Gers", "33": "en Gironde", "34": "dans l'Hérault", "35": "en Ille-et-Vilaine", "36": "dans l'Indre", "37": "en Indre-et-Loire", "38": "en Isère", "39": "dans le Jura", "40": "dans les Landes", "41": "en Loir-et-Cher", "42": "dans la Loire", "43": "en Haute-Loire", "44": "en Loire-Atlantique", "45": "dans le Loiret", "46": "dans le Lot", "47": "en Lot-et-Garonne", "48": "en Lozère", "49": "en Maine-et-Loire", "50": "dans la Manche", "51": "dans la Marne", "52": "en Haute-Marne", "53": "en Mayenne", "54": "en Meurthe-et-Moselle", "55": "dans la Meuse", "56": "dans le Morbihan", "57": "en Moselle", "58": "dans la Nièvre", "59": "dans le Nord", "60": "dans l'Oise", "61": "dans l'Orne", "62": "dans le Pas-de-Calais", "63": "dans le Puy-de-Dôme", "64": "dans les Pyrénées-Atlantiques", "65": "dans les Hautes-Pyrénées", "66": "dans les Pyrénées-Orientales", "67": "dans le Bas-Rhin", "68": "dans le Haut-Rhin", "69": "dans le Rhône", "70": "en Haute-Saône", "71": "en Saône-et-Loire", "72": "dans la Sarthe", "73": "en Savoie", "74": "en Haute-Savoie", "75": "à Paris", "76": "en Seine-Maritime", "77": "en Seine-et-Marne", "78": "dans les Yvelines", "79": "dans les Deux-Sèvres", "80": "dans la Somme", "81": "dans le Tarn", "82": "en Tarn-et-Garonne", "83": "dans le Var", "84": "dans le Vaucluse", "85": "en Vendée", "86": "dans la Vienne", "87": "en Haute-Vienne", "88": "dans les Vosges", "89": "dans l'Yonne", "90": "dans le Territoire de Belfort", "91": "dans l'Essonne", "92": "dans les Hauts-de-Seine", "93": "en Seine-Saint-Denis", "94": "dans le Val-de-Marne", "95": "dans le Val-d'Oise"};
 
-// Codes WMO. `mail` = ce que le mail ose écrire ; null = formulation neutre.
-// 96 et 99 sont ramenés à « orage » : la grêle est modélisée, pas observée.
-const PHENO={95:['Orage','orage'],96:['Orage avec grêle','orage'],99:['Orage avec forte grêle','orage'],
-  80:['Averses','averses'],81:['Averses fortes','averses'],82:['Averse violente','averses'],
-  66:['Pluie verglaçante',null],67:['Pluie verglaçante forte',null],
-  75:['Neige forte',null],85:['Chutes de neige',null],86:['Fortes chutes de neige',null],
-  63:['Pluie continue',null],65:['Pluie forte',null],61:['Pluie faible',null],
-  51:['Bruine',null],53:['Bruine',null],55:['Bruine forte',null]};
-
 // ───────────────────────────────────────────────────────────── paramètres
-const FENETRE=30, OFFSET_1=7, ECART_2=14, SILENCE=30, EXPIRATION=21;
-const ETAT_URL='./etat.json';
+// Le calcul vit dans detection.js, réplique exacte de moteur.py, partagée avec
+// les tests. Cette page ne fait que charger les fichiers et afficher.
+const D=window.Detection;
+const PLUIE_URL='./pluie.json', STATIONS_URL='./stations.json', ETAT_URL='./etat.json';
 
-let PIC=30, SEUIL_JOUR=1, NB_JOURS=15;
-let meteo={}, etat={sequences:{},campagnes:{},detection_cron:null,bascule:null}, faits=[], tab='afaire';
+let REGLAGES={...D.REGLAGES};
+let pluie=null, stations={}, meteo={}, faits=[], erreurs=[], tab='afaire', COMPARABLE=false;
+let etat={sequences:{},campagnes:{},detection_cron:null,bascule:null};
 
-const aujourdhui=new Date(); aujourdhui.setHours(0,0,0,0);
-const fmt=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().split('T')[0];
-const plus=(d,n)=>{const r=new Date(d);r.setDate(r.getDate()+n);return r};
-const jours=d=>Math.round((d-aujourdhui)/864e5);
-const iso=s=>{const [a,m,j]=s.split('-').map(Number);return new Date(a,m-1,j)};
-const fr=s=>!s?'—':iso(s).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});
+// La date du jour, en heure locale, au format AAAA-MM-JJ.
+const maintenant=new Date();
+const AUJ=maintenant.getFullYear()+'-'+String(maintenant.getMonth()+1).padStart(2,'0')+'-'+
+          String(maintenant.getDate()).padStart(2,'0');
+const ecart=d=>D.ecartJours(AUJ,d);
+const fr=s=>!s?'—':s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4);
+const frCourt=s=>!s?'—':s.slice(8,10)+'/'+s.slice(5,7);
 const nb=n=>(n==null?'—':n.toLocaleString('fr-FR'));
 const pct=(a,b)=>(!b?'—':(100*a/b).toFixed(1).replace('.',',')+' %');
+const virgule=v=>String(v).replace('.',',');
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dateLongue=s=>D.jourLong(s)+' '+s.slice(0,4);
 
 document.getElementById('today-date').textContent=
-  aujourdhui.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  maintenant.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
 // ───────────────────────────────────────────────────────────── contrôles
 function lireControles(){
-  PIC=parseFloat(document.getElementById('pic').value);
-  SEUIL_JOUR=parseFloat(document.getElementById('seuilJour').value);
-  NB_JOURS=parseInt(document.getElementById('nbJours').value);
-  document.getElementById('valPic').textContent=PIC;
-  document.getElementById('valSeuil').textContent=String(SEUIL_JOUR).replace('.',',');
-  document.getElementById('valNb').textContent=NB_JOURS;
+  REGLAGES={pic:parseFloat(document.getElementById('pic').value),
+            seuilJour:parseFloat(document.getElementById('seuilJour').value),
+            nbJours:parseInt(document.getElementById('nbJours').value)};
+  document.getElementById('valPic').textContent=REGLAGES.pic;
+  document.getElementById('valSeuil').textContent=virgule(REGLAGES.seuilJour);
+  document.getElementById('valNb').textContent=REGLAGES.nbJours;
 }
 ['pic','seuilJour','nbJours'].forEach(id=>
   document.getElementById(id).addEventListener('input',()=>{lireControles();recalculer()}));
-document.getElementById('depth').addEventListener('change',()=>{meteo={};chargerTout(true)});
 function reinit(){
-  document.getElementById('pic').value=30;
-  document.getElementById('seuilJour').value=1;
-  document.getElementById('nbJours').value=15;
+  document.getElementById('pic').value=D.REGLAGES.pic;
+  document.getElementById('seuilJour').value=D.REGLAGES.seuilJour;
+  document.getElementById('nbJours').value=D.REGLAGES.nbJours;
   lireControles();recalculer();
 }
 
-// ───────────────────────────────────────────────────────────── météo
-const dors=ms=>new Promise(r=>setTimeout(r,ms));
-async function lot(batch,d1,d2,essai=0){
-  const la=batch.map(d=>d.lat.toFixed(4)).join(','), lo=batch.map(d=>d.lon.toFixed(4)).join(',');
-  const url=`https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}`+
-            `&start_date=${d1}&end_date=${d2}&daily=precipitation_sum,weather_code&timezone=Europe%2FParis`;
-  try{
-    const r=await Promise.race([fetch(url),new Promise((_,x)=>setTimeout(()=>x(new Error('Timeout')),20000))]);
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    let j=await r.json(); if(!Array.isArray(j))j=[j];
-    batch.forEach((dept,i)=>{
-      const l=j[i];
-      meteo[dept.code]=(l&&l.daily&&l.daily.precipitation_sum)
-        ? {dates:l.daily.time,p:l.daily.precipitation_sum.map(v=>v??0),
-           c:(l.daily.weather_code||[]).map(v=>v??-1)}
-        : {dates:[],p:[],c:[],erreur:'données absentes'};
-    });
-  }catch(e){
-    if(essai<2){await dors(800*Math.pow(2,essai));return lot(batch,d1,d2,essai+1)}
-    if(batch.length>1){const m=Math.ceil(batch.length/2);
-      await lot(batch.slice(0,m),d1,d2,0); await lot(batch.slice(m),d1,d2,0); return}
-    meteo[batch[0].code]={dates:[],p:[],erreur:e.message};
-  }
+// ───────────────────────────────────────────────────────────── données
+// Tout vient du site lui-même : pluie.json, extrait chaque matin des fichiers
+// Météo-France ; stations.json, la liste figée ; etat.json, l'avancement des
+// séquences. Aucun appel à un service de données extérieur.
+async function lireJSON(url){
+  const r=await fetch(url+'?t='+Date.now());
+  if(!r.ok)throw new Error(url.slice(2)+' : HTTP '+r.status);
+  return r.json();
 }
 
 async function chargerEtat(){
   try{
-    const r=await fetch(ETAT_URL+'?t='+Date.now());
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const e=await r.json();
+    const e=await lireJSON(ETAT_URL);
     etat={sequences:e.sequences||{},campagnes:e.campagnes||{},
           detection_cron:e.detection_cron||null,maj:e.maj,parametres:e.parametres,
           bascule:e.bascule||null};
-    document.getElementById('etat-src').textContent=
-      'état du '+(e.maj?new Date(e.maj).toLocaleString('fr-FR'):'?')+' · '+
-      Object.keys(etat.sequences).length+' séquence(s)';
     return true;
-  }catch(e){
-    etat={sequences:{},campagnes:{},detection_cron:null};
-    document.getElementById('etat-src').textContent='etat.json absent — affichage de la détection seule';
+  }catch(err){
+    etat={sequences:{},campagnes:{},detection_cron:null,bascule:null};
     return false;
   }
 }
 
-async function chargerTout(force){
+async function chargerTout(){
   const b=document.getElementById('btn-refresh'); b.classList.add('spinning');
-  const prof=parseInt(document.getElementById('depth').value);
-  document.getElementById('depth-warn').textContent=prof<92?'⚠ moins de 3 mois : verrou peu fiable':'historique complet';
-  document.getElementById('progress-wrap').style.display='block';
-  if(force)meteo={};
-  await chargerEtat();
-  const d2=fmt(aujourdhui), d1=fmt(plus(aujourdhui,-prof));
-  const reste=DEPTS.filter(d=>!meteo[d.code]);
-  if(reste.length){
-    const T=24, lots=[]; for(let i=0;i<reste.length;i+=T)lots.push(reste.slice(i,i+T));
-    let fini=0;
-    await Promise.all(lots.map(async l=>{
-      await lot(l,d1,d2); fini+=l.length;
-      document.getElementById('progress-bar').style.width=Math.round(fini/reste.length*100)+'%';
-      document.getElementById('progress-label').textContent=fini+' / '+reste.length+' départements';
-    }));
+  try{
+    const [p,s]=await Promise.all([lireJSON(PLUIE_URL),lireJSON(STATIONS_URL)]);
+    pluie=p; stations={}; (s.stations||[]).forEach(x=>{stations[x.code]=x});
+  }catch(err){
+    pluie=null;
+    const ban=document.getElementById('banner');
+    ban.className='banner err';
+    ban.textContent='Données Météo-France illisibles ('+err.message+'). La page doit être ouverte par un '+
+      'serveur web : un double-clic sur le fichier ne permet pas de lire les données.';
   }
-  const err=Object.values(meteo).filter(m=>m.erreur).length;
-  const ban=document.getElementById('banner');
-  if(err>=DEPTS.length){ban.className='banner err';ban.textContent='Échec du chargement météo. Les appels passent sur GitHub Pages, pas dans un aperçu local.'}
-  else if(err){ban.className='banner warn';ban.textContent=err+' département(s) en erreur. Le balayage est partiel, ne pas le présenter comme complet.'}
-  else{ban.className='banner';ban.style.display='none'}
-  document.getElementById('progress-bar').style.width='100%';
-  setTimeout(()=>document.getElementById('progress-wrap').style.display='none',1500);
+  const okEtat=await chargerEtat();
+  // Une tâche planifiée qui n'a encore tourné que sur l'ancienne source ne
+  // publie pas connu_au_mail1_j : la comparer à la page n'aurait pas de sens.
+  COMPARABLE=!!(etat.parametres&&etat.parametres.connu_au_mail1_j!==undefined);
+  document.getElementById('etat-src').textContent=!okEtat
+    ?'etat.json absent — affichage de la détection seule'
+    :'état du '+(etat.maj?new Date(etat.maj).toLocaleString('fr-FR'):'?')+' · '+
+     Object.keys(etat.sequences).length+' séquence(s)'+
+     (etat.detection_cron&&!COMPARABLE
+       ?' · comparaison avec la tâche planifiée suspendue : elle n\'a pas encore tourné sur Météo-France':'');
+  afficherSource();
   b.classList.remove('spinning');
   recalculer();
 }
 
-// ───────────────────── détection : réplique exacte de moteur.py
-function declencheurs(p,dates,codes){
-  const out=[];
-  for(let i=0;i<p.length;i++) if(p[i]>=PIC)
-    out.push({i,serie:'A',pic24_mm:Math.round(p[i]*10)/10,pic_date:dates[i],wmo:(codes&&codes[i]!=null)?codes[i]:-1});
-  for(let i=0;i<p.length;i++){
-    const deb=Math.max(0,i-(FENETRE-1));
-    let n=0; for(let k=deb;k<=i;k++) if(p[k]>=SEUIL_JOUR)n++;
-    if(n>=NB_JOURS) out.push({i,serie:'B',jours_pluie:n,debut_fenetre:dates[deb]});
-  }
-  out.sort((a,b)=>a.i-b.i||a.serie.localeCompare(b.serie));
-  return out;
+// La mention exigée par la licence : la source et la date de mise à jour.
+function afficherSource(){
+  const el=document.getElementById('source'), dn=document.getElementById('donnees'),
+        ds=document.getElementById('donnees-sub');
+  if(!pluie){el.style.display='none';dn.textContent='—';ds.textContent='—';return}
+  const s=pluie.source||{};
+  el.style.display='block';
+  el.innerHTML=`<b id="mention">${esc(pluie.mention)}</b><br>
+    Source : <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.jeu)}</a>,
+    ${esc(s.producteur)}, sur data.gouv.fr ·
+    <a href="${esc(s.licence_url)}" target="_blank" rel="noopener">${esc(s.licence)}</a> ·
+    journée Météo-France ${esc(pluie.journee)}`;
+  dn.textContent='du '+fr(pluie.debut)+' au '+fr(pluie.fin);
+  ds.textContent=Object.keys(pluie.stations||{}).length+' stations, une par département';
 }
 
-// Le mail 1 d'un episode tombe-t-il avant la date de bascule ?
-// Meme calcul que moteur.py : episode + OFFSET_1 compare a la bascule.
-function m1Avant(episode,bascule){
-  const m1=plus(episode,OFFSET_1);
-  return fmt(m1) < bascule;
-}
-
-function traiter(dept,p,dates,codes){
-  const res=[]; let libre=null;
-  for(const t of declencheurs(p,dates,codes)){
-    const episode=iso(dates[t.i]);
-    const cle=dept.code+'|'+dates[t.i]+'|'+t.serie;
-    const su=etat.sequences[cle];
-    const detail=t.serie==='A'
-      ? {pic24_mm:t.pic24_mm,pic_date:t.pic_date,wmo:t.wmo}
-      : {jours_pluie:t.jours_pluie,debut_fenetre:t.debut_fenetre};
-    // Bascule : un declencheur dont le mail 1 etait du avant le passage en
-    // reel est abandonne, pas monte. Meme regle que moteur.py, meme source :
-    // le champ « bascule » de etat.json. L'abandon n'arme aucun verrou.
-    if(!su&&etat.bascule&&m1Avant(episode,etat.bascule)){
-      res.push({code:dept.code,dept:dept.nom,region:dept.region,cle,serie:t.serie,
-                episode:dates[t.i],etape:'abandonne',
-                motif:'anterieur a la bascule du '+etat.bascule,...detail});
-      continue;
-    }
-    if(!su&&libre&&episode<libre){
-      res.push({code:dept.code,dept:dept.nom,region:dept.region,cle,serie:t.serie,
-                episode:dates[t.i],etape:'bloque',libre_le:fmt(libre),...detail});
-      continue;
-    }
-    const m1=plus(episode,OFFSET_1);
-    const base={code:dept.code,dept:dept.nom,region:dept.region,cle,serie:t.serie,
-                episode:dates[t.i],mail1_prevu:fmt(m1),...detail};
-    if(!su){
-      if(jours(m1)<-EXPIRATION){res.push({...base,etape:'expire'});continue}
-      res.push({...base,etape:jours(m1)<=0?'a_monter':'a_venir',jours:jours(m1)});
-      libre=plus(m1,ECART_2+SILENCE); continue;
-    }
-    const e=su.etape; Object.assign(base,su); base.etape=e;
-    if(e==='abandonne'){res.push({...base,etape:'abandonne'});continue}
-    if(e==='mail1_monte'){
-      const age=-jours(iso(su.mail1_monte_le));
-      if(age>EXPIRATION){res.push({...base,etape:'expire_non_envoye',age});libre=null}
-      else{res.push({...base,etape:'attente_envoi_mail1',age});libre=plus(m1,ECART_2+SILENCE)}
-      continue;
-    }
-    if(e==='mail1_envoye'||e==='mail2_monte'){
-      const m2=plus(iso(su.mail1_envoye_le),ECART_2);
-      const et=e==='mail2_monte'?'attente_envoi_mail2':(jours(m2)<=0?'mail2_a_monter':'mail2_a_venir');
-      res.push({...base,etape:et,mail2_prevu:fmt(m2),jours:jours(m2)});
-      libre=plus(m2,SILENCE); continue;
-    }
-    if(e==='mail2_envoye'){
-      const fin=plus(iso(su.mail2_envoye_le),SILENCE);
-      res.push({...base,etape:jours(fin)<0?'silence':'termine',silence_jusquau:fmt(fin)});
-      libre=fin; continue;
-    }
-    res.push({...base,etape:e||'inconnu'});
-  }
-  return res;
-}
-
+// ───────────────────────────────────────────────────────────── calcul
+// Même fenêtre que moteur.py : 92 jours, jusqu'au dernier jour publié.
 function recalculer(){
-  faits=[];
+  faits=[]; erreurs=[]; meteo={};
+  if(!pluie){rendre();return}
+  const n=pluie.stations[Object.keys(pluie.stations)[0]].rr.length;
+  const f=D.fenetre(pluie.debut,n,AUJ);
+  const dates=f.dates.slice(f.i0,f.i1+1);
+  const attendu=D.attendu(AUJ);
   for(const d of DEPTS){
-    const m=meteo[d.code]; if(!m||m.erreur||!m.dates.length)continue;
-    faits.push(...traiter(d,m.p,m.dates,m.c));
+    const s=pluie.stations[d.code];
+    if(!s){erreurs.push({code:d.code,texte:'station absente de pluie.json'});continue}
+    meteo[d.code]={dates:f.dates,p:s.rr};       // série complète, pour la Simulation
+    const p=s.rr.slice(f.i0,f.i1+1);
+    if(attendu>dates[dates.length-1]||p[dates.indexOf(attendu)]===null)
+      erreurs.push({code:d.code,texte:'pas de donnée le '+fr(attendu)});
+    const m=D.mention(s.publie_le);
+    for(const x of D.traiter(d,p,dates,etat,AUJ,REGLAGES)){x.mention=m;faits.push(x)}
   }
   rendre();
+}
+
+function alertesDonnees(){
+  if(!pluie)return [];
+  const msgs=[];
+  if(erreurs.length)
+    msgs.push(erreurs.length+' département(s) sans la donnée attendue du '+fr(D.attendu(AUJ))+' : '+
+              erreurs.map(e=>e.code).join(', ')+'.'+
+              (erreurs.length>20?' Les données ne sont pas à jour.':''));
+  const muettes=Object.entries(pluie.stations).filter(([c,s])=>s.silence_j!==null&&s.silence_j>=3);
+  if(muettes.length)
+    msgs.push('Station(s) silencieuse(s) depuis 3 jours ou plus : '+
+              muettes.map(([c,s])=>c+' '+((stations[c]||{}).nom||s.num)+' ('+s.silence_j+' j)').join(', ')+
+              '. À remplacer dans stations.json.');
+  const retard=Object.entries(pluie.stations).filter(([c,s])=>s.etat!=='a_jour');
+  if(retard.length)
+    msgs.push('Fichier(s) Météo-France en retard ou absent(s) : '+
+              retard.map(([c,s])=>c+' ('+s.etat.replace('_',' ')+')').join(', ')+'.');
+  return msgs;
+}
+
+function alerteCoherence(){
+  if(!etat.detection_cron||!COMPARABLE)return [];
+  const mien=new Set(faits.filter(f=>!['bloque','expire'].includes(f.etape)).map(f=>f.cle));
+  const sien=new Set(Object.keys(etat.detection_cron));
+  const manque=[...sien].filter(k=>!mien.has(k)), trop=[...mien].filter(k=>!sien.has(k));
+  if(!manque.length&&!trop.length)return [];
+  return ['Divergence page / tâche planifiée : '+trop.length+' détection(s) ici absente(s) du cron, '+
+          manque.length+' du cron absente(s) ici. Vérifier que les réglages correspondent.'];
 }
 
 // ───────────────────────────────────────────────────────────── rendu
@@ -517,26 +470,13 @@ const st=e=>{const [l,c]=ETIQ[e]||[e,'var(--slate)'];
   return `<span class="st"><span class="dot" style="background:${c}"></span>${l}</span>`};
 const chipSerie=s=>`<span class="chip ${s}">Série ${s}</span>`;
 const fait=r=>r.serie==='A'
-  ? `<b>${String(r.pic24_mm).replace('.',',')} mm</b> le ${fr(r.pic_date).slice(0,5)}`
+  ? `<b>${virgule(r.pic24_mm)} mm</b> le ${frCourt(r.pic_date)}`
   : `<b>${r.jours_pluie} jours</b> de pluie sur 30`;
-const phenoLab=c=>{const x=PHENO[c];return x?x[0]:null};
-const phenoMail=c=>{const x=PHENO[c];return x?x[1]:null};
-const MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-// Seul le 1er prend « er ». Du 2 au 31 le nombre reste nu.
-const dateLongue=s=>{const d=iso(s);return (d.getDate()===1?'1er':d.getDate())+' '+MOIS[d.getMonth()]};
-const mm=v=>Number.isInteger(v)?String(v):String(v).replace('.',',');
+const nomStation=code=>(stations[code]||{}).nom||'—';
+const infoStation=code=>{const s=stations[code];
+  return s?'N° '+s.num+', à '+virgule(s.km)+' km de la préfecture, '+s.alt+' m':''};
 // Phrase exacte que le mail écrira — %%BLOC_METEO%%
-function blocMeteo(r){
-  const ou=DEPT_EN[r.code]||('dans le '+r.dept);
-  // Forme DATEE : « sur les 30 derniers jours » est relatif au moment de la
-  // lecture, alors que le mail part 7 puis 21 jours apres la fin de la fenetre.
-  if(r.serie==='B')
-    return `Entre le ${dateLongue(r.debut_fenetre)} et le ${dateLongue(r.episode)}, ${r.jours_pluie} jours de pluie ont été relevés ${ou}.`;
-  const p=phenoMail(r.wmo);
-  if(p==='orage')  return `L'orage du ${dateLongue(r.pic_date)} a laissé ${mm(r.pic24_mm)} mm en 24 heures ${ou}.`;
-  if(p==='averses')return `Les averses du ${dateLongue(r.pic_date)} ont laissé ${mm(r.pic24_mm)} mm en 24 heures ${ou}.`;
-  return `Le ${dateLongue(r.pic_date)}, ${mm(r.pic24_mm)} mm de pluie sont tombés en 24 heures ${ou}.`;
-}
+const blocMeteo=r=>D.blocMeteo(r,DEPT_EN[r.code]||('dans le '+r.dept));
 const par=e=>faits.filter(f=>f.etape===e);
 
 function rendre(){
@@ -552,26 +492,18 @@ function rendre(){
     ['Bloqués',par('bloque').length,'var(--grey)'],
     ['Campagnes parties',camp.length,'var(--green)']
   ].map(([l,n,c])=>`<div class="kpi"><div class="n" style="color:${c}">${n}</div><div class="l">${l}</div></div>`).join('');
-  coherence();
+  if(pluie){
+    const ban=document.getElementById('banner');
+    const msgs=alertesDonnees().concat(alerteCoherence());
+    ban.className=msgs.length?'banner warn':'banner';
+    ban.textContent=msgs.join(' ');
+  }
   const v=document.getElementById('vue');
   if(tab==='afaire')v.innerHTML=vueAFaire(aFaire,attente,aVenir);
   else if(tab==='sequences')v.innerHTML=vueSequences();
   else if(tab==='carte')v.innerHTML=vueCarte();
   else if(tab==='historique')v.innerHTML=vueHistorique();
   else v.innerHTML=vueSimulation();
-}
-
-function coherence(){
-  if(!etat.detection_cron)return;
-  const mien=new Set(faits.filter(f=>!['bloque','expire'].includes(f.etape)).map(f=>f.cle));
-  const sien=new Set(Object.keys(etat.detection_cron));
-  const manque=[...sien].filter(k=>!mien.has(k)), trop=[...mien].filter(k=>!sien.has(k));
-  if(manque.length||trop.length){
-    const b=document.getElementById('banner');
-    b.className='banner warn';
-    b.textContent='Divergence page / tâche planifiée : '+trop.length+' détection(s) ici absente(s) du cron, '+
-      manque.length+' du cron absente(s) ici. Vérifier que les réglages correspondent.';
-  }
 }
 
 function onglet(t){tab=t;document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.t===t));rendre()}
@@ -583,23 +515,24 @@ function vueAFaire(aFaire,attente,aVenir){
   <div class="panel"><div class="panel-head"><div><h2>${titre}</h2><div class="sub">${sub}</div></div>
     <span class="muted">${rows.length} ligne(s)</span></div>
   ${rows.length?`<table><thead><tr>
-    <th>Dépt</th><th>Série</th><th>Fait déclencheur</th><th>Phénomène</th><th>Épisode</th><th>Étape</th><th>Échéance</th><th class="num">Retard</th>
+    <th>Dépt</th><th>Série</th><th>Fait déclencheur</th><th>Station</th><th>Épisode</th><th>Étape</th><th>Échéance</th><th class="num">Retard</th>
   </tr></thead><tbody>${rows.sort((a,b)=>(a.mail2_prevu||a.mail1_prevu).localeCompare(b.mail2_prevu||b.mail1_prevu)).map(r=>{
-    const ech=r.mail2_prevu||r.mail1_prevu, j=jours(iso(ech));
+    const ech=r.mail2_prevu||r.mail1_prevu, j=ecart(ech);
     return `<tr>
       <td><span class="code">${r.code}</span> ${r.dept}</td>
       <td>${chipSerie(r.serie)}</td>
       <td>${fait(r)}</td>
-      <td>${r.serie==='A'?(phenoLab(r.wmo)?`<span class="pheno">${phenoLab(r.wmo)}</span>`:'<span class="muted">—</span>'):'<span class="muted">n/a</span>'}</td>
+      <td><span class="station" title="${esc(infoStation(r.code))}">${esc(nomStation(r.code))}</span></td>
       <td class="muted">${fr(r.episode)}</td>
       <td>${st(r.etape)}</td>
       <td>${fr(ech)}</td>
       <td class="num" style="color:${j<0?'var(--red)':'var(--slate)'}">${j<0?(-j)+' j':'J'+(j===0?'':'+'+j)}</td>
     </tr>
-    <tr class="apercu"><td colspan="8"><span class="ap-l">Phrase du mail</span> ${blocMeteo(r)}</td></tr>`}).join('')}</tbody></table>`:vide('Rien dans cette catégorie.')}
+    <tr class="apercu"><td colspan="8"><span class="ap-l">Phrase du mail</span> ${esc(blocMeteo(r))}${r.mention
+      ?`<br><span class="ap-l">Pied du mail</span> ${esc(r.mention)}`:''}</td></tr>`}).join('')}</tbody></table>`:vide('Rien dans cette catégorie.')}
   </div>`;
   return tbl(aFaire,'À monter aujourd\'hui','Le brouillon doit être créé, puis relu et envoyé par Nicolas.')
-       + tbl(attente,'Brouillons montés, en attente d\'envoi','Expirent au bout de '+EXPIRATION+' jours sans envoi.')
+       + tbl(attente,'Brouillons montés, en attente d\'envoi','Expirent au bout de '+D.EXPIRATION+' jours sans envoi.')
        + tbl(aVenir,'À venir','Échéances futures, rien à faire pour l\'instant.');
 }
 
@@ -608,10 +541,11 @@ function vueSequences(){
   if(!rows.length)return vide('Aucune séquence en cours.');
   return `<div class="panel"><div class="panel-head"><div><h2>Séquences en cours</h2>
     <div class="sub">Le mail 2 part 14 jours après l'envoi réel du mail 1.</div></div></div>
-  <table><thead><tr><th>Dépt</th><th>Série</th><th>Épisode</th><th>Mail 1</th><th>Mail 2</th><th>Étape</th><th>Silence jusqu'au</th></tr></thead>
+  <table><thead><tr><th>Dépt</th><th>Série</th><th>Station</th><th>Épisode</th><th>Mail 1</th><th>Mail 2</th><th>Étape</th><th>Silence jusqu'au</th></tr></thead>
   <tbody>${rows.map(r=>`<tr>
     <td><span class="code">${r.code}</span> ${r.dept}</td>
     <td>${chipSerie(r.serie)}</td>
+    <td><span class="station" title="${esc(infoStation(r.code))}">${esc(nomStation(r.code))}</span></td>
     <td class="muted">${fr(r.episode)}</td>
     <td>${r.mail1_envoye_le?'envoyé le '+fr(r.mail1_envoye_le):'prévu '+fr(r.mail1_prevu)}</td>
     <td>${r.mail2_envoye_le?'envoyé le '+fr(r.mail2_envoye_le):(r.mail2_prevu?'prévu '+fr(r.mail2_prevu):'<span class="muted">après le mail 1</span>')}</td>
@@ -633,7 +567,7 @@ function vueCarte(){
     const c=COORDS[d.code]; if(!c)continue;
     const e=parCode[d.code];
     const f=coul[e?e.r:0]||'#d4ead9';
-    dots+=`<circle cx="${c[0]}" cy="${c[1]}" r="10" fill="${f}" opacity=".94"><title>${d.code} ${d.nom}</title></circle>`;
+    dots+=`<circle cx="${c[0]}" cy="${c[1]}" r="10" fill="${f}" opacity=".94"><title>${d.code} ${d.nom} — station ${esc(nomStation(d.code))}</title></circle>`;
     dots+=`<text x="${c[0]}" y="${c[1]+3.5}" text-anchor="middle" font-size="8" font-weight="700"
       fill="${e&&e.r>=5?'#fff':'#1a2c3d'}" font-family="Outfit,sans-serif" pointer-events="none">${d.code}</text>`;
   }
@@ -675,7 +609,7 @@ function vueHistorique(){
     <div class="sub">Taux d'ouverture sur délivrés. Ce qui répond à « le mail 2 sert-il à quelque chose ».</div></div></div>
     <div class="simu-grid">
       ${carte('Mail 1 · J+7',agr(m1))}${carte('Mail 2 · J+21',agr(m2))}
-      ${carte('Série A · orage',agr(sa))}${carte('Série B · pluie persistante',agr(sb))}
+      ${carte('Série A · intensité',agr(sa))}${carte('Série B · pluie persistante',agr(sb))}
     </div>
   </div>
   <div class="panel"><div class="panel-head"><div><h2>Campagnes envoyées</h2>
@@ -704,45 +638,62 @@ function exportCSV(){
   const e=['Campagne','Envoyee le','Dept','Nom','Serie','Mail','Episode','Contacts','Delivres','Ouvertures','Clics','Desabos'];
   const l=camp.map(c=>{const s=c.stats||{};return [c.id,c.envoye_le,c.dept,c.nom_dept||'',c.serie,
     c.etape,c.episode,s.contacts||'',s.delivres||'',s.ouvertures||'',s.clics||'',s.desabos||''].join(';')});
-  const csv='\uFEFF'+[e.join(';')].concat(l).join('\r\n');
+  const csv='﻿'+[e.join(';')].concat(l).join('\r\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
-  a.download='veille-pluvio-campagnes-'+fmt(aujourdhui)+'.csv'; a.click();
+  a.download='veille-pluvio-campagnes-'+AUJ+'.csv'; a.click();
 }
 
 // ───────────────────────────────────────────────────────────── simulation
+// Douze mois complets : du 1er du mois, onze mois avant le dernier mois
+// entièrement publié, jusqu'à la fin de ce mois-là.
+function periodeSimulation(fin){
+  const [a,m,j]=fin.split('-').map(Number);
+  const jours=(an,mois)=>new Date(Date.UTC(an,mois,0)).getUTCDate();
+  let fa=a, fm=m;
+  if(j!==jours(a,m)){fm=m-1;if(fm===0){fm=12;fa=a-1}}
+  let da=fa, dm=fm-11; if(dm<=0){dm+=12;da-=1}
+  const deux=x=>String(x).padStart(2,'0');
+  return {debut:da+'-'+deux(dm)+'-01', fin:fa+'-'+deux(fm)+'-'+deux(jours(fa,fm))};
+}
+
 function vueSimulation(){
-  const prof=parseInt(document.getElementById('depth').value);
+  if(!pluie||!meteo[DEPTS[0].code])return vide('Données Météo-France non chargées.');
+  const per=periodeSimulation(pluie.fin);
+  const dates=meteo[DEPTS[0].code].dates;
+  const i0=dates.indexOf(per.debut), i1=dates.indexOf(per.fin);
+  if(i0<0||i1<0||D.plusJours(per.debut,-(D.FENETRE-1))<dates[0])
+    return `<div class="panel">${vide('Historique insuffisant pour douze mois complets : les données couvrent du '+
+      fr(pluie.debut)+' au '+fr(pluie.fin)+'.')}</div>`;
   let seqA=0,seqB=0,total=0; const parMois={};
   for(const d of DEPTS){
-    const m=meteo[d.code]; if(!m||m.erreur||!m.dates.length)continue;
-    let bloque=-1;
-    for(const t of declencheurs(m.p,m.dates,m.c)){
-      if(t.i<=bloque)continue;
-      total++; t.serie==='A'?seqA++:seqB++;
-      for(const off of [OFFSET_1,OFFSET_1+ECART_2]){
-        const k=fmt(plus(iso(m.dates[t.i]),off)).slice(0,7);
+    const m=meteo[d.code]; if(!m)continue;
+    for(const x of D.simuler(m.p,m.dates,i0,i1,REGLAGES)){
+      total++; x.serie==='A'?seqA++:seqB++;
+      for(const off of [D.OFFSET_1,D.OFFSET_1+D.ECART_2]){
+        const k=D.plusJours(x.episode,off).slice(0,7);
         parMois[k]=(parMois[k]||0)+1;
       }
-      bloque=t.i+OFFSET_1+ECART_2+SILENCE;
     }
   }
-  const an=Math.round(total*365/prof), mails=an*2;
+  const campagnes=total*2;
   const mois=Object.entries(parMois).sort();
   const max=Math.max(1,...mois.map(x=>x[1]));
   return `
   <div class="panel"><div class="panel-head"><div><h2>Simulation</h2>
-    <div class="sub">Effet des réglages sur ${prof} jours d'historique réel. Aucun effet sur ce qui part.</div></div></div>
+    <div class="sub">Douze mois complets d'observations Météo-France, du ${dateLongue(per.debut)} au
+      ${dateLongue(per.fin)}. Démarrage à froid, mails partis à l'heure. Aucun effet sur ce qui part.</div></div></div>
     <div class="simu-grid">
-      <div class="simu-card"><div class="l">Séquences sur la période</div>
+      <div class="simu-card"><div class="l">Séquences sur douze mois</div>
         <div class="n">${total}</div><div class="d">série A ${seqA} · série B ${seqB}</div></div>
-      <div class="simu-card"><div class="l">Projection annuelle</div>
-        <div class="n">${an}</div><div class="d">séquences par an, soit <b>${mails} campagnes</b></div></div>
+      <div class="simu-card"><div class="l">Campagnes sur douze mois</div>
+        <div class="n" id="simu-campagnes">${campagnes}</div>
+        <div class="d">deux mails par séquence, un département par campagne</div></div>
       <div class="simu-card"><div class="l">Par département</div>
-        <div class="n">${(an/DEPTS.length).toFixed(1).replace('.',',')}</div>
-        <div class="d">séquences par an en moyenne, soit ${(an/DEPTS.length*2).toFixed(1).replace('.',',')} mails par contact</div></div>
+        <div class="n">${(total/DEPTS.length).toFixed(1).replace('.',',')}</div>
+        <div class="d">séquences par an en moyenne, soit ${(campagnes/DEPTS.length).toFixed(1).replace('.',',')} mails par contact</div></div>
       <div class="simu-card"><div class="l">Réglages testés</div>
-        <div class="n" style="font-size:19px">${PIC} mm · ${String(SEUIL_JOUR).replace('.',',')} mm · ${NB_JOURS} j</div>
+        <div class="n" style="font-size:19px">${REGLAGES.pic} mm · ${virgule(REGLAGES.seuilJour)} mm · ${REGLAGES.nbJours} j</div>
         <div class="d">pic 24 h · seuil jour de pluie · nombre de jours</div></div>
     </div>
     <div class="bars">${mois.map(([m,v])=>`<div class="bar-wrap">
@@ -751,13 +702,13 @@ function vueSimulation(){
       <div class="bar-lab">${m.slice(5)}/${m.slice(2,4)}</div></div>`).join('')}</div>
     <div style="padding:6px 22px 20px;font-size:12px;color:var(--slate-light)">
       Campagnes par mois d'envoi. Un creux suivi d'un pic vient du verrou, pas du climat :
-      les départements déclenchent ensemble, purgent leurs ${OFFSET_1+ECART_2+SILENCE} jours, puis ressortent ensemble.
+      les départements déclenchent ensemble, purgent leurs ${D.OFFSET_1+D.ECART_2+D.SILENCE} jours, puis ressortent ensemble.
     </div>
   </div>`;
 }
 
 lireControles();
-chargerTout(false);
+chargerTout();
 </script>
 </body>
 </html>

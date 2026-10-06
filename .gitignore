@@ -48,8 +48,10 @@
 # la non-regression entre moteur.py et index.html
 !/test_coherence.py
 
-# la page servie par GitHub Pages (Pages sert index.html a la racine)
+# la page servie par GitHub Pages (Pages sert index.html a la racine), et
+# son calcul, partage avec les tests
 !/index.html
+!/detection.js
 
 # le workflow, et lui seul dans .github
 !/.github/

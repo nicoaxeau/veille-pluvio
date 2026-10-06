@@ -48,7 +48,9 @@ SOURCE = {
     "jeu": "Données climatologiques de base - quotidiennes",
     "url": "https://www.data.gouv.fr/datasets/donnees-climatologiques-de-base-quotidiennes",
     "licence": "Licence Ouverte 2.0",
-    "licence_url": "https://www.etalab.gouv.fr/licence-ouverte-open-licence/",
+    # L'ancienne adresse etalab.gouv.fr renvoie desormais vers l'accueil de
+    # data.gouv.fr (constate le 06/10/2026) : on pointe la page de la licence.
+    "licence_url": "https://www.data.gouv.fr/pages/legal/licences/etalab-2.0",
 }
 JOURNEE = "de 06 h UTC le jour J à 06 h UTC le jour J+1"
 # Decision de Nicolas du 06/10/2026 : la licence impose la source ET la date de
