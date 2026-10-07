@@ -206,6 +206,20 @@
     return seqs;
   }
 
+  // L'onglet Simulation porte sur douze mois complets : du 1er du mois, onze
+  // mois avant le dernier mois entièrement publié, à la fin de ce mois-là.
+  // Données jusqu'au 04/10/2026 -> du 01/10/2025 au 30/09/2026.
+  function periodeSimulation(fin) {
+    const [a, m, j] = fin.split("-").map(Number);
+    const jours = (an, mois) => new Date(Date.UTC(an, mois, 0)).getUTCDate();
+    let fa = a, fm = m;
+    if (j !== jours(a, m)) { fm = m - 1; if (fm === 0) { fm = 12; fa = a - 1; } }
+    let da = fa, dm = fm - 11;
+    if (dm <= 0) { dm += 12; da -= 1; }
+    const deux = x => String(x).padStart(2, "0");
+    return {debut: da + "-" + deux(dm) + "-01", fin: fa + "-" + deux(fm) + "-" + deux(jours(fa, fm))};
+  }
+
   // ---------------------------------------------------------- données
   // Toutes les dates de pluie.json, et la fenêtre de détection du moteur :
   // PROFONDEUR jours, jusqu'au dernier jour publié.
@@ -222,7 +236,7 @@
 
   const D = {FENETRE, OFFSET_1, ECART_2, SILENCE, EXPIRATION, PROFONDEUR, DELAI_PUBLICATION,
              CONNU_AU_MAIL1, REGLAGES, MOIS, plusJours, ecartJours, mm, jourLong, mention, blocMeteo,
-             declencheurs, jourCite, traiter, simuler, fenetre, attendu};
+             declencheurs, jourCite, traiter, simuler, periodeSimulation, fenetre, attendu};
   if (typeof module !== "undefined" && module.exports) module.exports = D;
   else racine.Detection = D;
 })(typeof window !== "undefined" ? window : this);

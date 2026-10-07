@@ -190,7 +190,7 @@ code{background:#eef3f8;padding:1px 6px;border-radius:5px;font-size:11.5px}
   Aucune clé API n'est présente dans cette page.
 </div>
 
-<script src="detection.js"></script>
+<script src="detection.js?v=c688f7ee"></script>
 <script>
 const DEPTS=[
   {code:"01",nom:"Ain",pref:"Bourg-en-Bresse",lat:46.2050,lon:5.2277,region:"Auvergne-Rhône-Alpes"},
@@ -644,21 +644,10 @@ function exportCSV(){
 }
 
 // ───────────────────────────────────────────────────────────── simulation
-// Douze mois complets : du 1er du mois, onze mois avant le dernier mois
-// entièrement publié, jusqu'à la fin de ce mois-là.
-function periodeSimulation(fin){
-  const [a,m,j]=fin.split('-').map(Number);
-  const jours=(an,mois)=>new Date(Date.UTC(an,mois,0)).getUTCDate();
-  let fa=a, fm=m;
-  if(j!==jours(a,m)){fm=m-1;if(fm===0){fm=12;fa=a-1}}
-  let da=fa, dm=fm-11; if(dm<=0){dm+=12;da-=1}
-  const deux=x=>String(x).padStart(2,'0');
-  return {debut:da+'-'+deux(dm)+'-01', fin:fa+'-'+deux(fm)+'-'+deux(jours(fa,fm))};
-}
-
+// Douze mois complets : la période vient de detection.js, comme le calcul.
 function vueSimulation(){
   if(!pluie||!meteo[DEPTS[0].code])return vide('Données Météo-France non chargées.');
-  const per=periodeSimulation(pluie.fin);
+  const per=D.periodeSimulation(pluie.fin);
   const dates=meteo[DEPTS[0].code].dates;
   const i0=dates.indexOf(per.debut), i1=dates.indexOf(per.fin);
   if(i0<0||i1<0||D.plusJours(per.debut,-(D.FENETRE-1))<dates[0])

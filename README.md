@@ -41,7 +41,7 @@ lecture, sans identifiant.
 | `sequences-reference.json` | les 236 séquences attendues sur `pluie-reference.json` |
 | `maj_etat.py` | écrit `etat.json` à partir de la sortie du moteur |
 | `verif_etat.py` | garde-fou : refuse le commit si `etat.json`, `pluie.json` ou `stations.json` contient une adresse |
-| `test_coherence.py` | non-régression entre `moteur.py` et `index.html` |
+| `test_coherence.py` | non-régression entre `moteur.py` et la page (`detection.js`), à l'unité |
 | `index.html` | la page de suivi, servie par GitHub Pages. Lit `pluie.json`, `stations.json` et `etat.json` sur le site lui-même |
 | `detection.js` | le calcul de la page, réplique exacte de `moteur.py` |
 | `etat.json` | états et compteurs agrégés. Jamais de détail par destinataire |
@@ -115,9 +115,19 @@ page ni au réseau : des fonctions pures, que les tests peuvent faire tourner
 hors navigateur.
 
 **Toute modification de l'une doit être reportée sur l'autre.**
-`test_coherence.py` est réécrit à l'étape 5 du passage à Météo-France : il fera
-tourner `detection.js` sous Node et exigera le même résultat que le moteur, à
-l'unité. Le workflow le lance avant toute publication d'état.
+`test_coherence.py` fait tourner `detection.js` (sous Node sur GitHub, dans
+Chrome sans fenêtre en local) et `moteur.py` sur les mêmes données : cas
+fabriqués, `pluie-reference.json`, le moteur lancé comme par le workflow à deux
+dates, et le `pluie.json` du jour. Il exige le même résultat à l'unité :
+déclencheurs, jours cités, lignes, étapes, phrases, mentions, et la simulation
+de douze mois (236 séquences, 472 campagnes sur la référence). Sur GitHub,
+l'absence de Node le fait échouer. Le workflow le lance avant toute publication
+d'état.
+
+La page appelle `detection.js?v=` suivi de l'empreinte du fichier : sans quoi
+un navigateur peut garder l'ancien calcul en cache avec la nouvelle page.
+**Toute modification de `detection.js` doit changer cette empreinte dans
+`index.html`** ; `test_coherence.py` le vérifie et donne la bonne valeur.
 
 La page ouvre ses données par `fetch` : elle doit être servie par un serveur
 web. Un double-clic sur `index.html` ne permet pas de lire les fichiers. En
