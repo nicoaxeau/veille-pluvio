@@ -59,3 +59,7 @@
 !/.github/workflows/
 /.github/workflows/*
 !/.github/workflows/veille.yml
+
+# l'essai a la main sur la branche meteofrance. A RETIRER AVANT LA FUSION
+# dans main, avec le fichier lui-meme.
+!/.github/workflows/essai-branche.yml
