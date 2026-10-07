@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-10-05T18:34:28+00:00",
+ "maj": "2026-10-07T07:15:28+00:00",
  "bascule": null,
  "parametres": {
   "pic_mm": 30.0,
@@ -11,39 +11,46 @@
   "mail2_ecart_j": 14,
   "silence_j": 30,
   "expiration_j": 21,
-  "profondeur_j": 92
+  "profondeur_j": 92,
+  "connu_au_mail1_j": 5
  },
  "sequences": {},
  "campagnes": {},
  "detection_cron": {
-  "07|2026-09-30|A": {
-   "dept": "Ardèche",
-   "serie": "A",
-   "episode": "2026-09-30",
-   "etape": "a_venir"
-  },
-  "19|2026-10-01|A": {
-   "dept": "Corrèze",
-   "serie": "A",
-   "episode": "2026-10-01",
-   "etape": "a_venir"
-  },
-  "30|2026-10-01|A": {
-   "dept": "Gard",
-   "serie": "A",
-   "episode": "2026-10-01",
-   "etape": "a_venir"
-  },
-  "66|2026-10-04|A": {
-   "dept": "Pyrénées-Orientales",
+  "11|2026-10-04|A": {
+   "dept": "Aude",
    "serie": "A",
    "episode": "2026-10-04",
    "etape": "a_venir"
   },
-  "73|2026-09-09|A": {
-   "dept": "Savoie",
+  "14|2026-09-28|A": {
+   "dept": "Calvados",
    "serie": "A",
-   "episode": "2026-09-09",
+   "episode": "2026-09-28",
+   "etape": "a_monter"
+  },
+  "23|2026-09-30|A": {
+   "dept": "Creuse",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "a_monter"
+  },
+  "30|2026-09-30|A": {
+   "dept": "Gard",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "a_monter"
+  },
+  "34|2026-09-30|A": {
+   "dept": "Hérault",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "a_monter"
+  },
+  "87|2026-09-30|A": {
+   "dept": "Haute-Vienne",
+   "serie": "A",
+   "episode": "2026-09-30",
    "etape": "a_monter"
   }
  },
