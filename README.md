@@ -64,8 +64,10 @@ de la préfecture, **dans le département**, qui mesure la pluie. Le mail ne doi
 jamais citer une mesure prise ailleurs.
 
 La liste est **figée** : elle n'est jamais recalculée. Une station silencieuse
-3 jours de suite déclenchera une alerte ; la remplacer est un commit relu, qui
-renseigne le champ `remplace` (numéro, nom et motif de l'ancienne station).
+3 jours de suite déclenche une alerte : une issue « Station Meteo-France
+muette », une par station, commentée chaque jour tant qu'elle se tait. La
+remplacer est un commit relu, qui renseigne le champ `remplace` (numéro, nom
+et motif de l'ancienne station).
 
 `test_stations.py` vérifie la liste : 96 stations, une par département, chacune
 dans son département (en Corse, par le numéro de commune), à moins de 15 km de
@@ -88,7 +90,7 @@ stations de `stations.json`, sur les 400 derniers jours.
 - Pour chaque station : l'état du fichier de son département (`a_jour`,
   `en_retard`, `absent`), sa date de publication, son dernier jour de pluie
   publié, et le nombre de jours de silence de la station. À partir de 3 jours,
-  l'extraction signale la station.
+  l'extraction signale la station, et le workflow ouvre une issue.
 - L'adresse des fichiers est trouvée à chaque tour par l'API de data.gouv.fr :
   leur nom porte les années, et changera en janvier.
 
@@ -152,11 +154,37 @@ et lesquels.
 
 ## La tâche planifiée
 
-`.github/workflows/veille.yml`, tous les jours à 11 h de Paris.
+`.github/workflows/veille.yml`, tous les jours à 11 h de Paris, au plus tôt :
+GitHub retarde les tâches planifiées de plusieurs heures.
 
-Elle tourne **à blanc** : elle détecte, elle écrit `etat.json`, et c'est tout.
-Aucun mail n'est monté, programmé ni envoyé depuis ce dépôt, et aucun secret
-n'y est déclaré.
+Elle tourne **à blanc** : elle télécharge, elle détecte, elle écrit
+`pluie.json` et `etat.json`, et c'est tout. Aucun mail n'est monté, programmé
+ni envoyé depuis ce dépôt, et aucun secret n'y est déclaré.
 
-Un échec ouvre une issue étiquetée `veille-echec`. La page continue d'afficher
-le dernier état publié.
+Le tour, dans l'ordre :
+
+1. les tests hors ligne : `test_stations.py`, `test_extraction.py`,
+   `test_moteur.py` ;
+2. le téléchargement des 95 fichiers Météo-France, trois essais chacun,
+   8 minutes au plus ;
+3. la liste des stations muettes depuis 3 jours ou plus ;
+4. le moteur ;
+5. `test_coherence.py`, qui compare la page et le moteur, sur la référence et
+   sur les données du jour ;
+6. `maj_etat.py`, puis le contrôle anti-adresse `verif_etat.py` ;
+7. le commit de `pluie.json` et de `etat.json`.
+
+Un fichier pas encore republié ce matin met ses départements « en retard » :
+le jour manque, il compte en erreur, jamais comme sec, et le tour du lendemain
+rattrape. Au-delà de 20 départements sans la donnée du jour, le tour échoue.
+
+Après chaque tour, quel qu'en soit le résultat, le job `alertes`, seul autorisé
+à écrire des issues, ouvre :
+
+- une issue `veille-echec` si le tour a échoué ou a été annulé ; tant qu'elle
+  est ouverte, les échecs suivants la commentent ;
+- une issue `station-muette` par station silencieuse depuis 3 jours ou plus,
+  commentée chaque jour tant qu'elle se tait, jamais dupliquée.
+
+Il refuse d'ouvrir une issue dont le texte contiendrait une adresse. La page
+continue d'afficher le dernier état publié.
