@@ -19,6 +19,8 @@ et le moteur tournent sur des copies, dans un dossier temporaire.
 6. Les jours sans donnee : departement en erreur, jamais un jour sec ; au-dela
    de 20 departements, maj_etat.py refuse de publier.
 7. verif_etat.py controle etat.json, pluie.json et stations.json.
+8. Apres le mail 2 : « silence » pendant les 30 jours, « termine » a partir
+   du jour ou le verrou tombe.
 
 Ses attendus sont ecrits en dur, et c'est voulu.
 
@@ -177,10 +179,14 @@ def reference():
 
 
 # ===================================================== 5 et 6. le moteur lance
-def lancer(pluie, date="2026-10-06"):
-    """Lance moteur.py comme le workflow, dans un dossier temporaire."""
+def lancer(pluie, date="2026-10-06", etat=None):
+    """Lance moteur.py comme le workflow, dans un dossier temporaire. Sans etat
+    fourni, sur une copie de etat.json."""
     t = tempfile.mkdtemp()
-    shutil.copy(os.path.join(RACINE, "etat.json"), os.path.join(t, "etat.json"))
+    if etat is None:
+        shutil.copy(os.path.join(RACINE, "etat.json"), os.path.join(t, "etat.json"))
+    else:
+        io.open(os.path.join(t, "etat.json"), "w", encoding="utf-8").write(json.dumps(etat))
     io.open(os.path.join(t, "pluie.json"), "w", encoding="utf-8").write(json.dumps(pluie, ensure_ascii=False))
     env = dict(os.environ, VP_DATE=date, VP_PLUIE=os.path.join(t, "pluie.json"),
                VP_ETAT=os.path.join(t, "etat.json"), VP_EXIGE_ETAT="1",
@@ -293,6 +299,23 @@ def verif_etat():
     v("une adresse glissee dans pluie.json : commit refuse", r.returncode == 1 and "ECHEC" in r.stdout, "")
 
 
+# ===================================================== 8. apres le mail 2
+def apres_mail2():
+    print("")
+    print("8. Apres le mail 2 : silence de 30 jours, puis termine")
+    cle = "14|2026-09-28|A"
+    ref = json.load(io.open(os.path.join(RACINE, "pluie-reference.json"), encoding="utf-8"))
+    etat = {"version": 2, "bascule": None, "campagnes": {}, "sequences": {
+        cle: {"etape": "mail2_envoye", "mail1_envoye_le": "2026-10-05", "mail2_envoye_le": "2026-10-19"}}}
+    for date, attendu in (("2026-10-20", "silence"), ("2026-11-17", "silence"),
+                          ("2026-11-18", "termine"), ("2026-11-25", "termine")):
+        t, r = lancer(ref, date, etat)
+        f = [x for x in tous_les_faits(json.loads(r.stdout)) if x["cle"] == cle] if r.returncode == 0 else []
+        v("mail 2 parti le 19/10 : %s au %s/%s" % (attendu, date[8:], date[5:7]),
+          len(f) == 1 and f[0]["etape"] == attendu and f[0]["silence_jusquau"] == "2026-11-18",
+          "obtenu %s" % (f[0]["etape"] if f else "aucune ligne"))
+
+
 def main():
     print("Controle du moteur sur les observations Meteo-France. Aucun acces reseau.")
     print("")
@@ -302,6 +325,7 @@ def main():
     reference()
     conditions_reelles()
     verif_etat()
+    apres_mail2()
     print("")
     print("RESULTAT : " + ("le moteur est conforme" if OK else "AU MOINS UN ECART — ne pas livrer"))
     return 0 if OK else 1

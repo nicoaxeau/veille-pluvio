@@ -169,7 +169,8 @@
       }
       if (e === "mail2_envoye") {
         const fin = plusJours(connue.mail2_envoye_le, SILENCE);
-        faits.push({...base, etape: jour(fin) < 0 ? "silence" : "termine", silence_jusquau: fin});
+        // En silence avant fin ; terminé dès fin, le jour où le verrou tombe.
+        faits.push({...base, etape: jour(fin) > 0 ? "silence" : "termine", silence_jusquau: fin});
         libre = fin;
         continue;
       }

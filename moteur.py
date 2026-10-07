@@ -272,7 +272,8 @@ def traiter(dept, p, dates):
         if e == "mail2_envoye":
             envoi2 = dt.date.fromisoformat(connue["mail2_envoye_le"])
             fin = envoi2 + dt.timedelta(days=SILENCE)
-            faits.append({**base, "etape": "silence" if jour(fin) < 0 else "termine",
+            # En silence avant fin ; termine des fin, le jour ou le verrou tombe.
+            faits.append({**base, "etape": "silence" if jour(fin) > 0 else "termine",
                           "silence_jusquau": fin.isoformat()})
             libre_a_partir_de = fin
             continue
