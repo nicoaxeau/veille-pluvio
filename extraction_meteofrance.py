@@ -252,8 +252,17 @@ def ecrire(doc, chemin):
     io.open(chemin, "w", encoding="utf-8", newline="\n").write(texte)
 
 
-def rapport(doc, stations):
+def muettes(doc, stations):
+    """Les stations silencieuses depuis SEUIL_SILENCE_J jours ou plus :
+    [code, nom, numero, jours de silence, dernier jour de pluie publie]. Le
+    rapport ci-dessous et l'alerte du workflow lisent cette seule liste."""
     noms = {s["code"]: s.get("nom", "") for s in stations}
+    return [[c, noms.get(c, ""), s["num"], s["silence_j"], s["dernier_jour"]]
+            for c, s in doc["stations"].items()
+            if s["silence_j"] is not None and s["silence_j"] >= SEUIL_SILENCE_J]
+
+
+def rapport(doc, stations):
     st = doc["stations"]
     etats = {e: sorted(c for c, s in st.items() if s["etat"] == e) for e in ("a_jour", "en_retard", "absent")}
     print("pluie.json : %d stations, du %s au %s (%d jours)"
@@ -264,10 +273,9 @@ def rapport(doc, stations):
     for e in ("en_retard", "absent"):
         for c in etats[e]:
             print("ATTENTION | %s : fichier %s (publie le %s)" % (c, e.replace("_", " "), st[c]["publie_le"]))
-    for c, s in st.items():
-        if s["silence_j"] is not None and s["silence_j"] >= SEUIL_SILENCE_J:
-            print("ALERTE    | station silencieuse : %s %s (%s), %d jours sans donnee, derniere valeur le %s"
-                  % (c, noms.get(c, ""), s["num"], s["silence_j"], s["dernier_jour"]))
+    for c, nom, num, j, dernier in muettes(doc, stations):
+        print("ALERTE    | station silencieuse : %s %s (%s), %d jours sans donnee, derniere valeur le %s"
+              % (c, nom, num, j, dernier))
 
 
 # ------------------------------------------------------------------ main

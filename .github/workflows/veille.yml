@@ -1,14 +1,17 @@
 name: Veille pluviometrique
 
-# MODE A BLANC. Le cron detecte, il ecrit etat.json, et c'est tout.
+# MODE A BLANC. Le cron telecharge les observations Meteo-France, detecte,
+# ecrit pluie.json et etat.json, et c'est tout.
 #
 # Il n'appelle ni Mailjet ni Vision : aucun secret n'est declare dans ce
 # workflow, et il ne peut donc pas en utiliser. La seule sortie reseau est
-# Open-Meteo, API publique en lecture, sans identifiant.
+# data.gouv.fr : son API publique et les fichiers Meteo-France qu'elle
+# designe, en lecture, sans identifiant.
 #
-# LE DEPOT EST PUBLIC. Les logs de ce workflow le sont aussi : on n'y ecrit
-# jamais d'adresse email. verif_etat.py refuse le commit s'il en trouve une
-# dans etat.json.
+# LE DEPOT EST PUBLIC. Les logs de ce workflow le sont aussi, comme ses
+# issues : on n'y ecrit jamais d'adresse email. verif_etat.py refuse le commit
+# s'il en trouve une dans etat.json, pluie.json ou stations.json, et le job
+# « alertes » refuse d'ouvrir une issue qui en contiendrait une.
 
 on:
   schedule:
@@ -20,12 +23,15 @@ on:
     # debut d'heure, la plus chargee. Mesure du 15/09 au 01/10/2026 a la
     # minute 0 : retard median 5 h 07, jusqu'a 8 h 22. L'horaire ecrit ici
     # est un horaire de depart AU PLUS TOT, pas une heure d'execution.
+    #
+    # Meteo-France republie ses fichiers vers 6 h UTC (releve a 05 h 54 et
+    # 06 h 23) : le tour part au plus tot trois heures apres.
     - cron: "17 9 * * *"
     # - cron: "17 10 * * *"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: veille
@@ -35,6 +41,10 @@ jobs:
   veille:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: write        # le commit de pluie.json et de etat.json, rien d'autre
+    outputs:
+      muettes: ${{ steps.muettes.outputs.liste }}
 
     # Pose pour tout le job : le controle d'environnement et la detection
     # doivent voir exactement la meme valeur.
@@ -50,6 +60,13 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Installer Node
+        # test_coherence.py fait tourner detection.js, le calcul de la page,
+        # sous Node. Sans Node, il echoue : il ne saute pas.
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
       - name: Controle de l'environnement — VP_ETAT
         # CONTROLE DUR. Sans etat, le moteur repartirait de zero a chaque tour
@@ -67,34 +84,69 @@ jobs:
           fi
           python -c "import json,io,sys; d=json.load(io.open('$VP_ETAT',encoding='utf-8'));             print('OK    | %s lisible, version %s, bascule %r' % ('$VP_ETAT', d.get('version'), d.get('bascule')));             sys.exit(0 if d.get('version') == 2 else 1)"
 
-      - name: Non-regression moteur.py contre index.html
-        # Les deux implementations doivent produire le meme texte. Si elles
-        # divergent, on ne publie pas un etat que la page interpreterait
-        # autrement.
-        run: python test_coherence.py
+      - name: Tests hors ligne — stations, extraction, moteur
+        # Avant tout telechargement. Si la liste figee, l'extraction ou le
+        # moteur ne sont plus conformes, on s'arrete sans rien publier.
+        run: |
+          python test_stations.py
+          python test_extraction.py
+          python test_moteur.py
+
+      - name: Telechargement Meteo-France — pluie.json
+        # Les 95 fichiers du jour, trois essais chacun, et 8 minutes au plus.
+        # Un fichier pas encore republie ce matin est « en retard » : le jour
+        # manque pour ses departements, qui comptent en erreur, jamais comme
+        # secs, et le tour du lendemain rattrape. Un fichier introuvable est
+        # « absent » : ses jours deja publies sont repris du pluie.json
+        # precedent, rien n'est invente. Si aucun fichier n'est lisible, le
+        # tour echoue et pluie.json n'est pas reecrit.
+        timeout-minutes: 8
+        run: python extraction_meteofrance.py --precedent pluie.json
+
+      - name: Stations muettes depuis 3 jours ou plus
+        # La liste passe au job « alertes », qui ouvre une issue par station.
+        # Meme regle que le rapport de l'extraction : la fonction muettes().
+        id: muettes
+        run: |
+          python - >> "$GITHUB_OUTPUT" <<'FIN'
+          import io, json
+          import extraction_meteofrance as x
+          doc = json.load(io.open("pluie.json", encoding="utf-8"))
+          stations = json.load(io.open("stations.json", encoding="utf-8"))["stations"]
+          print("liste=" + json.dumps(x.muettes(doc, stations), ensure_ascii=False))
+          FIN
 
       - name: Detection
         # VP_ETAT et VP_EXIGE_ETAT sont poses au niveau du job, plus haut.
         run: python moteur.py > veille.json
 
+      - name: Non-regression moteur.py contre la page, donnees du jour comprises
+        # Les deux implementations doivent produire le meme texte, sur la
+        # reference comme sur le pluie.json qu'on vient de telecharger. Si
+        # elles divergent, on ne publie pas un etat que la page interpreterait
+        # autrement.
+        run: python test_coherence.py
+
       - name: Mise a jour de etat.json
+        # Au-dela de 20 departements sans la donnee du jour, maj_etat.py
+        # refuse de publier : le tour echoue et l'issue d'echec s'ouvre.
         run: python maj_etat.py veille.json
 
-      - name: Controle avant commit — aucune adresse dans etat.json
-        # Garde-fou dur. S'il trouve un « @ » suivi d'un point, ou un champ
-        # au nom evoquant un destinataire, il sort en erreur et rien n'est
-        # commite.
+      - name: Controle avant commit — aucune adresse
+        # Garde-fou dur, sur etat.json, pluie.json et stations.json. S'il
+        # trouve un « @ » suivi d'un point, ou un champ au nom evoquant un
+        # destinataire, il sort en erreur et rien n'est commite.
         run: python verif_etat.py
 
-      - name: Commit si etat.json a change
+      - name: Commit si pluie.json ou etat.json a change
         run: |
-          if git diff --quiet -- etat.json; then
-            echo "etat.json inchange, rien a commiter."
+          if git diff --quiet -- pluie.json etat.json; then
+            echo "pluie.json et etat.json inchanges, rien a commiter."
             exit 0
           fi
           git config user.name  "veille-pluvio"
           git config user.email "veille-pluvio@users.noreply.github.com"
-          git add etat.json
+          git add pluie.json etat.json
           git commit -m "Veille du $(date -u +%Y-%m-%d) — detection automatique"
           git push
 
@@ -104,64 +156,147 @@ jobs:
         if: always()
         run: rm -f veille.json
 
-  notifier:
-    # Alerte si le job precedent a ECHOUE ou a ete ANNULE.
+  alertes:
+    # Tourne apres chaque tour, QUEL QU'EN SOIT LE RESULTAT : c'est son script
+    # qui decide d'ouvrir une issue.
     #
     # Le 17/09/2026, la detection a depasse ses 15 minutes : GitHub a annule le
-    # job, et un job annule n'est pas en echec. Avec « if: failure() », cette
-    # alerte a ete sautee : une journee perdue sans que personne le sache.
+    # job, et un job annule n'est pas en echec. Avec « if: failure() »,
+    # l'alerte a ete sautee : une journee perdue sans que personne le sache.
+    # « always() » est la seule condition dont on soit sur qu'elle survive a
+    # un depassement de delai ; « cancelled() » ne suffirait pas, il dit si
+    # TOUT le run a ete annule, pas si le job precedent a depasse son delai.
     #
-    # On teste donc explicitement le resultat du job precedent. « always() »
-    # garantit que cette condition est evaluee quel que soit ce resultat ;
-    # « cancelled() » ne suffirait pas, il dit si TOUT le run a ete annule,
-    # pas si le job precedent a depasse son delai.
+    # Seul job a pouvoir ecrire des issues. Avant le 07/10/2026, le workflow
+    # n'accordait que « contents: write » : la premiere issue d'echec aurait
+    # ete refusee par GitHub. Elle n'a jamais eu a partir.
     needs: veille
-    if: always() && (needs.veille.result == 'failure' || needs.veille.result == 'cancelled')
+    if: always()
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
     steps:
-      - name: Ouvrir une issue d'echec
+      - name: Issues d'alerte — echec du tour, stations muettes
         uses: actions/github-script@v7
         env:
           RESULTAT: ${{ needs.veille.result }}
+          MUETTES: ${{ needs.veille.outputs.muettes }}
+          BRANCHE: ${{ github.ref_name }}
         with:
           script: |
-            const annule = process.env.RESULTAT === "cancelled";
-            const titre = `Veille pluviometrique ${annule ? "annulee" : "en echec"} — ${new Date().toISOString().slice(0,10)}`;
-            const corps = annule ? [
-              "**La tache planifiee a ete ANNULEE. Aucun etat n'a ete publie aujourd'hui.**",
-              "",
-              `Execution : ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
-              "",
-              "Cause la plus probable : le job a depasse ses 15 minutes (timeout-minutes),",
-              "en general parce qu'Open-Meteo repondait lentement, comme le 17/09/2026.",
-              "Sinon : annulation manuelle depuis l'onglet Actions.",
-              "",
-              "Le prochain tour planifie reprendra normalement.",
-              "La page continue d'afficher le dernier etat publie.",
-            ].join("\n") : [
-              "La tache planifiee a echoue. Aucun etat n'a ete publie.",
-              "",
-              `Execution : ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
-              "",
-              "Causes possibles, par ordre de frequence :",
-              "- Open-Meteo indisponible ou trop de departements en erreur",
-              "- divergence entre moteur.py et index.html (test_coherence.py)",
-              "- verif_etat.py a refuse le commit : une adresse a ete trouvee dans etat.json",
-              "",
-              "La page continue d'afficher le dernier etat publie.",
-            ].join("\n");
-            const ouvertes = await github.rest.issues.listForRepo({
-              owner: context.repo.owner, repo: context.repo.repo,
-              state: "open", labels: "veille-echec",
-            });
-            if (ouvertes.data.length > 0) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner, repo: context.repo.repo,
-                issue_number: ouvertes.data[0].number, body: corps,
-              });
-            } else {
-              await github.rest.issues.create({
-                owner: context.repo.owner, repo: context.repo.repo,
-                title: titre, body: corps, labels: ["veille-echec"],
-              });
+            const {owner, repo} = context.repo;
+            const jour = new Date().toISOString().slice(0, 10);
+            const enClair = iso => iso.split("-").reverse().join("/");
+            const execution = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const branche = process.env.BRANCHE;
+            const essai = branche === "main" ? "" : ` — essai, branche ${branche}`;
+            const avertissement = essai ? [`**ESSAI sur la branche ${branche}.** Rien a faire : fermer cette issue apres verification.`, ""] : [];
+
+            // LE DEPOT EST PUBLIC : aucune issue ne part avec une adresse.
+            function sansAdresse(texte) {
+              if (/@[^\s@]*\./.test(texte)) throw new Error("une adresse aurait ete publiee dans une issue : refus");
+              return texte;
             }
+
+            // L'etiquette doit exister avant de servir : GitHub ne la cree pas
+            // forcement a la volee.
+            async function etiquette(nom, couleur, description) {
+              try {
+                await github.rest.issues.getLabel({owner, repo, name: nom});
+              } catch (e) {
+                if (e.status !== 404) throw e;
+                await github.rest.issues.createLabel({owner, repo, name: nom, color: couleur, description});
+              }
+            }
+
+            async function ouvertes(nom) {
+              const r = await github.rest.issues.listForRepo({owner, repo, state: "open", labels: nom, per_page: 100});
+              return r.data;
+            }
+
+            async function ouvrir(nom, titre, corps) {
+              const r = await github.rest.issues.create({owner, repo, labels: [nom],
+                                                         title: sansAdresse(titre), body: sansAdresse(corps)});
+              core.info(`Issue #${r.data.number} ouverte : ${titre}`);
+            }
+
+            async function commenter(issue, corps) {
+              await github.rest.issues.createComment({owner, repo, issue_number: issue.number,
+                                                      body: sansAdresse(corps)});
+              core.info(`Commentaire sur l'issue #${issue.number} : ${issue.title}`);
+            }
+
+            // 1. Le tour a echoue ou a ete annule : une seule issue ouverte a
+            // la fois, les suivants la commentent.
+            const resultat = process.env.RESULTAT;
+            const echec = resultat === "failure" || resultat === "cancelled";
+            if (echec) {
+              const annule = resultat === "cancelled";
+              const titre = `Veille pluviometrique ${annule ? "annulee" : "en echec"} — ${jour}${essai}`;
+              const corps = avertissement.concat(annule ? [
+                "**La tache planifiee a ete ANNULEE. Aucun etat n'a ete publie aujourd'hui.**",
+                "",
+                `Execution : ${execution}`,
+                "",
+                "Cause la plus probable : le job a depasse ses 15 minutes (timeout-minutes).",
+                "Sinon : annulation manuelle depuis l'onglet Actions.",
+                "",
+                "Le prochain tour planifie reprendra normalement.",
+                "La page continue d'afficher le dernier etat publie.",
+              ] : [
+                "La tache planifiee a echoue. Aucun etat n'a ete publie.",
+                "",
+                `Execution : ${execution}`,
+                "",
+                "Causes possibles :",
+                "- Meteo-France n'a pas encore publie : plus de 20 departements sans la donnee du jour, maj_etat.py refuse de publier",
+                "- data.gouv.fr injoignable ou trop lent : aucun fichier lu, ou telechargement au-dela de 8 minutes",
+                "- un test hors ligne a echoue : test_stations.py, test_extraction.py ou test_moteur.py",
+                "- divergence entre moteur.py et la page (test_coherence.py)",
+                "- verif_etat.py a refuse le commit : une adresse a ete trouvee",
+                "- le push a ete refuse : le depot a change pendant le tour",
+                "",
+                "Le tour du lendemain rattrape les jours manques : le moteur relit tout chaque matin.",
+                "La page continue d'afficher le dernier etat publie.",
+              ]).join("\n");
+              await etiquette("veille-echec", "d73a4a", "Le tour de la veille a echoue ou a ete annule");
+              const deja = await ouvertes("veille-echec");
+              if (deja.length > 0) await commenter(deja[0], corps);
+              else await ouvrir("veille-echec", titre, corps);
+            }
+
+            // 2. Les stations muettes depuis 3 jours ou plus : UNE ISSUE PAR
+            // STATION, commentee chaque jour tant qu'elle se tait, jamais
+            // dupliquee. Decision du 06/10/2026 : alerte au 3e jour.
+            const muettes = JSON.parse(process.env.MUETTES || "[]");
+            if (muettes.length > 0) {
+              await etiquette("station-muette", "fbca04", "Station Meteo-France sans donnee depuis 3 jours ou plus");
+              const deja = await ouvertes("station-muette");
+              for (const [code, nom, num, jours, dernier] of muettes) {
+                const titre = `Station Meteo-France muette : ${code} ${nom} (${num})${essai}`;
+                const derniere = dernier ? `le ${enClair(dernier)}` : "aucune dans les 400 derniers jours";
+                const issue = deja.find(i => i.title === titre);
+                if (issue) {
+                  await commenter(issue, [
+                    `Toujours muette au ${enClair(jour)} : ${jours} jours sans donnee. Derniere valeur : ${derniere}.`,
+                    "",
+                    `Execution : ${execution}`,
+                  ].join("\n"));
+                } else {
+                  await ouvrir("station-muette", titre, avertissement.concat([
+                    `**Station Meteo-France sans donnee depuis ${jours} jours : ${code} ${nom} (${num}).**`,
+                    "",
+                    `Derniere valeur publiee : ${derniere}.`,
+                    "",
+                    `Tant qu'elle se tait, le departement ${code} n'a pas la pluie du jour : il est en erreur pour la journee, et aucun episode n'y est detecte.`,
+                    "",
+                    "Que faire : remplacer la station dans `stations.json`, par un commit relu qui renseigne le champ `remplace` (numero, nom et motif de l'ancienne station). La liste est figee : rien n'est remplace automatiquement.",
+                    "",
+                    `Execution : ${execution}`,
+                  ]).join("\n"));
+                }
+              }
+            }
+
+            if (!echec && muettes.length === 0) core.info("Rien a signaler : aucune issue.");

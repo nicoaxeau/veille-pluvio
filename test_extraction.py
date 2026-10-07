@@ -8,6 +8,8 @@ Hors ligne, aucun acces reseau.
    valeur vide, ligne manquante, vrai zero, station qui se tait, fichier en
    retard, fichier absent ou illisible, ligne du lendemain sans pluie, reprise
    du pluie.json precedent. Un jour sans donnee doit sortir null, jamais 0.
+   La liste des stations muettes, que lit l'alerte du workflow, part a 3 jours
+   de silence ; Privas, muette depuis le 01/10/2026, y figure.
 2. pluie-reference.json, tire des fichiers publies le 06/10/2026, doit porter
    les 96 stations de stations.json, la mention exacte, la source, et des
    valeurs relevees a la main dans les fichiers bruts.
@@ -131,6 +133,25 @@ def cas_fabriques():
     v("station sans aucune valeur : toute la fenetre en silence",
       all(x is None for x in s["rr"]) and s["dernier_jour"] is None and s["silence_j"] == 400,
       "silence %s" % s["silence_j"])
+
+    # Les stations muettes : la liste que lisent le rapport et l'alerte du workflow.
+    m = X.muettes(doc, STATIONS)
+    v("stations muettes : 3 jours et plus, ni en retard ni absent",
+      [x[0] for x in m] == ["01", "34"], ", ".join("%s %s j" % (x[0], x[3]) for x in m))
+    v("station muette : code, nom, numero, jours, dernier jour",
+      m[:1] == [["01", "UN", "01000001", 3, "2026-10-01"]], "%s" % (m[:1],))
+    d5 = json.loads(json.dumps(doc))
+    d5["stations"]["01"]["silence_j"] = 2
+    v("2 jours de silence : pas encore d'alerte", "01" not in [x[0] for x in X.muettes(d5, STATIONS)], "")
+    # Le cas du 06/10/2026 : Privas se tait depuis le 01/10, une autre station du
+    # meme fichier publie jusqu'au 04/10.
+    l07 = [(n, d, "1.0", "") for n, fin in (("07186001", "2026-09-30"), ("07066001", "2026-10-04"))
+           for d in jours("2025-07-01", fin)]
+    privas = [{"code": "07", "num": "07186001", "nom": "PRIVAS"}]
+    d6 = X.construire(privas, {"07": {"contenu": fichier(l07), "publie_le": "2026-10-06T06:23:00Z",
+                                      "fichier": "Q_07"}}, AUJ)
+    v("Privas muette depuis le 01/10 : alerte a 4 jours",
+      X.muettes(d6, privas) == [["07", "PRIVAS", "07186001", 4, "2026-09-30"]], "%s" % (X.muettes(d6, privas),))
 
     v("mention : date de publication la plus recente",
       doc["mention"] == "Données pluviométriques : Météo-France, mise à jour du 6 octobre 2026", doc["mention"])
