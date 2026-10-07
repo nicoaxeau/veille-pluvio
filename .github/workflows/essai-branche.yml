@@ -18,7 +18,7 @@ name: Essai sur la branche meteofrance
 # que l'issue s'ouvre au premier essai, puis se complete au second au lieu de
 # se doubler. Decision de Nicolas du 07/10/2026.
 #
-# Essai n° 1
+# Essai n° 2 : la meme alerte doit completer l'issue ouverte, pas en ouvrir une autre.
 
 on:
   push:
