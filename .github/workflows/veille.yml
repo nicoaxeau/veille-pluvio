@@ -29,6 +29,16 @@ on:
     - cron: "17 9 * * *"
     # - cron: "17 10 * * *"
   workflow_dispatch:
+  # ESSAI SUR LA BRANCHE meteofrance, A RETIRER AVANT LA FUSION avec
+  # essai-branche.yml : permet a celui-ci de lancer ce workflow tel quel.
+  # L'option essai_privas ajoute une alerte fabriquee, Privas muette, pour
+  # prouver sur GitHub que l'issue s'ouvre, puis se complete au lieu de se
+  # doubler. Decision de Nicolas du 07/10/2026.
+  workflow_call:
+    inputs:
+      essai_privas:
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -107,13 +117,22 @@ jobs:
         # La liste passe au job « alertes », qui ouvre une issue par station.
         # Meme regle que le rapport de l'extraction : la fonction muettes().
         id: muettes
+        env:
+          ESSAI_PRIVAS: ${{ inputs.essai_privas }}
         run: |
           python - >> "$GITHUB_OUTPUT" <<'FIN'
-          import io, json
+          import datetime as dt, io, json, os
           import extraction_meteofrance as x
           doc = json.load(io.open("pluie.json", encoding="utf-8"))
           stations = json.load(io.open("stations.json", encoding="utf-8"))["stations"]
-          print("liste=" + json.dumps(x.muettes(doc, stations), ensure_ascii=False))
+          liste = x.muettes(doc, stations)
+          if os.environ.get("ESSAI_PRIVAS") == "true":
+              # ESSAI, donnees fabriquees : Privas (07186001), muette depuis le
+              # 01/10/2026, remise a la place de Chomerac dans une copie.
+              s = dict(doc["stations"]["07"], num="07186001", dernier_jour="2026-09-30")
+              s["silence_j"] = (dt.date.fromisoformat(s["fin_fichier"] or doc["fin"]) - dt.date(2026, 9, 30)).days
+              liste += x.muettes({"stations": {"07": s}}, [{"code": "07", "nom": "PRIVAS"}])
+          print("liste=" + json.dumps(liste, ensure_ascii=False))
           FIN
 
       - name: Detection
