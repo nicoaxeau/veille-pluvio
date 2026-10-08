@@ -13,8 +13,74 @@
   "expiration_j": 21,
   "profondeur_j": 92
  },
- "sequences": {},
- "campagnes": {},
+ "sequences": {
+  "14|2026-09-28|A": {
+   "etape": "abandonne",
+   "motif": "mail 1 non envoyé, décision du 07/10/2026"
+  },
+  "23|2026-09-30|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-07"
+  },
+  "30|2026-09-30|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-07"
+  },
+  "34|2026-09-30|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-07"
+  },
+  "87|2026-09-30|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-07"
+  }
+ },
+ "campagnes": {
+  "15023638": {
+   "cle": "30|2026-09-30|A",
+   "dept": "30",
+   "nom_dept": "Gard",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail1",
+   "monte_le": "2026-10-07",
+   "liste_id": 10649423,
+   "titre": "J+7 - Pluies - Gard"
+  },
+  "15023646": {
+   "cle": "34|2026-09-30|A",
+   "dept": "34",
+   "nom_dept": "Hérault",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail1",
+   "monte_le": "2026-10-07",
+   "liste_id": 10649424,
+   "titre": "J+7 - Pluies- Hérault"
+  },
+  "15023653": {
+   "cle": "87|2026-09-30|A",
+   "dept": "87",
+   "nom_dept": "Haute-Vienne",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail1",
+   "monte_le": "2026-10-07",
+   "liste_id": 10649426,
+   "titre": "J+7-Pluies-Haute-Vienne"
+  },
+  "15023662": {
+   "cle": "23|2026-09-30|A",
+   "dept": "23",
+   "nom_dept": "Creuse",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail1",
+   "monte_le": "2026-10-07",
+   "liste_id": 10649428,
+   "titre": "J+7-Pluies-Creuse"
+  }
+ },
  "detection_cron": {
   "07|2026-09-30|A": {
    "dept": "Ardèche",
