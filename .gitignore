@@ -45,6 +45,10 @@
 !/maj_etat.py
 !/verif_etat.py
 
+# le flux RSS des brouillons a envoyer, lu par Power Automate, et ce qui l'ecrit
+!/rappels.py
+!/rappels.xml
+
 # la non-regression entre moteur.py et index.html
 !/test_coherence.py
 
