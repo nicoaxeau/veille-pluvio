@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-10-07T07:19:44+00:00",
+ "maj": "2026-10-05T18:34:28+00:00",
  "bascule": null,
  "parametres": {
   "pic_mm": 30.0,
@@ -11,46 +11,141 @@
   "mail2_ecart_j": 14,
   "silence_j": 30,
   "expiration_j": 21,
-  "profondeur_j": 92,
-  "connu_au_mail1_j": 5
+  "profondeur_j": 92
  },
- "sequences": {},
- "campagnes": {},
+ "sequences": {
+  "14|2026-09-28|A": {
+   "etape": "abandonne",
+   "motif": "mail 1 non envoyé, décision du 07/10/2026"
+  },
+  "23|2026-09-30|A": {
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-07",
+   "mail1_envoye_le": "2026-10-07"
+  },
+  "30|2026-09-30|A": {
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-07",
+   "mail1_envoye_le": "2026-10-07"
+  },
+  "34|2026-09-30|A": {
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-07",
+   "mail1_envoye_le": "2026-10-07"
+  },
+  "87|2026-09-30|A": {
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-07",
+   "mail1_envoye_le": "2026-10-07"
+  }
+ },
+ "campagnes": {
+  "15023638": {
+   "cle": "30|2026-09-30|A",
+   "dept": "30",
+   "nom_dept": "Gard",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail1",
+   "monte_le": "2026-10-07",
+   "liste_id": 10649423,
+   "titre": "J+7 - Pluies - Gard",
+   "envoye_le": "2026-10-07",
+   "stats": {
+    "contacts": 235,
+    "delivres": 185,
+    "ouvertures": 39,
+    "clics": 0,
+    "desabos": 2
+   }
+  },
+  "15023646": {
+   "cle": "34|2026-09-30|A",
+   "dept": "34",
+   "nom_dept": "Hérault",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail1",
+   "monte_le": "2026-10-07",
+   "liste_id": 10649424,
+   "titre": "J+7 - Pluies- Hérault",
+   "envoye_le": "2026-10-07",
+   "stats": {
+    "contacts": 469,
+    "delivres": 397,
+    "ouvertures": 84,
+    "clics": 0,
+    "desabos": 2
+   }
+  },
+  "15023653": {
+   "cle": "87|2026-09-30|A",
+   "dept": "87",
+   "nom_dept": "Haute-Vienne",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail1",
+   "monte_le": "2026-10-07",
+   "liste_id": 10649426,
+   "titre": "J+7-Pluies-Haute-Vienne",
+   "envoye_le": "2026-10-07",
+   "stats": {
+    "contacts": 16,
+    "delivres": 13,
+    "ouvertures": 3,
+    "clics": 0,
+    "desabos": 0
+   }
+  },
+  "15023662": {
+   "cle": "23|2026-09-30|A",
+   "dept": "23",
+   "nom_dept": "Creuse",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail1",
+   "monte_le": "2026-10-07",
+   "liste_id": 10649428,
+   "titre": "J+7-Pluies-Creuse",
+   "envoye_le": "2026-10-07",
+   "stats": {
+    "contacts": 4,
+    "delivres": 4,
+    "ouvertures": 0,
+    "clics": 0,
+    "desabos": 0
+   }
+  }
+ },
  "detection_cron": {
-  "11|2026-10-04|A": {
-   "dept": "Aude",
+  "07|2026-09-30|A": {
+   "dept": "Ardèche",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "a_venir"
+  },
+  "19|2026-10-01|A": {
+   "dept": "Corrèze",
+   "serie": "A",
+   "episode": "2026-10-01",
+   "etape": "a_venir"
+  },
+  "30|2026-10-01|A": {
+   "dept": "Gard",
+   "serie": "A",
+   "episode": "2026-10-01",
+   "etape": "a_venir"
+  },
+  "66|2026-10-04|A": {
+   "dept": "Pyrénées-Orientales",
    "serie": "A",
    "episode": "2026-10-04",
    "etape": "a_venir"
   },
-  "14|2026-09-28|A": {
-   "dept": "Calvados",
+  "73|2026-09-09|A": {
+   "dept": "Savoie",
    "serie": "A",
-   "episode": "2026-09-28",
-   "etape": "a_monter"
-  },
-  "23|2026-09-30|A": {
-   "dept": "Creuse",
-   "serie": "A",
-   "episode": "2026-09-30",
-   "etape": "a_monter"
-  },
-  "30|2026-09-30|A": {
-   "dept": "Gard",
-   "serie": "A",
-   "episode": "2026-09-30",
-   "etape": "a_monter"
-  },
-  "34|2026-09-30|A": {
-   "dept": "Hérault",
-   "serie": "A",
-   "episode": "2026-09-30",
-   "etape": "a_monter"
-  },
-  "87|2026-09-30|A": {
-   "dept": "Haute-Vienne",
-   "serie": "A",
-   "episode": "2026-09-30",
+   "episode": "2026-09-09",
    "etape": "a_monter"
   }
  },
