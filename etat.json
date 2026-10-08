@@ -28,6 +28,10 @@
    "mail1_monte_le": "2026-10-07",
    "mail1_envoye_le": "2026-10-07"
   },
+  "24|2026-10-06|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-08"
+  },
   "30|2026-09-30|A": {
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-10-07",
@@ -132,6 +136,18 @@
    "liste_id": 10649875,
    "titre": "J+7 - Pluies - Aude",
    "objet": "Aude : après les fortes pluies"
+  },
+  "15025817": {
+   "cle": "24|2026-10-06|A",
+   "dept": "24",
+   "nom_dept": "Dordogne",
+   "serie": "A",
+   "episode": "2026-10-06",
+   "etape": "mail1",
+   "monte_le": "2026-10-08",
+   "liste_id": 10649877,
+   "titre": "J+7 - Pluies - Dordogne",
+   "objet": "Dordogne : après les fortes pluies"
   }
  },
  "detection_cron": {
