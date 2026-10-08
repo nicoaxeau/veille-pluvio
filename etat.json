@@ -19,20 +19,24 @@
    "motif": "mail 1 non envoyé, décision du 07/10/2026"
   },
   "23|2026-09-30|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-07"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-07",
+   "mail1_envoye_le": "2026-10-07"
   },
   "30|2026-09-30|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-07"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-07",
+   "mail1_envoye_le": "2026-10-07"
   },
   "34|2026-09-30|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-07"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-07",
+   "mail1_envoye_le": "2026-10-07"
   },
   "87|2026-09-30|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-07"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-07",
+   "mail1_envoye_le": "2026-10-07"
   }
  },
  "campagnes": {
@@ -45,7 +49,15 @@
    "etape": "mail1",
    "monte_le": "2026-10-07",
    "liste_id": 10649423,
-   "titre": "J+7 - Pluies - Gard"
+   "titre": "J+7 - Pluies - Gard",
+   "envoye_le": "2026-10-07",
+   "stats": {
+    "contacts": 235,
+    "delivres": 185,
+    "ouvertures": 39,
+    "clics": 0,
+    "desabos": 2
+   }
   },
   "15023646": {
    "cle": "34|2026-09-30|A",
@@ -56,7 +68,15 @@
    "etape": "mail1",
    "monte_le": "2026-10-07",
    "liste_id": 10649424,
-   "titre": "J+7 - Pluies- Hérault"
+   "titre": "J+7 - Pluies- Hérault",
+   "envoye_le": "2026-10-07",
+   "stats": {
+    "contacts": 469,
+    "delivres": 397,
+    "ouvertures": 84,
+    "clics": 0,
+    "desabos": 2
+   }
   },
   "15023653": {
    "cle": "87|2026-09-30|A",
@@ -67,7 +87,15 @@
    "etape": "mail1",
    "monte_le": "2026-10-07",
    "liste_id": 10649426,
-   "titre": "J+7-Pluies-Haute-Vienne"
+   "titre": "J+7-Pluies-Haute-Vienne",
+   "envoye_le": "2026-10-07",
+   "stats": {
+    "contacts": 16,
+    "delivres": 13,
+    "ouvertures": 3,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15023662": {
    "cle": "23|2026-09-30|A",
@@ -78,7 +106,15 @@
    "etape": "mail1",
    "monte_le": "2026-10-07",
    "liste_id": 10649428,
-   "titre": "J+7-Pluies-Creuse"
+   "titre": "J+7-Pluies-Creuse",
+   "envoye_le": "2026-10-07",
+   "stats": {
+    "contacts": 4,
+    "delivres": 4,
+    "ouvertures": 0,
+    "clics": 0,
+    "desabos": 0
+   }
   }
  },
  "detection_cron": {
