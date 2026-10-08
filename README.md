@@ -29,8 +29,9 @@ métropole :
 | **A** — intensité | un jour à **≥ 30 mm** en 24 h |
 | **B** — persistance | **≥ 15 jours de pluie** (≥ 1 mm) sur 30 jours glissants |
 
-Source des données : [Open-Meteo](https://open-meteo.com/), API publique en
-lecture, sans identifiant.
+Source des données : les observations quotidiennes de Météo-France, une
+station par département, publiées sur data.gouv.fr sous Licence Ouverte 2.0.
+Voir « Les données Météo-France » plus bas.
 
 ## Les fichiers
 
