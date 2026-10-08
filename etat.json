@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-10-08T13:55:29+00:00",
+ "maj": "2026-10-08T16:28:00+00:00",
  "bascule": null,
  "parametres": {
   "pic_mm": 30.0,
@@ -171,7 +171,7 @@
    "dept": "Aude",
    "serie": "A",
    "episode": "2026-10-04",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "14|2026-09-28|A": {
    "dept": "Calvados",
@@ -190,7 +190,7 @@
    "dept": "Dordogne",
    "serie": "A",
    "episode": "2026-10-06",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "30|2026-09-30|A": {
    "dept": "Gard",
@@ -202,7 +202,7 @@
    "dept": "Gironde",
    "serie": "A",
    "episode": "2026-10-06",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "34|2026-09-30|A": {
    "dept": "Hérault",
