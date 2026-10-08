@@ -201,12 +201,41 @@ def jour(d):
     return (d - AUJOURDHUI).days
 
 
+def verrou(connue, episode):
+    """Fin du verrou arme par une sequence inscrite dans etat.json, ou None si
+    elle n'en arme pas (abandon, mail 1 monte puis expire). Memes durees que la
+    machine a etats de traiter()."""
+    e = connue.get("etape")
+    if e == "mail1_monte":
+        age = -jour(dt.date.fromisoformat(connue["mail1_monte_le"]))
+        return None if age > EXPIRATION else episode + dt.timedelta(days=OFFSET_1 + ECART_2 + SILENCE)
+    if e in ("mail1_envoye", "mail2_monte"):
+        return dt.date.fromisoformat(connue["mail1_envoye_le"]) + dt.timedelta(days=ECART_2 + SILENCE)
+    if e == "mail2_envoye":
+        return dt.date.fromisoformat(connue["mail2_envoye_le"]) + dt.timedelta(days=SILENCE)
+    return None
+
+
 def traiter(dept, p, dates):
     """Deroule la chronologie d'un departement et renvoie ses sequences."""
     faits = []
     libre_a_partir_de = None   # date avant laquelle aucune nouvelle sequence
-    for i, serie, detail in declencheurs(p, dates):
+    trig = declencheurs(p, dates)
+    # Le verrou vient des sequences inscrites dans etat.json, pas seulement des
+    # declencheurs encore visibles dans la fenetre. Defaut trouve le 08/10/2026
+    # par le rejeu de l'etape 9 : un episode B dont le declencheur sortait de
+    # la fenetre perdait son verrou, et un episode bloque ressortait « a monter »
+    # avec plusieurs semaines de retard.
+    vues = {f"{dept['code']}|{dates[i]}|{s}" for i, s, _ in trig}
+    inscrites = sorted((k.split("|")[1], k) for k in SEQ
+                       if k.startswith(dept["code"] + "|") and k not in vues)
+    for i, serie, detail in trig:
         episode = dt.date.fromisoformat(dates[i])
+        while inscrites and inscrites[0][0] < dates[i]:
+            ep, k = inscrites.pop(0)
+            v = verrou(SEQ[k], dt.date.fromisoformat(ep))
+            if v is not None and (libre_a_partir_de is None or v > libre_a_partir_de):
+                libre_a_partir_de = v
         cle = f"{dept['code']}|{dates[i]}|{serie}"
         connue = SEQ.get(cle)
         if serie == "A":

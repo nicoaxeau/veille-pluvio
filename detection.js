@@ -103,6 +103,17 @@
     return [dates[best], p[best]];
   }
 
+  // Fin du verrou armé par une séquence inscrite dans etat.json, ou null si elle
+  // n'en arme pas. Mêmes durées que la machine à états de traiter().
+  function verrou(connue, episode, jour) {
+    const e = connue.etape;
+    if (e === "mail1_monte")
+      return -jour(connue.mail1_monte_le) > EXPIRATION ? null : plusJours(episode, OFFSET_1 + ECART_2 + SILENCE);
+    if (e === "mail1_envoye" || e === "mail2_monte") return plusJours(connue.mail1_envoye_le, ECART_2 + SILENCE);
+    if (e === "mail2_envoye") return plusJours(connue.mail2_envoye_le, SILENCE);
+    return null;
+  }
+
   // Déroule la chronologie d'un département. etat = {sequences, bascule}.
   function traiter(dept, p, dates, etat, aujourdhui, rg) {
     rg = rg || REGLAGES;
@@ -110,8 +121,19 @@
     const jour = d => ecartJours(aujourdhui, d);
     const faits = [];
     let libre = null;                    // date avant laquelle aucune nouvelle séquence
-    for (const t of declencheurs(p, dates, rg)) {
+    const trig = declencheurs(p, dates, rg);
+    // Le verrou vient des séquences inscrites dans etat.json, pas seulement des
+    // déclencheurs encore visibles dans la fenêtre (défaut trouvé le 08/10/2026).
+    const vues = new Set(trig.map(t => dept.code + "|" + dates[t.i] + "|" + t.serie));
+    const inscrites = Object.keys(seq).filter(k => k.startsWith(dept.code + "|") && !vues.has(k))
+      .map(k => [k.split("|")[1], k]).sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : a[1] < b[1] ? -1 : 1));
+    for (const t of trig) {
       const episode = dates[t.i];
+      while (inscrites.length && inscrites[0][0] < episode) {
+        const [ep, k] = inscrites.shift();
+        const v = verrou(seq[k], ep, jour);
+        if (v !== null && (libre === null || v > libre)) libre = v;
+      }
       const cle = dept.code + "|" + episode + "|" + t.serie;
       const connue = seq[cle];
       const detail = t.serie === "A"
