@@ -482,7 +482,8 @@ function rendre(){
   const aFaire=[...par('a_monter'),...par('mail2_a_monter')];
   const attente=[...par('attente_envoi_mail1'),...par('attente_envoi_mail2')];
   const aVenir=[...par('a_venir'),...par('mail2_a_venir')];
-  const camp=Object.values(etat.campagnes||{});
+  // Une campagne est « partie » quand la réconciliation a relevé sa date d'envoi.
+  const camp=Object.values(etat.campagnes||{}).filter(c=>c.envoye_le);
   document.getElementById('kpis').innerHTML=[
     ['À faire',aFaire.length,'var(--red)'],
     ['En attente d\'envoi',attente.length,'var(--orange)'],
