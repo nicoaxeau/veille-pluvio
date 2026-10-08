@@ -15,6 +15,10 @@
   "connu_au_mail1_j": 5
  },
  "sequences": {
+  "11|2026-10-04|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-08"
+  },
   "14|2026-09-28|A": {
    "etape": "abandonne",
    "motif": "mail 1 non envoyé, décision du 07/10/2026"
@@ -116,6 +120,18 @@
     "clics": 0,
     "desabos": 0
    }
+  },
+  "15025814": {
+   "cle": "11|2026-10-04|A",
+   "dept": "11",
+   "nom_dept": "Aude",
+   "serie": "A",
+   "episode": "2026-10-04",
+   "etape": "mail1",
+   "monte_le": "2026-10-08",
+   "liste_id": 10649875,
+   "titre": "J+7 - Pluies - Aude",
+   "objet": "Aude : après les fortes pluies"
   }
  },
  "detection_cron": {
