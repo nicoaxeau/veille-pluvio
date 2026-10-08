@@ -21,6 +21,8 @@ et le moteur tournent sur des copies, dans un dossier temporaire.
 7. verif_etat.py controle etat.json, pluie.json et stations.json.
 8. Apres le mail 2 : « silence » pendant les 30 jours, « termine » a partir
    du jour ou le verrou tombe.
+9. Le verrou d'une sequence inscrite tient meme quand son declencheur est
+   sorti de la fenetre de 92 jours : le cas de la Correze, au 04/12/2025.
 
 Ses attendus sont ecrits en dur, et c'est voulu.
 
@@ -316,6 +318,23 @@ def apres_mail2():
           "obtenu %s" % (f[0]["etape"] if f else "aucune ligne"))
 
 
+# =========================================== 9. verrou hors de la fenetre
+def verrou_hors_fenetre():
+    print("")
+    print("9. Verrou d'une sequence sortie de la fenetre : la Correze")
+    ref = json.load(io.open(os.path.join(RACINE, "pluie-reference.json"), encoding="utf-8"))
+    n = (dt.date(2025, 12, 2) - dt.date.fromisoformat(ref["debut"])).days + 1
+    pl = dict(ref, fin="2025-12-02", stations={c: dict(s, rr=s["rr"][:n]) for c, s in ref["stations"].items()})
+    etat = {"version": 2, "bascule": None, "campagnes": {}, "sequences": {
+        "19|2025-10-01|B": {"etape": "mail2_envoye", "mail1_envoye_le": "2025-10-08",
+                            "mail2_envoye_le": "2025-10-22"}}}
+    for date, attendu in (("2025-12-03", "bloque"), ("2025-12-04", "bloque")):
+        t, r = lancer(pl, date, etat)
+        f = [x for x in tous_les_faits(json.loads(r.stdout)) if x["cle"] == "19|2025-11-08|B"] if r.returncode == 0 else []
+        v("episode du 08/11 sous le verrou du 01/10 : %s au %s/%s" % (attendu, date[8:], date[5:7]),
+          len(f) == 1 and f[0]["etape"] == attendu, "obtenu %s" % (f[0]["etape"] if f else "aucune ligne"))
+
+
 def main():
     print("Controle du moteur sur les observations Meteo-France. Aucun acces reseau.")
     print("")
@@ -326,6 +345,7 @@ def main():
     conditions_reelles()
     verif_etat()
     apres_mail2()
+    verrou_hors_fenetre()
     print("")
     print("RESULTAT : " + ("le moteur est conforme" if OK else "AU MOINS UN ECART — ne pas livrer"))
     return 0 if OK else 1

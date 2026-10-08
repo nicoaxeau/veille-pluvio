@@ -170,6 +170,12 @@ def construire_cas():
         {"nom": "au 20/10/2026, sequences dans tous les etats et bascule au 10/10",
          "pluie": "reference", "aujourdhui": "2026-10-20",
          "etat": {"sequences": sequences, "bascule": "2026-10-10"}},
+        # Le cas de la Correze, trouve par le rejeu du 08/10/2026 : le declencheur
+        # du 01/10/2025 sort de la fenetre, son verrou doit tenir quand meme.
+        {"nom": "au 04/12/2025, Correze : verrou d'une sequence sortie de la fenetre",
+         "pluie": "reference", "aujourdhui": "2025-12-04",
+         "etat": {"sequences": {"19|2025-10-01|B": {"etape": "mail2_envoye", "mail1_envoye_le": "2025-10-08",
+                                                    "mail2_envoye_le": "2025-10-22"}}, "bascule": None}},
     ]
     pluies = {"reference": REFERENCE}
     if DU_JOUR:
