@@ -183,12 +183,12 @@ def reference():
 # ===================================================== 5 et 6. le moteur lance
 def lancer(pluie, date="2026-10-06", etat=None):
     """Lance moteur.py comme le workflow, dans un dossier temporaire. Sans etat
-    fourni, sur une copie de etat.json."""
+    fourni, sur un etat vide et fixe : jamais sur le etat.json vivant, qui porte
+    des sequences reelles depuis le 08/10/2026 et ferait varier les attendus."""
     t = tempfile.mkdtemp()
     if etat is None:
-        shutil.copy(os.path.join(RACINE, "etat.json"), os.path.join(t, "etat.json"))
-    else:
-        io.open(os.path.join(t, "etat.json"), "w", encoding="utf-8").write(json.dumps(etat))
+        etat = {"version": 2, "bascule": None, "campagnes": {}, "sequences": {}}
+    io.open(os.path.join(t, "etat.json"), "w", encoding="utf-8").write(json.dumps(etat))
     io.open(os.path.join(t, "pluie.json"), "w", encoding="utf-8").write(json.dumps(pluie, ensure_ascii=False))
     env = dict(os.environ, VP_DATE=date, VP_PLUIE=os.path.join(t, "pluie.json"),
                VP_ETAT=os.path.join(t, "etat.json"), VP_EXIGE_ETAT="1",
