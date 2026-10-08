@@ -56,8 +56,8 @@ Voir « Les données Météo-France » plus bas.
 
 ## La station de chaque département
 
-Le passage aux observations de Météo-France est en cours, sur la branche
-`meteofrance`. L'extraction lit `stations.json` et produit `pluie.json`, que
+Depuis le 08/10/2026, la veille repose sur les observations de Météo-France.
+L'extraction lit `stations.json` et produit `pluie.json`, que
 lisent le moteur et la page.
 
 Chaque département a **une station** : la station Météo-France la plus proche
