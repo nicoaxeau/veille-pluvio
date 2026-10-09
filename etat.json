@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-10-08T16:28:00+00:00",
+ "maj": "2026-10-09T16:10:49+00:00",
  "bascule": null,
  "parametres": {
   "pic_mm": 30.0,
@@ -167,6 +167,24 @@
   }
  },
  "detection_cron": {
+  "05|2026-10-07|A": {
+   "dept": "Hautes-Alpes",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
+  "06|2026-10-07|A": {
+   "dept": "Alpes-Maritimes",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
+  "07|2026-10-07|A": {
+   "dept": "Ardèche",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
   "11|2026-10-04|A": {
    "dept": "Aude",
    "serie": "A",
@@ -180,6 +198,18 @@
    "etape": "abandonne",
    "motif": "mail 1 non envoyé, décision du 07/10/2026"
   },
+  "15|2026-10-07|A": {
+   "dept": "Cantal",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
+  "16|2026-10-07|A": {
+   "dept": "Charente",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
   "23|2026-09-30|A": {
    "dept": "Creuse",
    "serie": "A",
@@ -191,6 +221,24 @@
    "serie": "A",
    "episode": "2026-10-06",
    "etape": "attente_envoi_mail1"
+  },
+  "26|2026-10-07|A": {
+   "dept": "Drôme",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
+  "2A|2026-10-07|A": {
+   "dept": "Corse-du-Sud",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
+  "2B|2026-10-07|A": {
+   "dept": "Haute-Corse",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
   },
   "30|2026-09-30|A": {
    "dept": "Gard",
@@ -209,6 +257,42 @@
    "serie": "A",
    "episode": "2026-09-30",
    "etape": "mail2_a_venir"
+  },
+  "38|2026-10-07|A": {
+   "dept": "Isère",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
+  "40|2026-10-07|A": {
+   "dept": "Landes",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
+  "51|2026-10-07|A": {
+   "dept": "Marne",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
+  "55|2026-10-07|A": {
+   "dept": "Meuse",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
+  "83|2026-10-07|A": {
+   "dept": "Var",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
+  },
+  "84|2026-10-07|A": {
+   "dept": "Vaucluse",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "a_venir"
   },
   "87|2026-09-30|A": {
    "dept": "Haute-Vienne",
