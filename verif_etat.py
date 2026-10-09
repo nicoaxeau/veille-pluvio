@@ -39,7 +39,7 @@ ADRESSE = re.compile(r"@[^\s@]*\.")
 # ayant ouvert ou clique, on l'ignore.
 CHAMPS_CAMPAGNE = {"id", "dept", "nom_dept", "serie", "episode", "etape",
                    "cle", "monte_le", "envoye_le", "mail", "stats", "liste_id",
-                   "objet", "titre"}
+                   "objet", "titre", "envoi_prevu"}
 CHAMPS_STATS = {"contacts", "delivres", "ouvertures", "clics", "desabos"}
 
 # Un champ dont le nom evoque un destinataire n'a rien a faire ici, meme vide.

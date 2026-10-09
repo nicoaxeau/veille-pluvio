@@ -11,8 +11,11 @@ Un element par campagne inscrite dans etat.json et pas encore envoyee
 (sans envoye_le) :
   titre     « À envoyer le 21/10/2026 : mail 2 Hérault »
   lien      le brouillon dans Mailjet
-  date      le jour ou le mail doit partir (mail 1 : episode + 7 jours ;
-            mail 2 : envoi du mail 1 + 14 jours), a 6 h UTC
+  date      le jour ou le mail doit partir, a 6 h UTC : envoi_prevu, pose par
+            le montage, deja reporte au jour ouvre suivant un samedi, un
+            dimanche ou un ferie (decision du 09/10/2026). A defaut, pour les
+            campagnes montees avant : mail 1 episode + 7 jours, mail 2 envoi
+            du mail 1 + 14 jours
 
 LE DEPOT EST PUBLIC : ni adresse, ni nom de liste, ni compteur. Un departement,
 une date, un lien de brouillon (qui ne s'ouvre qu'avec le compte Mailjet).
@@ -31,6 +34,8 @@ SITE = "https://nicoaxeau.github.io/veille-pluvio/"
 
 def date_envoi(c, sequences):
     """Le jour ou ce mail doit partir, ou None si on ne sait pas le dire."""
+    if c.get("envoi_prevu"):
+        return dt.date.fromisoformat(c["envoi_prevu"])
     if c.get("etape") == "mail1" and c.get("episode"):
         return dt.date.fromisoformat(c["episode"]) + dt.timedelta(days=OFFSET_1)
     s = sequences.get(c.get("cle")) or {}
