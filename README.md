@@ -156,7 +156,7 @@ et lesquels.
 
 ## La tâche planifiée
 
-`.github/workflows/veille.yml`, tous les jours à 11 h de Paris, au plus tôt :
+`.github/workflows/veille.yml`, tous les jours à 9 h 17 UTC (11 h 17 de Paris en été, 10 h 17 en hiver, sans rien changer au changement d'heure), au plus tôt :
 GitHub retarde les tâches planifiées de plusieurs heures.
 
 Elle tourne **à blanc** : elle télécharge, elle détecte, elle écrit

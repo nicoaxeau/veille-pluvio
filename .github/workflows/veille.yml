@@ -15,9 +15,11 @@ name: Veille pluviometrique
 
 on:
   schedule:
-    # 11 h 17 Paris en heure d'ete : « 17 9 * * * » UTC. A partir du
-    # 25 octobre 2026, passer a « 17 10 * * * ». Les deux lignes sont ecrites,
-    # une seule est active : decommenter l'autre le 25/10/2026.
+    # 9 h 17 UTC toute l'annee : 11 h 17 Paris en heure d'ete, 10 h 17 en
+    # heure d'hiver. Decision du 09/10/2026 : on ne change RIEN au passage a
+    # l'heure d'hiver (25/10/2026) ni au retour a l'heure d'ete. Les trois
+    # taches (veille 9 h 17, reconciliation 10 h 17, montage 11 h 47, en UTC)
+    # gardent leur ordre toute l'annee ; test_montage.py le verifie.
     #
     # Minute 17 et non 0 : GitHub retarde davantage les taches programmees en
     # debut d'heure, la plus chargee. Mesure du 15/09 au 01/10/2026 a la
@@ -27,7 +29,6 @@ on:
     # Meteo-France republie ses fichiers vers 6 h UTC (releve a 05 h 54 et
     # 06 h 23) : le tour part au plus tot trois heures apres.
     - cron: "17 9 * * *"
-    # - cron: "17 10 * * *"
   workflow_dispatch:
 
 permissions:
