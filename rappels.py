@@ -9,7 +9,7 @@ rien envoyer : il publie une date et un lien.
 
 Un element par campagne inscrite dans etat.json et pas encore envoyee
 (sans envoye_le) :
-  titre     « A envoyer le 21/10/2026 : mail 2 Herault »
+  titre     « À envoyer le 21/10/2026 : mail 2 Hérault »
   lien      le brouillon dans Mailjet
   date      le jour ou le mail doit partir (mail 1 : episode + 7 jours ;
             mail 2 : envoi du mail 1 + 14 jours), a 6 h UTC
@@ -49,7 +49,7 @@ def elements(etat):
         if not d:
             continue
         mail = "mail 1" if c.get("etape") == "mail1" else "mail 2"
-        out.append((d, "A envoyer le %s : %s %s" % (d.strftime("%d/%m/%Y"), mail, c.get("nom_dept") or c.get("dept")),
+        out.append((d, "À envoyer le %s : %s %s" % (d.strftime("%d/%m/%Y"), mail, c.get("nom_dept") or c.get("dept")),
                     "https://app.mailjet.com/campaigns/draft/%s/edit" % bid, bid))
     return sorted(out)
 
