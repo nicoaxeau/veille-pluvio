@@ -53,6 +53,7 @@ Voir « Les données Météo-France » plus bas.
 | `pluie.json` | la pluie quotidienne des 96 stations sur 400 jours, avec la source et la mention |
 | `pluie-reference.json` | la même extraction, figée sur les fichiers du 06/10/2026, pour les tests |
 | `test_extraction.py` | contrôle de l'extraction et de la référence |
+| `rappels.py`, `rappels.xml` | le flux RSS des brouillons prêts et pas encore envoyés (date d'envoi, lien Mailjet), lu chaque matin par un flux Power Automate qui envoie le rappel. Aucune adresse ; régénéré à chaque écriture de `etat.json` |
 
 ## La station de chaque département
 

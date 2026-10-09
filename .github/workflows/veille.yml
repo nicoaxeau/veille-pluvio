@@ -140,13 +140,16 @@ jobs:
 
       - name: Commit si pluie.json ou etat.json a change
         run: |
-          if git diff --quiet -- pluie.json etat.json; then
+          # Le flux RSS des rappels (lu par Power Automate) suit etat.json,
+          # dans le meme commit. Ajoute le 09/10/2026.
+          python rappels.py etat.json rappels.xml
+          if git diff --quiet -- pluie.json etat.json rappels.xml; then
             echo "pluie.json et etat.json inchanges, rien a commiter."
             exit 0
           fi
           git config user.name  "veille-pluvio"
           git config user.email "veille-pluvio@users.noreply.github.com"
-          git add pluie.json etat.json
+          git add pluie.json etat.json rappels.xml
           git commit -m "Veille du $(date -u +%Y-%m-%d) — detection automatique"
           git push
 
