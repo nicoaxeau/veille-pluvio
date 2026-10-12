@@ -16,8 +16,9 @@
  },
  "sequences": {
   "11|2026-10-04|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-08"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-08",
+   "mail1_envoye_le": "2026-10-12"
   },
   "14|2026-09-28|A": {
    "etape": "abandonne",
@@ -67,7 +68,7 @@
    "stats": {
     "contacts": 235,
     "delivres": 185,
-    "ouvertures": 50,
+    "ouvertures": 52,
     "clics": 0,
     "desabos": 2
    }
@@ -86,7 +87,7 @@
    "stats": {
     "contacts": 469,
     "delivres": 397,
-    "ouvertures": 105,
+    "ouvertures": 108,
     "clics": 0,
     "desabos": 2
    }
@@ -139,7 +140,15 @@
    "monte_le": "2026-10-08",
    "liste_id": 10649875,
    "titre": "J+7 - Pluies - Aude",
-   "objet": "Aude : après les fortes pluies"
+   "objet": "Aude : après les fortes pluies",
+   "envoye_le": "2026-10-12",
+   "stats": {
+    "contacts": 137,
+    "delivres": 118,
+    "ouvertures": 27,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15025817": {
    "cle": "24|2026-10-06|A",
