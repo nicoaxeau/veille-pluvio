@@ -50,8 +50,9 @@
    "mail1_envoye_le": "2026-10-07"
   },
   "24|2026-10-06|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-08"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-08",
+   "mail1_envoye_le": "2026-10-13"
   },
   "26|2026-10-07|A": {
    "etape": "mail1_monte",
@@ -71,8 +72,9 @@
    "mail1_envoye_le": "2026-10-07"
   },
   "33|2026-10-06|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-08"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-08",
+   "mail1_envoye_le": "2026-10-13"
   },
   "34|2026-09-30|A": {
    "etape": "mail1_envoye",
@@ -124,7 +126,7 @@
    "stats": {
     "contacts": 235,
     "delivres": 185,
-    "ouvertures": 52,
+    "ouvertures": 54,
     "clics": 0,
     "desabos": 2
    }
@@ -143,7 +145,7 @@
    "stats": {
     "contacts": 469,
     "delivres": 397,
-    "ouvertures": 108,
+    "ouvertures": 109,
     "clics": 0,
     "desabos": 2
    }
@@ -201,7 +203,7 @@
    "stats": {
     "contacts": 137,
     "delivres": 118,
-    "ouvertures": 27,
+    "ouvertures": 32,
     "clics": 0,
     "desabos": 1
    }
@@ -216,7 +218,15 @@
    "monte_le": "2026-10-08",
    "liste_id": 10649877,
    "titre": "J+7 - Pluies - Dordogne",
-   "objet": "Dordogne : après les fortes pluies"
+   "objet": "Dordogne : après les fortes pluies",
+   "envoye_le": "2026-10-13",
+   "stats": {
+    "contacts": 130,
+    "delivres": 115,
+    "ouvertures": 21,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15025876": {
    "cle": "33|2026-10-06|A",
@@ -228,7 +238,15 @@
    "monte_le": "2026-10-08",
    "liste_id": 10649887,
    "titre": "J+7 - Pluies - Gironde",
-   "objet": "Gironde : après les fortes pluies"
+   "objet": "Gironde : après les fortes pluies",
+   "envoye_le": "2026-10-13",
+   "stats": {
+    "contacts": 1313,
+    "delivres": 1025,
+    "ouvertures": 254,
+    "clics": 1,
+    "desabos": 7
+   }
   },
   "15033515": {
    "cle": "05|2026-10-07|A",
