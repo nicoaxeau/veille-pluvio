@@ -15,6 +15,18 @@
   "connu_au_mail1_j": 5
  },
  "sequences": {
+  "05|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
+  "06|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
+  "07|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
   "11|2026-10-04|A": {
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-10-08",
@@ -24,6 +36,14 @@
    "etape": "abandonne",
    "motif": "mail 1 non envoyé, décision du 07/10/2026"
   },
+  "15|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
+  "16|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
   "23|2026-09-30|A": {
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-10-07",
@@ -32,6 +52,18 @@
   "24|2026-10-06|A": {
    "etape": "mail1_monte",
    "mail1_monte_le": "2026-10-08"
+  },
+  "26|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
+  "2A|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
+  "2B|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
   },
   "30|2026-09-30|A": {
    "etape": "mail1_envoye",
@@ -46,6 +78,30 @@
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-10-07",
    "mail1_envoye_le": "2026-10-07"
+  },
+  "38|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
+  "40|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
+  "51|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
+  "55|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
+  "83|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
+  },
+  "84|2026-10-07|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-13"
   },
   "87|2026-09-30|A": {
    "etape": "mail1_envoye",
@@ -173,6 +229,188 @@
    "liste_id": 10649887,
    "titre": "J+7 - Pluies - Gironde",
    "objet": "Gironde : après les fortes pluies"
+  },
+  "15033515": {
+   "cle": "05|2026-10-07|A",
+   "dept": "05",
+   "nom_dept": "Hautes-Alpes",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650657,
+   "titre": "J+7 - Pluies - Hautes-Alpes",
+   "objet": "Hautes-Alpes : après les fortes pluies"
+  },
+  "15033516": {
+   "cle": "06|2026-10-07|A",
+   "dept": "06",
+   "nom_dept": "Alpes-Maritimes",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650658,
+   "titre": "J+7 - Pluies - Alpes-Maritimes",
+   "objet": "Alpes-Maritimes : après les fortes pluies"
+  },
+  "15033517": {
+   "cle": "07|2026-10-07|A",
+   "dept": "07",
+   "nom_dept": "Ardèche",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650659,
+   "titre": "J+7 - Pluies - Ardèche",
+   "objet": "Ardèche : après les fortes pluies"
+  },
+  "15033518": {
+   "cle": "15|2026-10-07|A",
+   "dept": "15",
+   "nom_dept": "Cantal",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650660,
+   "titre": "J+7 - Pluies - Cantal",
+   "objet": "Cantal : après les fortes pluies"
+  },
+  "15033519": {
+   "cle": "16|2026-10-07|A",
+   "dept": "16",
+   "nom_dept": "Charente",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650661,
+   "titre": "J+7 - Pluies - Charente",
+   "objet": "Charente : après les fortes pluies"
+  },
+  "15033521": {
+   "cle": "26|2026-10-07|A",
+   "dept": "26",
+   "nom_dept": "Drôme",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650662,
+   "titre": "J+7 - Pluies - Drôme",
+   "objet": "Drôme : après les fortes pluies"
+  },
+  "15033522": {
+   "cle": "2A|2026-10-07|A",
+   "dept": "2A",
+   "nom_dept": "Corse-du-Sud",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650663,
+   "titre": "J+7 - Pluies - Corse-du-Sud",
+   "objet": "Corse-du-Sud : après les fortes pluies"
+  },
+  "15033523": {
+   "cle": "2B|2026-10-07|A",
+   "dept": "2B",
+   "nom_dept": "Haute-Corse",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650664,
+   "titre": "J+7 - Pluies - Haute-Corse",
+   "objet": "Haute-Corse : après les fortes pluies"
+  },
+  "15033524": {
+   "cle": "38|2026-10-07|A",
+   "dept": "38",
+   "nom_dept": "Isère",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650665,
+   "titre": "J+7 - Pluies - Isère",
+   "objet": "Isère : après les fortes pluies"
+  },
+  "15033526": {
+   "cle": "40|2026-10-07|A",
+   "dept": "40",
+   "nom_dept": "Landes",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650666,
+   "titre": "J+7 - Pluies - Landes",
+   "objet": "Landes : après les fortes pluies"
+  },
+  "15033527": {
+   "cle": "51|2026-10-07|A",
+   "dept": "51",
+   "nom_dept": "Marne",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650667,
+   "titre": "J+7 - Pluies - Marne",
+   "objet": "Marne : après les fortes pluies"
+  },
+  "15033528": {
+   "cle": "55|2026-10-07|A",
+   "dept": "55",
+   "nom_dept": "Meuse",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650668,
+   "titre": "J+7 - Pluies - Meuse",
+   "objet": "Meuse : après les fortes pluies"
+  },
+  "15033529": {
+   "cle": "83|2026-10-07|A",
+   "dept": "83",
+   "nom_dept": "Var",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650669,
+   "titre": "J+7 - Pluies - Var",
+   "objet": "Var : après les fortes pluies"
+  },
+  "15033532": {
+   "cle": "84|2026-10-07|A",
+   "dept": "84",
+   "nom_dept": "Vaucluse",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail1",
+   "monte_le": "2026-10-13",
+   "envoi_prevu": "2026-10-14",
+   "liste_id": 10650670,
+   "titre": "J+7 - Pluies - Vaucluse",
+   "objet": "Vaucluse : après les fortes pluies"
   }
  },
  "detection_cron": {
