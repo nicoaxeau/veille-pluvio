@@ -65,12 +65,14 @@
    "mail1_envoye_le": "2026-10-14"
   },
   "2A|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "abandonne",
+   "mail1_monte_le": "2026-10-13",
+   "motif": "Ax'eau n'intervient pas en Corse"
   },
   "2B|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "abandonne",
+   "mail1_monte_le": "2026-10-13",
+   "motif": "Ax'eau n'intervient pas en Corse"
   },
   "30|2026-09-30|A": {
    "etape": "mail1_envoye",

@@ -50,6 +50,10 @@ def elements(etat):
     for bid, c in (etat.get("campagnes") or {}).items():
         if c.get("envoye_le"):
             continue
+        # Sequence abandonnee (decision du 15/10/2026 : les deux Corse,
+        # archivees sans envoi) : plus de rappel, meme si le brouillon existe.
+        if (seqs.get(c.get("cle")) or {}).get("etape") == "abandonne":
+            continue
         d = date_envoi(c, seqs)
         if not d:
             continue
