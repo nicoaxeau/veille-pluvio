@@ -10,7 +10,9 @@ memes donnees et exige le meme resultat, a l'unite :
   2. le calcul, sur des cas fabriques : jour sans donnee, jour cite, verrou,
      bascule ;
   3. pluie-reference.json : declencheurs et jours cites des 96 departements,
-     et la simulation de douze mois (236 sequences, 472 campagnes) ;
+     et la simulation de douze mois hors departements hors dispositif (231
+     sequences, 462 campagnes ; 236 et 472 avant l'exclusion de la Corse, le
+     15/10/2026) ;
   4. le moteur lance comme par le workflow, a deux dates, dont une avec des
      sequences dans tous les etats et une date de bascule : memes lignes,
      memes etapes, memes phrases, memes mentions, memes erreurs ;
@@ -54,7 +56,10 @@ def lire(nom):
     return json.load(io.open(os.path.join(RACINE, nom), encoding="utf-8"))
 
 
-DEPTS = [{"code": d["code"], "nom": d["nom"], "region": d["region"]} for d in lire("depts.json")]
+DEPTS = [dict({"code": d["code"], "nom": d["nom"], "region": d["region"]},
+              **({"hors_dispositif": d["hors_dispositif"]} if d.get("hors_dispositif") else {}))
+         for d in lire("depts.json")]
+HORS = sorted(d["code"] for d in DEPTS if d.get("hors_dispositif"))
 LIBELLES = {x["code"]: x["DEPT_EN"] for x in lire("libelles-departements.json")}
 REFERENCE = lire("pluie-reference.json")
 DU_JOUR = lire("pluie.json") if os.path.exists(os.path.join(RACINE, "pluie.json")) else None
@@ -194,7 +199,7 @@ def construire_cas():
         "periodes": list(PERIODES_SIMULATION),
         "series": series, "cites": cites, "traiter": traiter,
         "periode": list(PERIODE), "scenarios": scenarios, "pluies": pluies,
-        "depts": DEPTS, "libelles": LIBELLES,
+        "depts": DEPTS, "hors": HORS, "libelles": LIBELLES,
     }
 
 
@@ -219,13 +224,14 @@ function executer(D, cas) {
     res.declencheurs[code] = D.declencheurs(p, dates).map(t => t.serie === "A"
       ? [t.i, "A", t.pic24_mm].concat(D.jourCite(p, dates, t.i, null))
       : [t.i, "B", t.jours_pluie, t.debut_fenetre]);
-    res.simulation[code] = D.simuler(p, dates, i0, i1);
+    if (!cas.hors.includes(code)) res.simulation[code] = D.simuler(p, dates, i0, i1);
   }
   res.scenarios = cas.scenarios.map(sc => {
     const pl = cas.pluies[sc.pluie], m = pl.stations[Object.keys(pl.stations)[0]].rr.length;
     const f = D.fenetre(pl.debut, m, sc.aujourdhui), dts = f.dates.slice(f.i0, f.i1 + 1);
     const attendu = D.attendu(sc.aujourdhui), faits = [], erreurs = [];
     for (const d of cas.depts) {
+      if (D.horsDispositif(d)) continue;
       const s = pl.stations[d.code];
       if (!s) { erreurs.push(d.code); continue; }
       const p = s.rr.slice(f.i0, f.i1 + 1);
@@ -351,7 +357,8 @@ def cote_python(cas):
         res["declencheurs"][code] = [
             [i, "A", d["pic24_mm"]] + list(M.jour_cite(p, dates, i, None)) if sr == "A"
             else [i, "B", d["jours_pluie"], d["debut_fenetre"]] for i, sr, d in M.declencheurs(p, dates)]
-        res["simulation"][code] = M.simuler(p, dates, i0, i1)
+        if code not in HORS:
+            res["simulation"][code] = M.simuler(p, dates, i0, i1)
     res["scenarios"] = [lancer_moteur(sc) for sc in cas["scenarios"]]
     return res
 
@@ -380,9 +387,11 @@ def page():
     m = re.search(r"const DEPT_EN=(\{.*?\});", src)
     v("prepositions de la page = libelles-departements.json",
       bool(m) and json.loads(m.group(1)) == LIBELLES, "%d departements" % len(LIBELLES))
-    page_depts = re.findall(r'\{code:"(\w+)",nom:"([^"]*)",pref:"[^"]*",lat:[-\d.]+,lon:[-\d.]+,region:"([^"]*)"\}', src)
-    v("departements de la page = depts.json (code, nom, region)",
-      [list(x) for x in page_depts] == [[d["code"], d["nom"], d["region"]] for d in DEPTS],
+    page_depts = re.findall(r'\{code:"(\w+)",nom:"([^"]*)",pref:"[^"]*",lat:[-\d.]+,lon:[-\d.]+,region:"([^"]*)"'
+                            r'(?:,hors_dispositif:"([^"]*)")?\}', src)
+    v("departements de la page = depts.json (code, nom, region, hors dispositif)",
+      [list(x) for x in page_depts] == [[d["code"], d["nom"], d["region"], d.get("hors_dispositif", "")]
+                                        for d in DEPTS],
       "%d departements" % len(page_depts))
     urls = set(re.findall(r"https?://[^\s\"'<>)]+", src + io.open(DETECTION, encoding="utf-8").read()))
     chargements = re.findall(r"<link[^>]+href=[\"']https?:|<script[^>]+src=[\"']https?:|@import|"
@@ -447,11 +456,13 @@ def main():
     total_js = sum(len(x) for x in js["simulation"].values())
     total_py = sum(len(x) for x in py["simulation"].values())
     v("simulation identique, sequence par sequence", not ecarts, ", ".join(ecarts[:6]))
-    v("236 sequences, 472 campagnes, des deux cotes", total_js == total_py == 236,
+    v("231 sequences, 462 campagnes, des deux cotes, Corse ecartee", total_js == total_py == 231
+      and not set(js["simulation"]) & set(HORS),
       "page %d, moteur %d campagnes" % (2 * total_js, 2 * total_py))
     # Compare departement par departement : JavaScript range les cles d'objet
     # « 10 » a « 95 » avant « 01 » et « 2A », l'ordre de lecture differe.
-    ref = {c: [(x["episode"], x["serie"]) for x in l] for c, l in SEQUENCES_REFERENCE["par_departement"].items()}
+    ref = {c: [(x["episode"], x["serie"]) for x in l] for c, l in SEQUENCES_REFERENCE["par_departement"].items()
+           if c not in HORS}
     v("conforme a sequences-reference.json, departement par departement",
       {c: [(x["episode"], x["serie"]) for x in l] for c, l in js["simulation"].items()} == ref, "")
 

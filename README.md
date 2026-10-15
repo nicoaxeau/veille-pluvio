@@ -22,7 +22,7 @@ Deux mécanismes le garantissent :
 ## La règle métier
 
 Deux déclencheurs indépendants, calculés par département sur les 96 de
-métropole :
+métropole, hors départements « hors dispositif » :
 
 | Série | Condition |
 |---|---|
@@ -33,13 +33,20 @@ Source des données : les observations quotidiennes de Météo-France, une
 station par département, publiées sur data.gouv.fr sous Licence Ouverte 2.0.
 Voir « Les données Météo-France » plus bas.
 
+**Hors dispositif.** Un département dont l'entrée de `depts.json` porte le
+champ `hors_dispositif` (son motif) ne déclenche rien : ni séquence, ni erreur
+de donnée, ni alerte de station muette. Ses données restent collectées. Depuis
+le 15/10/2026 : la Corse-du-Sud et la Haute-Corse, « Ax'eau n'intervient pas
+en Corse ». La page les montre hachurées sur la carte, et les nomme sous la
+source.
+
 ## Les fichiers
 
 | Fichier | Rôle |
 |---|---|
 | `moteur.py` | détection et machine à états, sur `pluie.json`. Lecture seule, sortie JSON sur stdout |
 | `test_moteur.py` | contrôle du moteur, dont la simulation sur la référence |
-| `sequences-reference.json` | les 236 séquences attendues sur `pluie-reference.json` |
+| `sequences-reference.json` | les 236 séquences calculées sur `pluie-reference.json`, figées ; les tests en écartent les 5 de la Corse, hors dispositif : 231 attendues |
 | `maj_etat.py` | écrit `etat.json` à partir de la sortie du moteur |
 | `verif_etat.py` | garde-fou : refuse le commit si `etat.json`, `pluie.json` ou `stations.json` contient une adresse |
 | `test_coherence.py` | non-régression entre `moteur.py` et la page (`detection.js`), à l'unité |
@@ -124,7 +131,7 @@ Chrome sans fenêtre en local) et `moteur.py` sur les mêmes données : cas
 fabriqués, `pluie-reference.json`, le moteur lancé comme par le workflow à deux
 dates, et le `pluie.json` du jour. Il exige le même résultat à l'unité :
 déclencheurs, jours cités, lignes, étapes, phrases, mentions, et la simulation
-de douze mois (236 séquences, 472 campagnes sur la référence). Sur GitHub,
+de douze mois (231 séquences, 462 campagnes sur la référence, Corse écartée). Sur GitHub,
 l'absence de Node le fait échouer. Le workflow le lance avant toute publication
 d'état.
 

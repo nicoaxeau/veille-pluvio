@@ -12,8 +12,10 @@ et le moteur tournent sur des copies, dans un dossier temporaire.
    jour de pluie.
 3. Le jour cite : le plus fort des jours consecutifs a 30 mm, connu au mail 1
    (J+5), sans remonter dans le verrou precedent.
-4. Sur pluie-reference.json, la simulation retrouve les 236 sequences de
-   sequences-reference.json, une par une : 472 campagnes.
+4. Sur pluie-reference.json, la simulation retrouve les sequences de
+   sequences-reference.json, une par une, hors departements hors dispositif :
+   231 sequences, 462 campagnes (236 et 472 avant le 15/10/2026, dont 5
+   sequences corses ; le fichier de reference, fige, n'est pas modifie).
 5. Le moteur tel que le workflow le lance, sur la reference au 06/10/2026 :
    les phrases de l'Herault et du Gard, la mention, aucune erreur.
 6. Les jours sans donnee : departement en erreur, jamais un jour sec ; au-dela
@@ -23,6 +25,8 @@ et le moteur tournent sur des copies, dans un dossier temporaire.
    du jour ou le verrou tombe.
 9. Le verrou d'une sequence inscrite tient meme quand son declencheur est
    sorti de la fenetre de 92 jours : le cas de la Correze, au 04/12/2025.
+10. Hors dispositif (la Corse, decision du 15/10/2026) : ni declencheur, ni
+   erreur, ni jour manquant, meme sous 80 mm ; liste dans hors_dispositif.
 
 Ses attendus sont ecrits en dur, et c'est voulu.
 
@@ -60,6 +64,9 @@ PHRASE_HERAULT = "Le 30 septembre, 146 mm de pluie sont tombés en 24 heures dan
 PHRASE_GARD = "Le 30 septembre, 72 mm de pluie sont tombés en 24 heures dans le Gard."
 MENTION_0610 = "Données pluviométriques : Météo-France, mise à jour du 6 octobre 2026"
 MOTS_INTERDITS = ("orage", "averse", "grêle", "jusqu'à")
+# Departements hors dispositif, lus dans depts.json (decision du 15/10/2026).
+HORS = {d["code"] for d in json.load(io.open(os.path.join(RACINE, "depts.json"), encoding="utf-8"))
+        if d.get("hors_dispositif")}
 
 OK = True
 
@@ -155,7 +162,13 @@ def reference():
     dates = dates_depuis(doc["debut"], len(next(iter(doc["stations"].values()))["rr"]))
     i0, i1 = dates.index(attendu["periode"][0]), dates.index(attendu["periode"][1])
     obtenu, ecarts = {}, []
+    v("hors dispositif : la Corse, et elle seule", HORS == {"2A", "2B"}, ", ".join(sorted(HORS)))
+    ecartees = sum(len(attendu["par_departement"][c]) for c in HORS)
+    v("la reference figee compte 236 sequences, dont 5 hors dispositif",
+      attendu["sequences"] == 236 and ecartees == 5, "%d ecartees" % ecartees)
     for code, s in doc["stations"].items():
+        if code in HORS:
+            continue
         seqs = []
         for x in M.simuler(s["rr"], dates, i0, i1):
             if x["serie"] == "A":
@@ -168,9 +181,10 @@ def reference():
         if seqs != attendu["par_departement"][code]:
             ecarts.append(code)
     total = sum(len(x) for x in obtenu.values())
-    v("236 sequences, 472 campagnes", total == 236 and attendu["campagnes"] == 472,
+    v("231 sequences, 462 campagnes, hors dispositif ecarte", total == 231,
       "%d sequences, %d campagnes" % (total, 2 * total))
-    v("les 96 departements identiques au rejeu, sequence par sequence", not ecarts, ", ".join(ecarts[:8]))
+    v("les 94 departements identiques au rejeu, sequence par sequence",
+      not ecarts and len(obtenu) == 94, ", ".join(ecarts[:8]))
     h = [x for x in obtenu["34"] if x["episode"] == "2026-09-30"]
     g = [x for x in obtenu["30"] if x["episode"] == "2026-09-30"]
     v("Herault : sequence de serie A le 30/09", len(h) == 1 and h[0]["serie"] == "A", "")
@@ -268,7 +282,7 @@ def conditions_reelles():
       not [f for f in tous_les_faits(out) if f["code"] == "34" and f["episode"] == "2026-09-30"], "")
 
     pl = copy.deepcopy(ref)
-    codes = list(pl["stations"])[:21]
+    codes = [c for c in pl["stations"] if c not in HORS][:21]
     for c in codes:
         pl["stations"][c]["rr"][-1] = None
     t, r = lancer(pl)
@@ -279,8 +293,8 @@ def conditions_reelles():
     t, r = lancer(ref, date="2026-10-07")
     out = json.loads(r.stdout)
     rm, change, _ = majetat(t, r.stdout)
-    v("Meteo-France n'a pas publie : 96 en erreur, rien n'est publie",
-      len(out["erreurs"]) == 96 and rm.returncode == 1 and not change, "%d erreur(s)" % len(out["erreurs"]))
+    v("Meteo-France n'a pas publie : 94 en erreur, rien n'est publie",
+      len(out["erreurs"]) == 94 and rm.returncode == 1 and not change, "%d erreur(s)" % len(out["erreurs"]))
 
 
 # ================================================================ 7. verif_etat
@@ -335,6 +349,33 @@ def verrou_hors_fenetre():
           len(f) == 1 and f[0]["etape"] == attendu, "obtenu %s" % (f[0]["etape"] if f else "aucune ligne"))
 
 
+# ============================================================ 10. hors dispositif
+def hors_dispositif():
+    print("")
+    print("10. Hors dispositif : la Corse (decision du 15/10/2026)")
+    ref = json.load(io.open(os.path.join(RACINE, "pluie-reference.json"), encoding="utf-8"))
+    pl = copy.deepcopy(ref)
+    for c in ("2A", "2B"):
+        pl["stations"][c]["rr"][-3] = 80.0                # 80 mm le 02/10
+        pl["stations"][c]["rr"][-1] = None                # et rien le 04/10
+    t, r = lancer(pl)
+    out = json.loads(r.stdout) if r.returncode == 0 else {}
+    corses = [f for f in tous_les_faits(out) if f["code"] in HORS]
+    v("80 mm en Corse : aucun declencheur", r.returncode == 0 and not corses, "%d fait(s)" % len(corses))
+    v("donnee manquante en Corse : ni erreur ni jour manquant",
+      not [e for e in out.get("erreurs", []) if set(e["depts"]) & HORS]
+      and not set(out.get("sans_donnee", {})) & HORS, "")
+    v("la Corse est listee hors dispositif, avec le motif",
+      out.get("hors_dispositif") == [{"code": "2A", "dept": "Corse-du-Sud", "motif": "Ax'eau n'intervient pas en Corse"},
+                                     {"code": "2B", "dept": "Haute-Corse", "motif": "Ax'eau n'intervient pas en Corse"}], "")
+    v("les autres departements ne bougent pas : l'Herault et le Gard declenchent",
+      {"34", "30"} <= {f["code"] for f in tous_les_faits(out) if f.get("episode") == "2026-09-30"}, "")
+    doc = {"stations": {"2A": {"num": "1", "silence_j": 9, "dernier_jour": "2026-09-25"},
+                        "07": {"num": "2", "silence_j": 4, "dernier_jour": "2026-09-30"}}}
+    v("station corse muette : aucune alerte ; ailleurs, l'alerte reste",
+      [x[0] for x in X.muettes(doc, [])] == ["07"], "")
+
+
 def main():
     print("Controle du moteur sur les observations Meteo-France. Aucun acces reseau.")
     print("")
@@ -346,6 +387,7 @@ def main():
     verif_etat()
     apres_mail2()
     verrou_hors_fenetre()
+    hors_dispositif()
     print("")
     print("RESULTAT : " + ("le moteur est conforme" if OK else "AU MOINS UN ECART — ne pas livrer"))
     return 0 if OK else 1
