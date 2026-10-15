@@ -212,8 +212,8 @@ const DEPTS=[
   {code:"17",nom:"Charente-Maritime",pref:"La Rochelle",lat:46.1591,lon:-1.1520,region:"Nouvelle-Aquitaine"},
   {code:"18",nom:"Cher",pref:"Bourges",lat:47.0810,lon:2.3983,region:"Centre-Val de Loire"},
   {code:"19",nom:"Corrèze",pref:"Tulle",lat:45.2667,lon:1.7667,region:"Nouvelle-Aquitaine"},
-  {code:"2A",nom:"Corse-du-Sud",pref:"Ajaccio",lat:41.9192,lon:8.7386,region:"Corse"},
-  {code:"2B",nom:"Haute-Corse",pref:"Bastia",lat:42.7008,lon:9.4503,region:"Corse"},
+  {code:"2A",nom:"Corse-du-Sud",pref:"Ajaccio",lat:41.9192,lon:8.7386,region:"Corse",hors_dispositif:"Ax'eau n'intervient pas en Corse"},
+  {code:"2B",nom:"Haute-Corse",pref:"Bastia",lat:42.7008,lon:9.4503,region:"Corse",hors_dispositif:"Ax'eau n'intervient pas en Corse"},
   {code:"21",nom:"Côte-d'Or",pref:"Dijon",lat:47.3220,lon:5.0415,region:"Bourgogne-Franche-Comté"},
   {code:"22",nom:"Côtes-d'Armor",pref:"Saint-Brieuc",lat:48.5134,lon:-2.7657,region:"Bretagne"},
   {code:"23",nom:"Creuse",pref:"Guéret",lat:46.1684,lon:1.8684,region:"Nouvelle-Aquitaine"},
@@ -300,6 +300,14 @@ const DEPT_EN={"01": "dans l'Ain", "02": "dans l'Aisne", "03": "dans l'Allier", 
 // Le calcul vit dans detection.js, réplique exacte de moteur.py, partagée avec
 // les tests. Cette page ne fait que charger les fichiers et afficher.
 const D=window.Detection;
+// Départements hors dispositif (champ hors_dispositif, décision du 15/10/2026).
+const HORS=new Set(DEPTS.filter(d=>D.horsDispositif(d)).map(d=>d.code));
+function horsDispositifTexte(){
+  const h=DEPTS.filter(d=>D.horsDispositif(d));
+  if(!h.length)return '';
+  const motifs=[...new Set(h.map(d=>d.hors_dispositif))];
+  return `<br>Hors dispositif : ${h.map(d=>esc(d.nom)).join(', ')} (${motifs.map(esc).join(' ; ')})`;
+}
 const PLUIE_URL='./pluie.json', STATIONS_URL='./stations.json', ETAT_URL='./etat.json';
 
 let REGLAGES={...D.REGLAGES};
@@ -401,7 +409,7 @@ function afficherSource(){
     Source : <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.jeu)}</a>,
     ${esc(s.producteur)}, sur data.gouv.fr ·
     <a href="${esc(s.licence_url)}" target="_blank" rel="noopener">${esc(s.licence)}</a> ·
-    journée Météo-France ${esc(pluie.journee)}`;
+    journée Météo-France ${esc(pluie.journee)}`+horsDispositifTexte();
   dn.textContent='du '+fr(pluie.debut)+' au '+fr(pluie.fin);
   ds.textContent=Object.keys(pluie.stations||{}).length+' stations, une par département';
 }
@@ -416,6 +424,7 @@ function recalculer(){
   const dates=f.dates.slice(f.i0,f.i1+1);
   const attendu=D.attendu(AUJ);
   for(const d of DEPTS){
+    if(D.horsDispositif(d))continue;            // même règle que moteur.py
     const s=pluie.stations[d.code];
     if(!s){erreurs.push({code:d.code,texte:'station absente de pluie.json'});continue}
     meteo[d.code]={dates:f.dates,p:s.rr};       // série complète, pour la Simulation
@@ -435,12 +444,14 @@ function alertesDonnees(){
     msgs.push(erreurs.length+' département(s) sans la donnée attendue du '+fr(D.attendu(AUJ))+' : '+
               erreurs.map(e=>e.code).join(', ')+'.'+
               (erreurs.length>20?' Les données ne sont pas à jour.':''));
-  const muettes=Object.entries(pluie.stations).filter(([c,s])=>s.silence_j!==null&&s.silence_j>=3);
+  const dansDispositif=([c])=>!HORS.has(c);
+  const muettes=Object.entries(pluie.stations).filter(dansDispositif)
+    .filter(([c,s])=>s.silence_j!==null&&s.silence_j>=3);
   if(muettes.length)
     msgs.push('Station(s) silencieuse(s) depuis 3 jours ou plus : '+
               muettes.map(([c,s])=>c+' '+((stations[c]||{}).nom||s.num)+' ('+s.silence_j+' j)').join(', ')+
               '. À remplacer dans stations.json.');
-  const retard=Object.entries(pluie.stations).filter(([c,s])=>s.etat!=='a_jour');
+  const retard=Object.entries(pluie.stations).filter(dansDispositif).filter(([c,s])=>s.etat!=='a_jour');
   if(retard.length)
     msgs.push('Fichier(s) Météo-France en retard ou absent(s) : '+
               retard.map(([c,s])=>c+' ('+s.etat.replace('_',' ')+')').join(', ')+'.');
@@ -565,6 +576,13 @@ function vueCarte(){
   let dots='';
   for(const d of DEPTS){
     const c=COORDS[d.code]; if(!c)continue;
+    const motif=D.horsDispositif(d);
+    if(motif){
+      dots+=`<circle cx="${c[0]}" cy="${c[1]}" r="10" fill="url(#hachures)" stroke="#94a3b8" stroke-width="1"><title>${d.code} ${d.nom} — hors dispositif : ${esc(motif)}</title></circle>`;
+      dots+=`<text x="${c[0]}" y="${c[1]+3.5}" text-anchor="middle" font-size="8" font-weight="700"
+        fill="#64748b" font-family="Arial,Helvetica,sans-serif" pointer-events="none">${d.code}</text>`;
+      continue;
+    }
     const e=parCode[d.code];
     const f=coul[e?e.r:0]||'#d4ead9';
     dots+=`<circle cx="${c[0]}" cy="${c[1]}" r="10" fill="${f}" opacity=".94"><title>${d.code} ${d.nom} — station ${esc(nomStation(d.code))}</title></circle>`;
@@ -573,7 +591,10 @@ function vueCarte(){
   }
   return `<div class="panel"><div class="panel-head"><div><h2>Carte</h2>
     <div class="sub">Une pastille par département, couleur = état le plus avancé.</div></div></div>
-  <svg id="france-svg" viewBox="120 90 460 480" xmlns="http://www.w3.org/2000/svg">${dots}</svg>
+  <svg id="france-svg" viewBox="120 90 460 480" xmlns="http://www.w3.org/2000/svg"><defs>
+    <pattern id="hachures" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="4" height="4" fill="#e2e8f0"/><line x1="0" y1="0" x2="0" y2="4" stroke="#94a3b8" stroke-width="1.5"/>
+    </pattern></defs>${dots}</svg>
   <div class="map-legend">
     <span class="legend-item"><span class="legend-dot" style="background:#d4ead9"></span>Rien</span>
     <span class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>À monter</span>
@@ -582,6 +603,7 @@ function vueCarte(){
     <span class="legend-item"><span class="legend-dot" style="background:#8b7fd4"></span>Silence</span>
     <span class="legend-item"><span class="legend-dot" style="background:#22c55e"></span>Terminé</span>
     <span class="legend-item"><span class="legend-dot" style="background:#cbd5e1"></span>Bloqué</span>
+    <span class="legend-item"><span class="legend-dot" style="background:repeating-linear-gradient(45deg,#e2e8f0 0 2px,#94a3b8 2px 3px)"></span>Hors dispositif</span>
   </div></div>`;
 }
 
@@ -656,6 +678,7 @@ function vueSimulation(){
       fr(pluie.debut)+' au '+fr(pluie.fin)+'.')}</div>`;
   let seqA=0,seqB=0,total=0; const parMois={};
   for(const d of DEPTS){
+    if(D.horsDispositif(d))continue;
     const m=meteo[d.code]; if(!m)continue;
     for(const x of D.simuler(m.p,m.dates,i0,i1,REGLAGES)){
       total++; x.serie==='A'?seqA++:seqB++;

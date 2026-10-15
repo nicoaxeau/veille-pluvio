@@ -356,8 +356,14 @@ def main():
     # station silencieuse. Il sera rattrape au tour suivant.
     attendu = (AUJOURDHUI - dt.timedelta(days=DELAI_PUBLICATION)).isoformat()
 
-    tout, erreurs, sans_donnee = [], [], {}
+    tout, erreurs, sans_donnee, hors = [], [], {}, []
     for d in DEPTS:
+        # Hors dispositif (champ de depts.json, decision du 15/10/2026 pour la
+        # Corse) : ni declencheur, ni erreur, ni jour manquant. Ses donnees
+        # restent collectees, sans effet.
+        if d.get("hors_dispositif"):
+            hors.append({"code": d["code"], "dept": d["nom"], "motif": d["hors_dispositif"]})
+            continue
         s = (doc.get("stations") or {}).get(d["code"])
         if not s:
             erreurs.append({"depts": [d["code"]], "erreur": "station absente de pluie.json"})
@@ -404,7 +410,8 @@ def main():
         "bloques": par.get("bloque", []), "silence": par.get("silence", []),
         "expires": par.get("expire", []) + par.get("expire_non_envoye", []),
         "abandonnes": par.get("abandonne", []), "termines": par.get("termine", []),
-        "erreurs": erreurs, "sans_donnee": sans_donnee}, ensure_ascii=False, indent=1))
+        "erreurs": erreurs, "sans_donnee": sans_donnee, "hors_dispositif": hors},
+        ensure_ascii=False, indent=1))
 
 
 if __name__ == "__main__":

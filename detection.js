@@ -252,6 +252,13 @@
     const fin = [aujourdhui, dates[n - 1]].sort()[0];
     return {dates, i0: dates.indexOf(debut), i1: dates.indexOf(fin)};
   }
+  // Hors dispositif (champ de depts.json, décision du 15/10/2026 pour la
+  // Corse) : le motif, ou null. Même règle que la boucle de moteur.py : ni
+  // déclencheur, ni erreur, ni jour manquant.
+  function horsDispositif(dept) {
+    return (dept && dept.hors_dispositif) || null;
+  }
+
   // Le jour qui devrait être publié aujourd'hui.
   function attendu(aujourdhui) {
     return plusJours(aujourdhui, -DELAI_PUBLICATION);
@@ -259,7 +266,7 @@
 
   const D = {FENETRE, OFFSET_1, ECART_2, SILENCE, EXPIRATION, PROFONDEUR, DELAI_PUBLICATION,
              CONNU_AU_MAIL1, REGLAGES, MOIS, plusJours, ecartJours, mm, jourLong, mention, blocMeteo,
-             declencheurs, jourCite, traiter, simuler, periodeSimulation, fenetre, attendu};
+             declencheurs, jourCite, traiter, simuler, periodeSimulation, fenetre, attendu, horsDispositif};
   if (typeof module !== "undefined" && module.exports) module.exports = D;
   else racine.Detection = D;
 })(typeof window !== "undefined" ? window : this);

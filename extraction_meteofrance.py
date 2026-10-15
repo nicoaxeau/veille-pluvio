@@ -252,14 +252,24 @@ def ecrire(doc, chemin):
     io.open(chemin, "w", encoding="utf-8", newline="\n").write(texte)
 
 
-def muettes(doc, stations):
+def hors_dispositif():
+    """Codes des departements hors dispositif, lus dans depts.json (champ
+    hors_dispositif, decision du 15/10/2026 pour la Corse)."""
+    chemin = os.environ.get("VP_DEPTS", os.path.join(RACINE, "depts.json"))
+    return {d["code"] for d in json.load(io.open(chemin, encoding="utf-8")) if d.get("hors_dispositif")}
+
+
+def muettes(doc, stations, hors=None):
     """Les stations silencieuses depuis SEUIL_SILENCE_J jours ou plus :
     [code, nom, numero, jours de silence, dernier jour de pluie publie]. Le
-    rapport ci-dessous et l'alerte du workflow lisent cette seule liste."""
+    rapport ci-dessous et l'alerte du workflow lisent cette seule liste.
+    Une station d'un departement hors dispositif n'y figure jamais : ses
+    donnees sont collectees, mais elle n'appelle aucun remplacement."""
+    hors = hors_dispositif() if hors is None else hors
     noms = {s["code"]: s.get("nom", "") for s in stations}
     return [[c, noms.get(c, ""), s["num"], s["silence_j"], s["dernier_jour"]]
             for c, s in doc["stations"].items()
-            if s["silence_j"] is not None and s["silence_j"] >= SEUIL_SILENCE_J]
+            if c not in hors and s["silence_j"] is not None and s["silence_j"] >= SEUIL_SILENCE_J]
 
 
 def rapport(doc, stations):
