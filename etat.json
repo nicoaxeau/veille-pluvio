@@ -257,7 +257,7 @@
    "stats": {
     "contacts": 1313,
     "delivres": 1023,
-    "ouvertures": 286,
+    "ouvertures": 288,
     "clics": 1,
     "desabos": 8
    }
@@ -278,7 +278,7 @@
    "stats": {
     "contacts": 60,
     "delivres": 52,
-    "ouvertures": 9,
+    "ouvertures": 10,
     "clics": 0,
     "desabos": 0
    }
@@ -299,9 +299,9 @@
    "stats": {
     "contacts": 517,
     "delivres": 431,
-    "ouvertures": 142,
+    "ouvertures": 149,
     "clics": 0,
-    "desabos": 1
+    "desabos": 2
    }
   },
   "15033517": {
@@ -320,7 +320,7 @@
    "stats": {
     "contacts": 71,
     "delivres": 61,
-    "ouvertures": 17,
+    "ouvertures": 18,
     "clics": 0,
     "desabos": 0
    }
@@ -361,8 +361,8 @@
    "envoye_le": "2026-10-14",
    "stats": {
     "contacts": 52,
-    "delivres": 45,
-    "ouvertures": 4,
+    "delivres": 39,
+    "ouvertures": 5,
     "clics": 0,
     "desabos": 2
    }
@@ -383,7 +383,7 @@
    "stats": {
     "contacts": 188,
     "delivres": 159,
-    "ouvertures": 30,
+    "ouvertures": 31,
     "clics": 0,
     "desabos": 0
    }
@@ -430,7 +430,7 @@
    "stats": {
     "contacts": 460,
     "delivres": 394,
-    "ouvertures": 83,
+    "ouvertures": 94,
     "clics": 0,
     "desabos": 4
    }
@@ -451,7 +451,7 @@
    "stats": {
     "contacts": 236,
     "delivres": 200,
-    "ouvertures": 40,
+    "ouvertures": 42,
     "clics": 0,
     "desabos": 1
    }
@@ -472,7 +472,7 @@
    "stats": {
     "contacts": 58,
     "delivres": 55,
-    "ouvertures": 6,
+    "ouvertures": 7,
     "clics": 0,
     "desabos": 0
    }
@@ -514,7 +514,7 @@
    "stats": {
     "contacts": 624,
     "delivres": 500,
-    "ouvertures": 150,
+    "ouvertures": 160,
     "clics": 0,
     "desabos": 5
    }
@@ -535,7 +535,7 @@
    "stats": {
     "contacts": 930,
     "delivres": 724,
-    "ouvertures": 154,
+    "ouvertures": 162,
     "clics": 1,
     "desabos": 9
    }
