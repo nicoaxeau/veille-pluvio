@@ -16,16 +16,19 @@
  },
  "sequences": {
   "05|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "06|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "07|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "11|2026-10-04|A": {
    "etape": "mail1_envoye",
@@ -37,12 +40,14 @@
    "motif": "mail 1 non envoyé, décision du 07/10/2026"
   },
   "15|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "16|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "23|2026-09-30|A": {
    "etape": "mail1_envoye",
@@ -55,8 +60,9 @@
    "mail1_envoye_le": "2026-10-13"
   },
   "26|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "2A|2026-10-07|A": {
    "etape": "mail1_monte",
@@ -82,28 +88,34 @@
    "mail1_envoye_le": "2026-10-07"
   },
   "38|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "40|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "51|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "55|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "83|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "84|2026-10-07|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-13"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-13",
+   "mail1_envoye_le": "2026-10-14"
   },
   "87|2026-09-30|A": {
    "etape": "mail1_envoye",
@@ -126,7 +138,7 @@
    "stats": {
     "contacts": 235,
     "delivres": 185,
-    "ouvertures": 54,
+    "ouvertures": 55,
     "clics": 0,
     "desabos": 2
    }
@@ -223,7 +235,7 @@
    "stats": {
     "contacts": 130,
     "delivres": 115,
-    "ouvertures": 21,
+    "ouvertures": 23,
     "clics": 0,
     "desabos": 1
    }
@@ -242,10 +254,10 @@
    "envoye_le": "2026-10-13",
    "stats": {
     "contacts": 1313,
-    "delivres": 1025,
-    "ouvertures": 254,
+    "delivres": 1023,
+    "ouvertures": 286,
     "clics": 1,
-    "desabos": 7
+    "desabos": 8
    }
   },
   "15033515": {
@@ -259,7 +271,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650657,
    "titre": "J+7 - Pluies - Hautes-Alpes",
-   "objet": "Hautes-Alpes : après les fortes pluies"
+   "objet": "Hautes-Alpes : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 60,
+    "delivres": 52,
+    "ouvertures": 9,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15033516": {
    "cle": "06|2026-10-07|A",
@@ -272,7 +292,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650658,
    "titre": "J+7 - Pluies - Alpes-Maritimes",
-   "objet": "Alpes-Maritimes : après les fortes pluies"
+   "objet": "Alpes-Maritimes : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 517,
+    "delivres": 431,
+    "ouvertures": 142,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15033517": {
    "cle": "07|2026-10-07|A",
@@ -285,7 +313,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650659,
    "titre": "J+7 - Pluies - Ardèche",
-   "objet": "Ardèche : après les fortes pluies"
+   "objet": "Ardèche : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 71,
+    "delivres": 61,
+    "ouvertures": 17,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15033518": {
    "cle": "15|2026-10-07|A",
@@ -298,7 +334,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650660,
    "titre": "J+7 - Pluies - Cantal",
-   "objet": "Cantal : après les fortes pluies"
+   "objet": "Cantal : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 14,
+    "delivres": 12,
+    "ouvertures": 3,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15033519": {
    "cle": "16|2026-10-07|A",
@@ -311,7 +355,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650661,
    "titre": "J+7 - Pluies - Charente",
-   "objet": "Charente : après les fortes pluies"
+   "objet": "Charente : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 52,
+    "delivres": 45,
+    "ouvertures": 4,
+    "clics": 0,
+    "desabos": 2
+   }
   },
   "15033521": {
    "cle": "26|2026-10-07|A",
@@ -324,7 +376,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650662,
    "titre": "J+7 - Pluies - Drôme",
-   "objet": "Drôme : après les fortes pluies"
+   "objet": "Drôme : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 188,
+    "delivres": 159,
+    "ouvertures": 30,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15033522": {
    "cle": "2A|2026-10-07|A",
@@ -363,7 +423,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650665,
    "titre": "J+7 - Pluies - Isère",
-   "objet": "Isère : après les fortes pluies"
+   "objet": "Isère : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 460,
+    "delivres": 394,
+    "ouvertures": 83,
+    "clics": 0,
+    "desabos": 4
+   }
   },
   "15033526": {
    "cle": "40|2026-10-07|A",
@@ -376,7 +444,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650666,
    "titre": "J+7 - Pluies - Landes",
-   "objet": "Landes : après les fortes pluies"
+   "objet": "Landes : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 236,
+    "delivres": 200,
+    "ouvertures": 40,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15033527": {
    "cle": "51|2026-10-07|A",
@@ -389,7 +465,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650667,
    "titre": "J+7 - Pluies - Marne",
-   "objet": "Marne : après les fortes pluies"
+   "objet": "Marne : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 58,
+    "delivres": 55,
+    "ouvertures": 6,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15033528": {
    "cle": "55|2026-10-07|A",
@@ -402,7 +486,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650668,
    "titre": "J+7 - Pluies - Meuse",
-   "objet": "Meuse : après les fortes pluies"
+   "objet": "Meuse : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 13,
+    "delivres": 13,
+    "ouvertures": 2,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15033529": {
    "cle": "83|2026-10-07|A",
@@ -415,7 +507,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650669,
    "titre": "J+7 - Pluies - Var",
-   "objet": "Var : après les fortes pluies"
+   "objet": "Var : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 624,
+    "delivres": 500,
+    "ouvertures": 150,
+    "clics": 0,
+    "desabos": 5
+   }
   },
   "15033532": {
    "cle": "84|2026-10-07|A",
@@ -428,7 +528,15 @@
    "envoi_prevu": "2026-10-14",
    "liste_id": 10650670,
    "titre": "J+7 - Pluies - Vaucluse",
-   "objet": "Vaucluse : après les fortes pluies"
+   "objet": "Vaucluse : après les fortes pluies",
+   "envoye_le": "2026-10-14",
+   "stats": {
+    "contacts": 930,
+    "delivres": 724,
+    "ouvertures": 154,
+    "clics": 1,
+    "desabos": 9
+   }
   }
  },
  "detection_cron": {
