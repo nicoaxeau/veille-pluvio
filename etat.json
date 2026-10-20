@@ -50,7 +50,7 @@
    "mail1_envoye_le": "2026-10-14"
   },
   "23|2026-09-30|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-07",
    "mail1_envoye_le": "2026-10-07"
   },
@@ -75,7 +75,7 @@
    "motif": "Ax'eau n'intervient pas en Corse"
   },
   "30|2026-09-30|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-07",
    "mail1_envoye_le": "2026-10-07"
   },
@@ -85,7 +85,7 @@
    "mail1_envoye_le": "2026-10-13"
   },
   "34|2026-09-30|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-07",
    "mail1_envoye_le": "2026-10-07"
   },
@@ -120,7 +120,7 @@
    "mail1_envoye_le": "2026-10-14"
   },
   "87|2026-09-30|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-07",
    "mail1_envoye_le": "2026-10-07"
   }
@@ -539,6 +539,58 @@
     "clics": 1,
     "desabos": 9
    }
+  },
+  "15046167": {
+   "cle": "23|2026-09-30|A",
+   "dept": "23",
+   "nom_dept": "Creuse",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail2",
+   "monte_le": "2026-10-20",
+   "envoi_prevu": "2026-10-21",
+   "liste_id": 10649428,
+   "titre": "J+21 - Pluies - Creuse",
+   "objet": "Creuse : rien n'est apparu ?"
+  },
+  "15046168": {
+   "cle": "30|2026-09-30|A",
+   "dept": "30",
+   "nom_dept": "Gard",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail2",
+   "monte_le": "2026-10-20",
+   "envoi_prevu": "2026-10-21",
+   "liste_id": 10649423,
+   "titre": "J+21 - Pluies - Gard",
+   "objet": "Gard : rien n'est apparu ?"
+  },
+  "15046169": {
+   "cle": "34|2026-09-30|A",
+   "dept": "34",
+   "nom_dept": "Hérault",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail2",
+   "monte_le": "2026-10-20",
+   "envoi_prevu": "2026-10-21",
+   "liste_id": 10649424,
+   "titre": "J+21 - Pluies - Hérault",
+   "objet": "Hérault : rien n'est apparu ?"
+  },
+  "15046170": {
+   "cle": "87|2026-09-30|A",
+   "dept": "87",
+   "nom_dept": "Haute-Vienne",
+   "serie": "A",
+   "episode": "2026-09-30",
+   "etape": "mail2",
+   "monte_le": "2026-10-20",
+   "envoi_prevu": "2026-10-21",
+   "liste_id": 10649426,
+   "titre": "J+21 - Pluies - Haute-Vienne",
+   "objet": "Haute-Vienne : rien n'est apparu ?"
   }
  },
  "detection_cron": {
