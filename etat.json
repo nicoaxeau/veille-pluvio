@@ -50,9 +50,10 @@
    "mail1_envoye_le": "2026-10-14"
   },
   "23|2026-09-30|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-07",
-   "mail1_envoye_le": "2026-10-07"
+   "mail1_envoye_le": "2026-10-07",
+   "mail2_envoye_le": "2026-10-21"
   },
   "24|2026-10-06|A": {
    "etape": "mail1_envoye",
@@ -75,9 +76,10 @@
    "motif": "Ax'eau n'intervient pas en Corse"
   },
   "30|2026-09-30|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-07",
-   "mail1_envoye_le": "2026-10-07"
+   "mail1_envoye_le": "2026-10-07",
+   "mail2_envoye_le": "2026-10-21"
   },
   "33|2026-10-06|A": {
    "etape": "mail1_envoye",
@@ -85,9 +87,10 @@
    "mail1_envoye_le": "2026-10-13"
   },
   "34|2026-09-30|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-07",
-   "mail1_envoye_le": "2026-10-07"
+   "mail1_envoye_le": "2026-10-07",
+   "mail2_envoye_le": "2026-10-21"
   },
   "38|2026-10-07|A": {
    "etape": "mail1_envoye",
@@ -120,9 +123,10 @@
    "mail1_envoye_le": "2026-10-14"
   },
   "87|2026-09-30|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-07",
-   "mail1_envoye_le": "2026-10-07"
+   "mail1_envoye_le": "2026-10-07",
+   "mail2_envoye_le": "2026-10-21"
   }
  },
  "campagnes": {
@@ -299,7 +303,7 @@
    "stats": {
     "contacts": 517,
     "delivres": 431,
-    "ouvertures": 160,
+    "ouvertures": 161,
     "clics": 0,
     "desabos": 2
    }
@@ -516,7 +520,7 @@
     "delivres": 500,
     "ouvertures": 171,
     "clics": 0,
-    "desabos": 5
+    "desabos": 6
    }
   },
   "15033532": {
@@ -535,7 +539,7 @@
    "stats": {
     "contacts": 930,
     "delivres": 724,
-    "ouvertures": 179,
+    "ouvertures": 182,
     "clics": 1,
     "desabos": 9
    }
@@ -551,7 +555,15 @@
    "envoi_prevu": "2026-10-21",
    "liste_id": 10649428,
    "titre": "J+21 - Pluies - Creuse",
-   "objet": "Creuse : rien n'est apparu ?"
+   "objet": "Creuse : rien n'est apparu ?",
+   "envoye_le": "2026-10-21",
+   "stats": {
+    "contacts": 9,
+    "delivres": 9,
+    "ouvertures": 1,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15046168": {
    "cle": "30|2026-09-30|A",
@@ -564,7 +576,15 @@
    "envoi_prevu": "2026-10-21",
    "liste_id": 10649423,
    "titre": "J+21 - Pluies - Gard",
-   "objet": "Gard : rien n'est apparu ?"
+   "objet": "Gard : rien n'est apparu ?",
+   "envoye_le": "2026-10-21",
+   "stats": {
+    "contacts": 238,
+    "delivres": 188,
+    "ouvertures": 33,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15046169": {
    "cle": "34|2026-09-30|A",
@@ -577,7 +597,15 @@
    "envoi_prevu": "2026-10-21",
    "liste_id": 10649424,
    "titre": "J+21 - Pluies - Hérault",
-   "objet": "Hérault : rien n'est apparu ?"
+   "objet": "Hérault : rien n'est apparu ?",
+   "envoye_le": "2026-10-21",
+   "stats": {
+    "contacts": 472,
+    "delivres": 399,
+    "ouvertures": 79,
+    "clics": 0,
+    "desabos": 5
+   }
   },
   "15046170": {
    "cle": "87|2026-09-30|A",
@@ -590,7 +618,15 @@
    "envoi_prevu": "2026-10-21",
    "liste_id": 10649426,
    "titre": "J+21 - Pluies - Haute-Vienne",
-   "objet": "Haute-Vienne : rien n'est apparu ?"
+   "objet": "Haute-Vienne : rien n'est apparu ?",
+   "envoye_le": "2026-10-21",
+   "stats": {
+    "contacts": 21,
+    "delivres": 18,
+    "ouvertures": 5,
+    "clics": 0,
+    "desabos": 0
+   }
   }
  },
  "detection_cron": {

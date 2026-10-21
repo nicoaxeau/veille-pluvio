@@ -4,34 +4,6 @@
   <title>Veille pluviometrique Ax'eau : brouillons a envoyer</title>
   <link>https://nicoaxeau.github.io/veille-pluvio/</link>
   <description>Un element par brouillon pret et pas encore envoye.</description>
-  <lastBuildDate>Wed, 21 Oct 2026 14:29:49 +0000</lastBuildDate>
-  <item>
-    <title>À envoyer le 21/10/2026 : mail 2 Creuse</title>
-    <link>https://app.mailjet.com/campaigns/draft/15046167/edit</link>
-    <guid isPermaLink="false">brouillon-15046167</guid>
-    <pubDate>Wed, 21 Oct 2026 06:00:00 +0000</pubDate>
-    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-10-21</description>
-  </item>
-  <item>
-    <title>À envoyer le 21/10/2026 : mail 2 Gard</title>
-    <link>https://app.mailjet.com/campaigns/draft/15046168/edit</link>
-    <guid isPermaLink="false">brouillon-15046168</guid>
-    <pubDate>Wed, 21 Oct 2026 06:00:00 +0000</pubDate>
-    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-10-21</description>
-  </item>
-  <item>
-    <title>À envoyer le 21/10/2026 : mail 2 Haute-Vienne</title>
-    <link>https://app.mailjet.com/campaigns/draft/15046170/edit</link>
-    <guid isPermaLink="false">brouillon-15046170</guid>
-    <pubDate>Wed, 21 Oct 2026 06:00:00 +0000</pubDate>
-    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-10-21</description>
-  </item>
-  <item>
-    <title>À envoyer le 21/10/2026 : mail 2 Hérault</title>
-    <link>https://app.mailjet.com/campaigns/draft/15046169/edit</link>
-    <guid isPermaLink="false">brouillon-15046169</guid>
-    <pubDate>Wed, 21 Oct 2026 06:00:00 +0000</pubDate>
-    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-10-21</description>
-  </item>
+  <lastBuildDate>Wed, 21 Oct 2026 15:15:46 +0000</lastBuildDate>
 </channel>
 </rss>
