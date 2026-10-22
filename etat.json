@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-10-21T14:29:49+00:00",
+ "maj": "2026-10-22T14:31:05+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -630,6 +630,12 @@
   }
  },
  "detection_cron": {
+  "04|2026-10-20|A": {
+   "dept": "Alpes-de-Haute-Provence",
+   "serie": "A",
+   "episode": "2026-10-20",
+   "etape": "a_venir"
+  },
   "05|2026-08-20|A": {
    "dept": "Hautes-Alpes",
    "serie": "A",
@@ -725,7 +731,7 @@
    "dept": "Creuse",
    "serie": "A",
    "episode": "2026-09-30",
-   "etape": "attente_envoi_mail2"
+   "etape": "silence"
   },
   "24|2026-08-03|A": {
    "dept": "Dordogne",
@@ -757,7 +763,7 @@
    "dept": "Gard",
    "serie": "A",
    "episode": "2026-09-30",
-   "etape": "attente_envoi_mail2"
+   "etape": "silence"
   },
   "33|2026-10-06|A": {
    "dept": "Gironde",
@@ -769,7 +775,7 @@
    "dept": "Hérault",
    "serie": "A",
    "episode": "2026-09-30",
-   "etape": "attente_envoi_mail2"
+   "etape": "silence"
   },
   "38|2026-10-07|A": {
    "dept": "Isère",
@@ -874,7 +880,7 @@
    "dept": "Haute-Vienne",
    "serie": "A",
    "episode": "2026-09-30",
-   "etape": "attente_envoi_mail2"
+   "etape": "silence"
   }
  },
  "mode": "a_blanc"
