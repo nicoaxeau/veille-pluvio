@@ -581,9 +581,9 @@
    "stats": {
     "contacts": 238,
     "delivres": 188,
-    "ouvertures": 33,
+    "ouvertures": 43,
     "clics": 0,
-    "desabos": 1
+    "desabos": 2
    }
   },
   "15046169": {
@@ -601,8 +601,8 @@
    "envoye_le": "2026-10-21",
    "stats": {
     "contacts": 472,
-    "delivres": 399,
-    "ouvertures": 79,
+    "delivres": 398,
+    "ouvertures": 99,
     "clics": 0,
     "desabos": 5
    }
@@ -623,7 +623,7 @@
    "stats": {
     "contacts": 21,
     "delivres": 18,
-    "ouvertures": 5,
+    "ouvertures": 6,
     "clics": 0,
     "desabos": 0
    }
