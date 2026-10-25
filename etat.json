@@ -31,9 +31,13 @@
    "mail1_envoye_le": "2026-10-14"
   },
   "11|2026-10-04|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-08",
    "mail1_envoye_le": "2026-10-12"
+  },
+  "13|2026-10-19|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-25"
   },
   "14|2026-09-28|A": {
    "etape": "abandonne",
@@ -627,6 +631,32 @@
     "clics": 0,
     "desabos": 0
    }
+  },
+  "15054472": {
+   "cle": "13|2026-10-19|A",
+   "dept": "13",
+   "nom_dept": "Bouches-du-Rhône",
+   "serie": "A",
+   "episode": "2026-10-19",
+   "etape": "mail1",
+   "monte_le": "2026-10-25",
+   "envoi_prevu": "2026-10-26",
+   "liste_id": 10653430,
+   "titre": "J+7 - Pluies - Bouches-du-Rhône",
+   "objet": "Bouches-du-Rhône : après les fortes pluies"
+  },
+  "15054473": {
+   "cle": "11|2026-10-04|A",
+   "dept": "11",
+   "nom_dept": "Aude",
+   "serie": "A",
+   "episode": "2026-10-04",
+   "etape": "mail2",
+   "monte_le": "2026-10-25",
+   "envoi_prevu": "2026-10-26",
+   "liste_id": 10649875,
+   "titre": "J+21 - Pluies - Aude",
+   "objet": "Aude : rien n'est apparu ? 💧"
   }
  },
  "detection_cron": {
