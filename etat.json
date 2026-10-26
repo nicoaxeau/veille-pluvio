@@ -31,13 +31,15 @@
    "mail1_envoye_le": "2026-10-14"
   },
   "11|2026-10-04|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-08",
-   "mail1_envoye_le": "2026-10-12"
+   "mail1_envoye_le": "2026-10-12",
+   "mail2_envoye_le": "2026-10-26"
   },
   "13|2026-10-19|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-25"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-25",
+   "mail1_envoye_le": "2026-10-26"
   },
   "14|2026-09-28|A": {
    "etape": "abandonne",
@@ -585,7 +587,7 @@
    "stats": {
     "contacts": 238,
     "delivres": 188,
-    "ouvertures": 45,
+    "ouvertures": 47,
     "clics": 0,
     "desabos": 2
    }
@@ -606,7 +608,7 @@
    "stats": {
     "contacts": 472,
     "delivres": 398,
-    "ouvertures": 101,
+    "ouvertures": 105,
     "clics": 0,
     "desabos": 5
    }
@@ -643,7 +645,15 @@
    "envoi_prevu": "2026-10-26",
    "liste_id": 10653430,
    "titre": "J+7 - Pluies - Bouches-du-Rhône",
-   "objet": "Bouches-du-Rhône : après les fortes pluies"
+   "objet": "Bouches-du-Rhône : après les fortes pluies",
+   "envoye_le": "2026-10-26",
+   "stats": {
+    "contacts": 2407,
+    "delivres": 2046,
+    "ouvertures": 515,
+    "clics": 6,
+    "desabos": 15
+   }
   },
   "15054473": {
    "cle": "11|2026-10-04|A",
@@ -656,7 +666,15 @@
    "envoi_prevu": "2026-10-26",
    "liste_id": 10649875,
    "titre": "J+21 - Pluies - Aude",
-   "objet": "Aude : rien n'est apparu ? 💧"
+   "objet": "Aude : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-26",
+   "stats": {
+    "contacts": 136,
+    "delivres": 117,
+    "ouvertures": 21,
+    "clics": 0,
+    "desabos": 0
+   }
   }
  },
  "detection_cron": {
