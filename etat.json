@@ -15,6 +15,10 @@
   "connu_au_mail1_j": 5
  },
  "sequences": {
+  "04|2026-10-20|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-26"
+  },
   "05|2026-10-07|A": {
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-10-13",
@@ -62,7 +66,7 @@
    "mail2_envoye_le": "2026-10-21"
   },
   "24|2026-10-06|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-08",
    "mail1_envoye_le": "2026-10-13"
   },
@@ -88,7 +92,7 @@
    "mail2_envoye_le": "2026-10-21"
   },
   "33|2026-10-06|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-08",
    "mail1_envoye_le": "2026-10-13"
   },
@@ -675,6 +679,45 @@
     "clics": 0,
     "desabos": 0
    }
+  },
+  "15056403": {
+   "cle": "04|2026-10-20|A",
+   "dept": "04",
+   "nom_dept": "Alpes-de-Haute-Provence",
+   "serie": "A",
+   "episode": "2026-10-20",
+   "etape": "mail1",
+   "monte_le": "2026-10-26",
+   "envoi_prevu": "2026-10-27",
+   "liste_id": 10653761,
+   "titre": "J+7 - Pluies - Alpes-de-Haute-Provence",
+   "objet": "Alpes-de-Haute-Provence : après les fortes pluies"
+  },
+  "15056404": {
+   "cle": "24|2026-10-06|A",
+   "dept": "24",
+   "nom_dept": "Dordogne",
+   "serie": "A",
+   "episode": "2026-10-06",
+   "etape": "mail2",
+   "monte_le": "2026-10-26",
+   "envoi_prevu": "2026-10-27",
+   "liste_id": 10649877,
+   "titre": "J+21 - Pluies - Dordogne",
+   "objet": "Dordogne : rien n'est apparu ? 💧"
+  },
+  "15056405": {
+   "cle": "33|2026-10-06|A",
+   "dept": "33",
+   "nom_dept": "Gironde",
+   "serie": "A",
+   "episode": "2026-10-06",
+   "etape": "mail2",
+   "monte_le": "2026-10-26",
+   "envoi_prevu": "2026-10-27",
+   "liste_id": 10649887,
+   "titre": "J+21 - Pluies - Gironde",
+   "objet": "Gironde : rien n'est apparu ? 💧"
   }
  },
  "detection_cron": {
