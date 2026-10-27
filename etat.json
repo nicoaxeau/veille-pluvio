@@ -16,8 +16,9 @@
  },
  "sequences": {
   "04|2026-10-20|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-26"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-26",
+   "mail1_envoye_le": "2026-10-27"
   },
   "05|2026-10-07|A": {
    "etape": "mail1_envoye",
@@ -66,9 +67,10 @@
    "mail2_envoye_le": "2026-10-21"
   },
   "24|2026-10-06|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-08",
-   "mail1_envoye_le": "2026-10-13"
+   "mail1_envoye_le": "2026-10-13",
+   "mail2_envoye_le": "2026-10-27"
   },
   "26|2026-10-07|A": {
    "etape": "mail1_envoye",
@@ -92,9 +94,10 @@
    "mail2_envoye_le": "2026-10-21"
   },
   "33|2026-10-06|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-08",
-   "mail1_envoye_le": "2026-10-13"
+   "mail1_envoye_le": "2026-10-13",
+   "mail2_envoye_le": "2026-10-27"
   },
   "34|2026-09-30|A": {
    "etape": "mail2_envoye",
@@ -612,7 +615,7 @@
    "stats": {
     "contacts": 472,
     "delivres": 398,
-    "ouvertures": 105,
+    "ouvertures": 107,
     "clics": 0,
     "desabos": 5
    }
@@ -653,10 +656,10 @@
    "envoye_le": "2026-10-26",
    "stats": {
     "contacts": 2407,
-    "delivres": 2046,
-    "ouvertures": 515,
-    "clics": 6,
-    "desabos": 15
+    "delivres": 2044,
+    "ouvertures": 587,
+    "clics": 7,
+    "desabos": 16
    }
   },
   "15054473": {
@@ -675,7 +678,7 @@
    "stats": {
     "contacts": 136,
     "delivres": 117,
-    "ouvertures": 21,
+    "ouvertures": 28,
     "clics": 0,
     "desabos": 0
    }
@@ -691,7 +694,15 @@
    "envoi_prevu": "2026-10-27",
    "liste_id": 10653761,
    "titre": "J+7 - Pluies - Alpes-de-Haute-Provence",
-   "objet": "Alpes-de-Haute-Provence : après les fortes pluies"
+   "objet": "Alpes-de-Haute-Provence : après les fortes pluies",
+   "envoye_le": "2026-10-27",
+   "stats": {
+    "contacts": 109,
+    "delivres": 87,
+    "ouvertures": 24,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15056404": {
    "cle": "24|2026-10-06|A",
@@ -704,7 +715,15 @@
    "envoi_prevu": "2026-10-27",
    "liste_id": 10649877,
    "titre": "J+21 - Pluies - Dordogne",
-   "objet": "Dordogne : rien n'est apparu ? 💧"
+   "objet": "Dordogne : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-27",
+   "stats": {
+    "contacts": 129,
+    "delivres": 113,
+    "ouvertures": 13,
+    "clics": 0,
+    "desabos": 2
+   }
   },
   "15056405": {
    "cle": "33|2026-10-06|A",
@@ -717,7 +736,15 @@
    "envoi_prevu": "2026-10-27",
    "liste_id": 10649887,
    "titre": "J+21 - Pluies - Gironde",
-   "objet": "Gironde : rien n'est apparu ? 💧"
+   "objet": "Gironde : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-27",
+   "stats": {
+    "contacts": 1304,
+    "delivres": 1010,
+    "ouvertures": 216,
+    "clics": 0,
+    "desabos": 4
+   }
   }
  },
  "detection_cron": {
