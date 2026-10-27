@@ -21,17 +21,17 @@
    "mail1_envoye_le": "2026-10-27"
   },
   "05|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
   "06|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
   "07|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
@@ -51,12 +51,12 @@
    "motif": "mail 1 non envoyé, décision du 07/10/2026"
   },
   "15|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
   "16|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
@@ -73,7 +73,7 @@
    "mail2_envoye_le": "2026-10-27"
   },
   "26|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
@@ -106,32 +106,32 @@
    "mail2_envoye_le": "2026-10-21"
   },
   "38|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
   "40|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
   "51|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
   "55|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
   "83|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
   "84|2026-10-07|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14"
   },
@@ -745,6 +745,162 @@
     "clics": 0,
     "desabos": 4
    }
+  },
+  "15058210": {
+   "cle": "05|2026-10-07|A",
+   "dept": "05",
+   "nom_dept": "Hautes-Alpes",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650657,
+   "titre": "J+21 - Pluies - Hautes-Alpes",
+   "objet": "Hautes-Alpes : rien n'est apparu ? 💧"
+  },
+  "15058211": {
+   "cle": "06|2026-10-07|A",
+   "dept": "06",
+   "nom_dept": "Alpes-Maritimes",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650658,
+   "titre": "J+21 - Pluies - Alpes-Maritimes",
+   "objet": "Alpes-Maritimes : rien n'est apparu ? 💧"
+  },
+  "15058212": {
+   "cle": "07|2026-10-07|A",
+   "dept": "07",
+   "nom_dept": "Ardèche",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650659,
+   "titre": "J+21 - Pluies - Ardèche",
+   "objet": "Ardèche : rien n'est apparu ? 💧"
+  },
+  "15058213": {
+   "cle": "15|2026-10-07|A",
+   "dept": "15",
+   "nom_dept": "Cantal",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650660,
+   "titre": "J+21 - Pluies - Cantal",
+   "objet": "Cantal : rien n'est apparu ? 💧"
+  },
+  "15058214": {
+   "cle": "16|2026-10-07|A",
+   "dept": "16",
+   "nom_dept": "Charente",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650661,
+   "titre": "J+21 - Pluies - Charente",
+   "objet": "Charente : rien n'est apparu ? 💧"
+  },
+  "15058215": {
+   "cle": "26|2026-10-07|A",
+   "dept": "26",
+   "nom_dept": "Drôme",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650662,
+   "titre": "J+21 - Pluies - Drôme",
+   "objet": "Drôme : rien n'est apparu ? 💧"
+  },
+  "15058217": {
+   "cle": "38|2026-10-07|A",
+   "dept": "38",
+   "nom_dept": "Isère",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650665,
+   "titre": "J+21 - Pluies - Isère",
+   "objet": "Isère : rien n'est apparu ? 💧"
+  },
+  "15058218": {
+   "cle": "40|2026-10-07|A",
+   "dept": "40",
+   "nom_dept": "Landes",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650666,
+   "titre": "J+21 - Pluies - Landes",
+   "objet": "Landes : rien n'est apparu ? 💧"
+  },
+  "15058219": {
+   "cle": "51|2026-10-07|A",
+   "dept": "51",
+   "nom_dept": "Marne",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650667,
+   "titre": "J+21 - Pluies - Marne",
+   "objet": "Marne : rien n'est apparu ? 💧"
+  },
+  "15058220": {
+   "cle": "55|2026-10-07|A",
+   "dept": "55",
+   "nom_dept": "Meuse",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650668,
+   "titre": "J+21 - Pluies - Meuse",
+   "objet": "Meuse : rien n'est apparu ? 💧"
+  },
+  "15058221": {
+   "cle": "83|2026-10-07|A",
+   "dept": "83",
+   "nom_dept": "Var",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650669,
+   "titre": "J+21 - Pluies - Var",
+   "objet": "Var : rien n'est apparu ? 💧"
+  },
+  "15058222": {
+   "cle": "84|2026-10-07|A",
+   "dept": "84",
+   "nom_dept": "Vaucluse",
+   "serie": "A",
+   "episode": "2026-10-07",
+   "etape": "mail2",
+   "monte_le": "2026-10-27",
+   "envoi_prevu": "2026-10-28",
+   "liste_id": 10650670,
+   "titre": "J+21 - Pluies - Vaucluse",
+   "objet": "Vaucluse : rien n'est apparu ? 💧"
   }
  },
  "detection_cron": {
