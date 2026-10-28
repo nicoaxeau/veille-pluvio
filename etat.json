@@ -21,19 +21,22 @@
    "mail1_envoye_le": "2026-10-27"
   },
   "05|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "06|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "07|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "11|2026-10-04|A": {
    "etape": "mail2_envoye",
@@ -51,14 +54,16 @@
    "motif": "mail 1 non envoyé, décision du 07/10/2026"
   },
   "15|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "16|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "23|2026-09-30|A": {
    "etape": "mail2_envoye",
@@ -73,9 +78,10 @@
    "mail2_envoye_le": "2026-10-27"
   },
   "26|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "2A|2026-10-07|A": {
    "etape": "abandonne",
@@ -106,34 +112,40 @@
    "mail2_envoye_le": "2026-10-21"
   },
   "38|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "40|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "51|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "55|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "83|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "84|2026-10-07|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
-   "mail1_envoye_le": "2026-10-14"
+   "mail1_envoye_le": "2026-10-14",
+   "mail2_envoye_le": "2026-10-28"
   },
   "87|2026-09-30|A": {
    "etape": "mail2_envoye",
@@ -615,7 +627,7 @@
    "stats": {
     "contacts": 472,
     "delivres": 398,
-    "ouvertures": 107,
+    "ouvertures": 108,
     "clics": 0,
     "desabos": 5
    }
@@ -657,7 +669,7 @@
    "stats": {
     "contacts": 2407,
     "delivres": 2044,
-    "ouvertures": 587,
+    "ouvertures": 612,
     "clics": 7,
     "desabos": 16
    }
@@ -699,7 +711,7 @@
    "stats": {
     "contacts": 109,
     "delivres": 87,
-    "ouvertures": 24,
+    "ouvertures": 29,
     "clics": 0,
     "desabos": 1
    }
@@ -720,7 +732,7 @@
    "stats": {
     "contacts": 129,
     "delivres": 113,
-    "ouvertures": 13,
+    "ouvertures": 17,
     "clics": 0,
     "desabos": 2
    }
@@ -740,10 +752,10 @@
    "envoye_le": "2026-10-27",
    "stats": {
     "contacts": 1304,
-    "delivres": 1010,
-    "ouvertures": 216,
+    "delivres": 1008,
+    "ouvertures": 264,
     "clics": 0,
-    "desabos": 4
+    "desabos": 5
    }
   },
   "15058210": {
@@ -757,7 +769,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650657,
    "titre": "J+21 - Pluies - Hautes-Alpes",
-   "objet": "Hautes-Alpes : rien n'est apparu ? 💧"
+   "objet": "Hautes-Alpes : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 60,
+    "delivres": 52,
+    "ouvertures": 7,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15058211": {
    "cle": "06|2026-10-07|A",
@@ -770,7 +790,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650658,
    "titre": "J+21 - Pluies - Alpes-Maritimes",
-   "objet": "Alpes-Maritimes : rien n'est apparu ? 💧"
+   "objet": "Alpes-Maritimes : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 515,
+    "delivres": 429,
+    "ouvertures": 120,
+    "clics": 1,
+    "desabos": 0
+   }
   },
   "15058212": {
    "cle": "07|2026-10-07|A",
@@ -783,7 +811,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650659,
    "titre": "J+21 - Pluies - Ardèche",
-   "objet": "Ardèche : rien n'est apparu ? 💧"
+   "objet": "Ardèche : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 71,
+    "delivres": 61,
+    "ouvertures": 7,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15058213": {
    "cle": "15|2026-10-07|A",
@@ -796,7 +832,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650660,
    "titre": "J+21 - Pluies - Cantal",
-   "objet": "Cantal : rien n'est apparu ? 💧"
+   "objet": "Cantal : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 14,
+    "delivres": 12,
+    "ouvertures": 1,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15058214": {
    "cle": "16|2026-10-07|A",
@@ -809,7 +853,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650661,
    "titre": "J+21 - Pluies - Charente",
-   "objet": "Charente : rien n'est apparu ? 💧"
+   "objet": "Charente : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 50,
+    "delivres": 43,
+    "ouvertures": 5,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15058215": {
    "cle": "26|2026-10-07|A",
@@ -822,7 +874,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650662,
    "titre": "J+21 - Pluies - Drôme",
-   "objet": "Drôme : rien n'est apparu ? 💧"
+   "objet": "Drôme : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 188,
+    "delivres": 159,
+    "ouvertures": 29,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15058217": {
    "cle": "38|2026-10-07|A",
@@ -835,7 +895,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650665,
    "titre": "J+21 - Pluies - Isère",
-   "objet": "Isère : rien n'est apparu ? 💧"
+   "objet": "Isère : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 456,
+    "delivres": 390,
+    "ouvertures": 69,
+    "clics": 0,
+    "desabos": 3
+   }
   },
   "15058218": {
    "cle": "40|2026-10-07|A",
@@ -848,7 +916,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650666,
    "titre": "J+21 - Pluies - Landes",
-   "objet": "Landes : rien n'est apparu ? 💧"
+   "objet": "Landes : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 235,
+    "delivres": 198,
+    "ouvertures": 33,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15058219": {
    "cle": "51|2026-10-07|A",
@@ -861,7 +937,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650667,
    "titre": "J+21 - Pluies - Marne",
-   "objet": "Marne : rien n'est apparu ? 💧"
+   "objet": "Marne : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 58,
+    "delivres": 55,
+    "ouvertures": 2,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15058220": {
    "cle": "55|2026-10-07|A",
@@ -874,7 +958,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650668,
    "titre": "J+21 - Pluies - Meuse",
-   "objet": "Meuse : rien n'est apparu ? 💧"
+   "objet": "Meuse : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 13,
+    "delivres": 13,
+    "ouvertures": 0,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15058221": {
    "cle": "83|2026-10-07|A",
@@ -887,7 +979,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650669,
    "titre": "J+21 - Pluies - Var",
-   "objet": "Var : rien n'est apparu ? 💧"
+   "objet": "Var : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 618,
+    "delivres": 494,
+    "ouvertures": 119,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15058222": {
    "cle": "84|2026-10-07|A",
@@ -900,7 +1000,15 @@
    "envoi_prevu": "2026-10-28",
    "liste_id": 10650670,
    "titre": "J+21 - Pluies - Vaucluse",
-   "objet": "Vaucluse : rien n'est apparu ? 💧"
+   "objet": "Vaucluse : rien n'est apparu ? 💧",
+   "envoye_le": "2026-10-28",
+   "stats": {
+    "contacts": 921,
+    "delivres": 713,
+    "ouvertures": 112,
+    "clics": 1,
+    "desabos": 8
+   }
   }
  },
  "detection_cron": {
