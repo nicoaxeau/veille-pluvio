@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-10-27T15:21:08+00:00",
+ "maj": "2026-10-28T16:00:36+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -914,7 +914,7 @@
    "dept": "Alpes-de-Haute-Provence",
    "serie": "A",
    "episode": "2026-10-20",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "05|2026-08-20|A": {
    "dept": "Hautes-Alpes",
@@ -927,7 +927,7 @@
    "dept": "Hautes-Alpes",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "06|2026-08-20|A": {
    "dept": "Alpes-Maritimes",
@@ -940,7 +940,7 @@
    "dept": "Alpes-Maritimes",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "07|2026-08-11|A": {
    "dept": "Ardèche",
@@ -960,7 +960,7 @@
    "dept": "Ardèche",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "08|2026-10-24|A": {
    "dept": "Ardennes",
@@ -1005,13 +1005,13 @@
    "dept": "Cantal",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "16|2026-10-07|A": {
    "dept": "Charente",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "23|2026-09-30|A": {
    "dept": "Creuse",
@@ -1030,7 +1030,7 @@
    "dept": "Dordogne",
    "serie": "A",
    "episode": "2026-10-06",
-   "etape": "attente_envoi_mail2"
+   "etape": "silence"
   },
   "26|2026-08-20|A": {
    "dept": "Drôme",
@@ -1043,7 +1043,7 @@
    "dept": "Drôme",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "29|2026-10-24|B": {
    "dept": "Finistère",
@@ -1061,7 +1061,7 @@
    "dept": "Gironde",
    "serie": "A",
    "episode": "2026-10-06",
-   "etape": "attente_envoi_mail2"
+   "etape": "silence"
   },
   "34|2026-09-30|A": {
    "dept": "Hérault",
@@ -1073,13 +1073,13 @@
    "dept": "Isère",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "40|2026-10-07|A": {
    "dept": "Landes",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "50|2026-10-23|B": {
    "dept": "Manche",
@@ -1091,13 +1091,13 @@
    "dept": "Marne",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "55|2026-10-07|A": {
    "dept": "Meuse",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "63|2026-08-27|A": {
    "dept": "Puy-de-Dôme",
@@ -1158,13 +1158,19 @@
    "dept": "Var",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "84|2026-10-07|A": {
    "dept": "Vaucluse",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
+  },
+  "85|2026-10-26|B": {
+   "dept": "Vendée",
+   "serie": "B",
+   "episode": "2026-10-26",
+   "etape": "a_venir"
   },
   "86|2026-08-24|A": {
    "dept": "Vienne",
