@@ -123,6 +123,10 @@
    "mail1_envoye_le": "2026-10-14",
    "mail2_envoye_le": "2026-10-28"
   },
+  "50|2026-10-23|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-10-29"
+  },
   "51|2026-10-07|A": {
    "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
@@ -1009,6 +1013,19 @@
     "clics": 1,
     "desabos": 8
    }
+  },
+  "15061958": {
+   "cle": "50|2026-10-23|B",
+   "dept": "50",
+   "nom_dept": "Manche",
+   "serie": "B",
+   "episode": "2026-10-23",
+   "etape": "mail1",
+   "monte_le": "2026-10-29",
+   "envoi_prevu": "2026-10-30",
+   "liste_id": 10654659,
+   "titre": "J+7 - Pluies - Manche",
+   "objet": "Manche : après un mois pluvieux"
   }
  },
  "detection_cron": {
