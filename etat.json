@@ -669,9 +669,9 @@
    "stats": {
     "contacts": 2407,
     "delivres": 2044,
-    "ouvertures": 612,
-    "clics": 7,
-    "desabos": 16
+    "ouvertures": 619,
+    "clics": 8,
+    "desabos": 17
    }
   },
   "15054473": {
@@ -711,7 +711,7 @@
    "stats": {
     "contacts": 109,
     "delivres": 87,
-    "ouvertures": 29,
+    "ouvertures": 31,
     "clics": 0,
     "desabos": 1
    }
@@ -753,7 +753,7 @@
    "stats": {
     "contacts": 1304,
     "delivres": 1008,
-    "ouvertures": 264,
+    "ouvertures": 270,
     "clics": 0,
     "desabos": 5
    }
@@ -774,7 +774,7 @@
    "stats": {
     "contacts": 60,
     "delivres": 52,
-    "ouvertures": 7,
+    "ouvertures": 10,
     "clics": 0,
     "desabos": 0
    }
@@ -795,7 +795,7 @@
    "stats": {
     "contacts": 515,
     "delivres": 429,
-    "ouvertures": 120,
+    "ouvertures": 138,
     "clics": 1,
     "desabos": 0
    }
@@ -816,9 +816,9 @@
    "stats": {
     "contacts": 71,
     "delivres": 61,
-    "ouvertures": 7,
+    "ouvertures": 12,
     "clics": 0,
-    "desabos": 0
+    "desabos": 1
    }
   },
   "15058213": {
@@ -837,7 +837,7 @@
    "stats": {
     "contacts": 14,
     "delivres": 12,
-    "ouvertures": 1,
+    "ouvertures": 2,
     "clics": 0,
     "desabos": 0
    }
@@ -857,7 +857,7 @@
    "envoye_le": "2026-10-28",
    "stats": {
     "contacts": 50,
-    "delivres": 43,
+    "delivres": 37,
     "ouvertures": 5,
     "clics": 0,
     "desabos": 0
@@ -879,7 +879,7 @@
    "stats": {
     "contacts": 188,
     "delivres": 159,
-    "ouvertures": 29,
+    "ouvertures": 33,
     "clics": 0,
     "desabos": 1
    }
@@ -900,7 +900,7 @@
    "stats": {
     "contacts": 456,
     "delivres": 390,
-    "ouvertures": 69,
+    "ouvertures": 81,
     "clics": 0,
     "desabos": 3
    }
@@ -921,7 +921,7 @@
    "stats": {
     "contacts": 235,
     "delivres": 198,
-    "ouvertures": 33,
+    "ouvertures": 43,
     "clics": 0,
     "desabos": 0
    }
@@ -942,7 +942,7 @@
    "stats": {
     "contacts": 58,
     "delivres": 55,
-    "ouvertures": 2,
+    "ouvertures": 4,
     "clics": 0,
     "desabos": 1
    }
@@ -984,8 +984,8 @@
    "stats": {
     "contacts": 618,
     "delivres": 494,
-    "ouvertures": 119,
-    "clics": 0,
+    "ouvertures": 135,
+    "clics": 2,
     "desabos": 1
    }
   },
@@ -1005,7 +1005,7 @@
    "stats": {
     "contacts": 921,
     "delivres": 713,
-    "ouvertures": 112,
+    "ouvertures": 146,
     "clics": 1,
     "desabos": 8
    }
