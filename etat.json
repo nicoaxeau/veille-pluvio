@@ -124,8 +124,9 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "50|2026-10-23|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-10-29"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-10-29",
+   "mail1_envoye_le": "2026-10-30"
   },
   "51|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -673,7 +674,7 @@
    "stats": {
     "contacts": 2407,
     "delivres": 2044,
-    "ouvertures": 619,
+    "ouvertures": 625,
     "clics": 8,
     "desabos": 17
    }
@@ -736,7 +737,7 @@
    "stats": {
     "contacts": 129,
     "delivres": 113,
-    "ouvertures": 17,
+    "ouvertures": 18,
     "clics": 0,
     "desabos": 2
    }
@@ -757,7 +758,7 @@
    "stats": {
     "contacts": 1304,
     "delivres": 1008,
-    "ouvertures": 270,
+    "ouvertures": 272,
     "clics": 0,
     "desabos": 5
    }
@@ -799,7 +800,7 @@
    "stats": {
     "contacts": 515,
     "delivres": 429,
-    "ouvertures": 138,
+    "ouvertures": 145,
     "clics": 1,
     "desabos": 0
    }
@@ -883,7 +884,7 @@
    "stats": {
     "contacts": 188,
     "delivres": 159,
-    "ouvertures": 33,
+    "ouvertures": 34,
     "clics": 0,
     "desabos": 1
    }
@@ -904,7 +905,7 @@
    "stats": {
     "contacts": 456,
     "delivres": 390,
-    "ouvertures": 81,
+    "ouvertures": 82,
     "clics": 0,
     "desabos": 3
    }
@@ -925,7 +926,7 @@
    "stats": {
     "contacts": 235,
     "delivres": 198,
-    "ouvertures": 43,
+    "ouvertures": 45,
     "clics": 0,
     "desabos": 0
    }
@@ -946,7 +947,7 @@
    "stats": {
     "contacts": 58,
     "delivres": 55,
-    "ouvertures": 4,
+    "ouvertures": 5,
     "clics": 0,
     "desabos": 1
    }
@@ -988,7 +989,7 @@
    "stats": {
     "contacts": 618,
     "delivres": 494,
-    "ouvertures": 135,
+    "ouvertures": 139,
     "clics": 2,
     "desabos": 1
    }
@@ -1009,9 +1010,9 @@
    "stats": {
     "contacts": 921,
     "delivres": 713,
-    "ouvertures": 146,
+    "ouvertures": 157,
     "clics": 1,
-    "desabos": 8
+    "desabos": 9
    }
   },
   "15061958": {
@@ -1025,7 +1026,15 @@
    "envoi_prevu": "2026-10-30",
    "liste_id": 10654659,
    "titre": "J+7 - Pluies - Manche",
-   "objet": "Manche : après un mois pluvieux"
+   "objet": "Manche : après un mois pluvieux",
+   "envoye_le": "2026-10-30",
+   "stats": {
+    "contacts": 51,
+    "delivres": 41,
+    "ouvertures": 4,
+    "clics": 0,
+    "desabos": 0
+   }
   }
  },
  "detection_cron": {
