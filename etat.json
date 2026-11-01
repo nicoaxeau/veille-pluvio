@@ -15,6 +15,10 @@
   "connu_au_mail1_j": 5
  },
  "sequences": {
+  "02|2026-10-24|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-01"
+  },
   "04|2026-10-20|A": {
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-10-26",
@@ -37,6 +41,10 @@
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14",
    "mail2_envoye_le": "2026-10-28"
+  },
+  "08|2026-10-24|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-01"
   },
   "11|2026-10-04|A": {
    "etape": "mail2_envoye",
@@ -82,6 +90,10 @@
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14",
    "mail2_envoye_le": "2026-10-28"
+  },
+  "29|2026-10-24|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-01"
   },
   "2A|2026-10-07|A": {
    "etape": "abandonne",
@@ -140,6 +152,10 @@
    "mail1_envoye_le": "2026-10-14",
    "mail2_envoye_le": "2026-10-28"
   },
+  "76|2026-10-24|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-01"
+  },
   "83|2026-10-07|A": {
    "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
@@ -151,6 +167,10 @@
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14",
    "mail2_envoye_le": "2026-10-28"
+  },
+  "85|2026-10-26|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-01"
   },
   "87|2026-09-30|A": {
    "etape": "mail2_envoye",
@@ -1035,6 +1055,71 @@
     "clics": 0,
     "desabos": 0
    }
+  },
+  "15066774": {
+   "cle": "02|2026-10-24|A",
+   "dept": "02",
+   "nom_dept": "Aisne",
+   "serie": "A",
+   "episode": "2026-10-24",
+   "etape": "mail1",
+   "monte_le": "2026-11-01",
+   "envoi_prevu": "2026-11-02",
+   "liste_id": 10655104,
+   "titre": "J+7 - Pluies - Aisne",
+   "objet": "Aisne : après les fortes pluies"
+  },
+  "15066775": {
+   "cle": "08|2026-10-24|A",
+   "dept": "08",
+   "nom_dept": "Ardennes",
+   "serie": "A",
+   "episode": "2026-10-24",
+   "etape": "mail1",
+   "monte_le": "2026-11-01",
+   "envoi_prevu": "2026-11-02",
+   "liste_id": 10655105,
+   "titre": "J+7 - Pluies - Ardennes",
+   "objet": "Ardennes : après les fortes pluies"
+  },
+  "15066776": {
+   "cle": "29|2026-10-24|B",
+   "dept": "29",
+   "nom_dept": "Finistère",
+   "serie": "B",
+   "episode": "2026-10-24",
+   "etape": "mail1",
+   "monte_le": "2026-11-01",
+   "envoi_prevu": "2026-11-02",
+   "liste_id": 10655106,
+   "titre": "J+7 - Pluies - Finistère",
+   "objet": "Finistère : après un mois pluvieux"
+  },
+  "15066778": {
+   "cle": "76|2026-10-24|A",
+   "dept": "76",
+   "nom_dept": "Seine-Maritime",
+   "serie": "A",
+   "episode": "2026-10-24",
+   "etape": "mail1",
+   "monte_le": "2026-11-01",
+   "envoi_prevu": "2026-11-02",
+   "liste_id": 10655107,
+   "titre": "J+7 - Pluies - Seine-Maritime",
+   "objet": "Seine-Maritime : après les fortes pluies"
+  },
+  "15066779": {
+   "cle": "85|2026-10-26|B",
+   "dept": "85",
+   "nom_dept": "Vendée",
+   "serie": "B",
+   "episode": "2026-10-26",
+   "etape": "mail1",
+   "monte_le": "2026-11-01",
+   "envoi_prevu": "2026-11-02",
+   "liste_id": 10655108,
+   "titre": "J+7 - Pluies - Vendée",
+   "objet": "Vendée : après un mois pluvieux"
   }
  },
  "detection_cron": {
