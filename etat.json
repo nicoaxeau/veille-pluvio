@@ -16,8 +16,9 @@
  },
  "sequences": {
   "02|2026-10-24|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-01"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-01",
+   "mail1_envoye_le": "2026-11-02"
   },
   "04|2026-10-20|A": {
    "etape": "mail1_envoye",
@@ -43,8 +44,9 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "08|2026-10-24|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-01"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-01",
+   "mail1_envoye_le": "2026-11-02"
   },
   "11|2026-10-04|A": {
    "etape": "mail2_envoye",
@@ -92,8 +94,9 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "29|2026-10-24|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-01"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-01",
+   "mail1_envoye_le": "2026-11-02"
   },
   "2A|2026-10-07|A": {
    "etape": "abandonne",
@@ -153,8 +156,9 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "76|2026-10-24|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-01"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-01",
+   "mail1_envoye_le": "2026-11-02"
   },
   "83|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -169,8 +173,9 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "85|2026-10-26|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-01"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-01",
+   "mail1_envoye_le": "2026-11-02"
   },
   "87|2026-09-30|A": {
    "etape": "mail2_envoye",
@@ -694,7 +699,7 @@
    "stats": {
     "contacts": 2407,
     "delivres": 2044,
-    "ouvertures": 629,
+    "ouvertures": 638,
     "clics": 8,
     "desabos": 17
    }
@@ -715,7 +720,7 @@
    "stats": {
     "contacts": 136,
     "delivres": 117,
-    "ouvertures": 28,
+    "ouvertures": 29,
     "clics": 0,
     "desabos": 0
    }
@@ -757,9 +762,9 @@
    "stats": {
     "contacts": 129,
     "delivres": 113,
-    "ouvertures": 18,
+    "ouvertures": 20,
     "clics": 0,
-    "desabos": 2
+    "desabos": 3
    }
   },
   "15056405": {
@@ -778,7 +783,7 @@
    "stats": {
     "contacts": 1304,
     "delivres": 1008,
-    "ouvertures": 273,
+    "ouvertures": 282,
     "clics": 0,
     "desabos": 5
    }
@@ -820,7 +825,7 @@
    "stats": {
     "contacts": 515,
     "delivres": 429,
-    "ouvertures": 150,
+    "ouvertures": 152,
     "clics": 1,
     "desabos": 0
    }
@@ -925,7 +930,7 @@
    "stats": {
     "contacts": 456,
     "delivres": 390,
-    "ouvertures": 85,
+    "ouvertures": 87,
     "clics": 0,
     "desabos": 3
    }
@@ -946,7 +951,7 @@
    "stats": {
     "contacts": 235,
     "delivres": 198,
-    "ouvertures": 45,
+    "ouvertures": 46,
     "clics": 0,
     "desabos": 0
    }
@@ -1009,9 +1014,9 @@
    "stats": {
     "contacts": 618,
     "delivres": 494,
-    "ouvertures": 140,
+    "ouvertures": 146,
     "clics": 2,
-    "desabos": 1
+    "desabos": 2
    }
   },
   "15058222": {
@@ -1030,7 +1035,7 @@
    "stats": {
     "contacts": 921,
     "delivres": 713,
-    "ouvertures": 162,
+    "ouvertures": 166,
     "clics": 1,
     "desabos": 9
    }
@@ -1067,7 +1072,15 @@
    "envoi_prevu": "2026-11-02",
    "liste_id": 10655104,
    "titre": "J+7 - Pluies - Aisne",
-   "objet": "Aisne : après les fortes pluies"
+   "objet": "Aisne : après les fortes pluies",
+   "envoye_le": "2026-11-02",
+   "stats": {
+    "contacts": 47,
+    "delivres": 41,
+    "ouvertures": 11,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15066775": {
    "cle": "08|2026-10-24|A",
@@ -1080,7 +1093,15 @@
    "envoi_prevu": "2026-11-02",
    "liste_id": 10655105,
    "titre": "J+7 - Pluies - Ardennes",
-   "objet": "Ardennes : après les fortes pluies"
+   "objet": "Ardennes : après les fortes pluies",
+   "envoye_le": "2026-11-02",
+   "stats": {
+    "contacts": 10,
+    "delivres": 8,
+    "ouvertures": 1,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15066776": {
    "cle": "29|2026-10-24|B",
@@ -1093,7 +1114,15 @@
    "envoi_prevu": "2026-11-02",
    "liste_id": 10655106,
    "titre": "J+7 - Pluies - Finistère",
-   "objet": "Finistère : après un mois pluvieux"
+   "objet": "Finistère : après un mois pluvieux",
+   "envoye_le": "2026-11-02",
+   "stats": {
+    "contacts": 43,
+    "delivres": 37,
+    "ouvertures": 4,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15066778": {
    "cle": "76|2026-10-24|A",
@@ -1106,7 +1135,15 @@
    "envoi_prevu": "2026-11-02",
    "liste_id": 10655107,
    "titre": "J+7 - Pluies - Seine-Maritime",
-   "objet": "Seine-Maritime : après les fortes pluies"
+   "objet": "Seine-Maritime : après les fortes pluies",
+   "envoye_le": "2026-11-02",
+   "stats": {
+    "contacts": 404,
+    "delivres": 301,
+    "ouvertures": 46,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15066779": {
    "cle": "85|2026-10-26|B",
@@ -1119,7 +1156,15 @@
    "envoi_prevu": "2026-11-02",
    "liste_id": 10655108,
    "titre": "J+7 - Pluies - Vendée",
-   "objet": "Vendée : après un mois pluvieux"
+   "objet": "Vendée : après un mois pluvieux",
+   "envoye_le": "2026-11-02",
+   "stats": {
+    "contacts": 449,
+    "delivres": 363,
+    "ouvertures": 94,
+    "clics": 0,
+    "desabos": 1
+   }
   }
  },
  "detection_cron": {

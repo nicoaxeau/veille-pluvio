@@ -4,41 +4,6 @@
   <title>Veille pluviometrique Ax'eau : brouillons a envoyer</title>
   <link>https://nicoaxeau.github.io/veille-pluvio/</link>
   <description>Un element par brouillon pret et pas encore envoye.</description>
-  <lastBuildDate>Mon, 02 Nov 2026 19:28:47 +0000</lastBuildDate>
-  <item>
-    <title>À envoyer le 02/11/2026 : mail 1 Aisne</title>
-    <link>https://app.mailjet.com/campaigns/draft/15066774/edit</link>
-    <guid isPermaLink="false">brouillon-15066774</guid>
-    <pubDate>Mon, 02 Nov 2026 06:00:00 +0000</pubDate>
-    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-02</description>
-  </item>
-  <item>
-    <title>À envoyer le 02/11/2026 : mail 1 Ardennes</title>
-    <link>https://app.mailjet.com/campaigns/draft/15066775/edit</link>
-    <guid isPermaLink="false">brouillon-15066775</guid>
-    <pubDate>Mon, 02 Nov 2026 06:00:00 +0000</pubDate>
-    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-02</description>
-  </item>
-  <item>
-    <title>À envoyer le 02/11/2026 : mail 1 Finistère</title>
-    <link>https://app.mailjet.com/campaigns/draft/15066776/edit</link>
-    <guid isPermaLink="false">brouillon-15066776</guid>
-    <pubDate>Mon, 02 Nov 2026 06:00:00 +0000</pubDate>
-    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-02</description>
-  </item>
-  <item>
-    <title>À envoyer le 02/11/2026 : mail 1 Seine-Maritime</title>
-    <link>https://app.mailjet.com/campaigns/draft/15066778/edit</link>
-    <guid isPermaLink="false">brouillon-15066778</guid>
-    <pubDate>Mon, 02 Nov 2026 06:00:00 +0000</pubDate>
-    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-02</description>
-  </item>
-  <item>
-    <title>À envoyer le 02/11/2026 : mail 1 Vendée</title>
-    <link>https://app.mailjet.com/campaigns/draft/15066779/edit</link>
-    <guid isPermaLink="false">brouillon-15066779</guid>
-    <pubDate>Mon, 02 Nov 2026 06:00:00 +0000</pubDate>
-    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-02</description>
-  </item>
+  <lastBuildDate>Mon, 02 Nov 2026 20:22:56 +0000</lastBuildDate>
 </channel>
 </rss>
