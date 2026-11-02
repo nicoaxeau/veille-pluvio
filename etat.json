@@ -87,6 +87,10 @@
    "mail1_envoye_le": "2026-10-13",
    "mail2_envoye_le": "2026-10-27"
   },
+  "25|2026-10-27|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-02"
+  },
   "26|2026-10-07|A": {
    "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
@@ -148,6 +152,10 @@
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14",
    "mail2_envoye_le": "2026-10-28"
+  },
+  "52|2026-10-27|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-02"
   },
   "55|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -1165,6 +1173,32 @@
     "clics": 0,
     "desabos": 1
    }
+  },
+  "15068764": {
+   "cle": "25|2026-10-27|B",
+   "dept": "25",
+   "nom_dept": "Doubs",
+   "serie": "B",
+   "episode": "2026-10-27",
+   "etape": "mail1",
+   "monte_le": "2026-11-02",
+   "envoi_prevu": "2026-11-03",
+   "liste_id": 10655416,
+   "titre": "J+7 - Pluies - Doubs",
+   "objet": "Doubs : après un mois pluvieux"
+  },
+  "15068765": {
+   "cle": "52|2026-10-27|B",
+   "dept": "52",
+   "nom_dept": "Haute-Marne",
+   "serie": "B",
+   "episode": "2026-10-27",
+   "etape": "mail1",
+   "monte_le": "2026-11-02",
+   "envoi_prevu": "2026-11-03",
+   "liste_id": 10655417,
+   "titre": "J+7 - Pluies - Haute-Marne",
+   "objet": "Haute-Marne : après un mois pluvieux"
   }
  },
  "detection_cron": {
