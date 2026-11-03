@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-11-02T19:28:46+00:00",
+ "maj": "2026-11-03T17:01:26+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -1206,7 +1206,7 @@
    "dept": "Aisne",
    "serie": "A",
    "episode": "2026-10-24",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "04|2026-10-20|A": {
    "dept": "Alpes-de-Haute-Provence",
@@ -1264,7 +1264,7 @@
    "dept": "Ardennes",
    "serie": "A",
    "episode": "2026-10-24",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "11|2026-10-04|A": {
    "dept": "Aude",
@@ -1334,7 +1334,7 @@
    "dept": "Doubs",
    "serie": "B",
    "episode": "2026-10-27",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "26|2026-08-20|A": {
    "dept": "Drôme",
@@ -1353,7 +1353,7 @@
    "dept": "Finistère",
    "serie": "B",
    "episode": "2026-10-24",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "30|2026-09-30|A": {
    "dept": "Gard",
@@ -1401,7 +1401,7 @@
    "dept": "Haute-Marne",
    "serie": "B",
    "episode": "2026-10-27",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "55|2026-10-07|A": {
    "dept": "Meuse",
@@ -1441,7 +1441,7 @@
    "dept": "Seine-Maritime",
    "serie": "A",
    "episode": "2026-10-24",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "79|2026-08-26|A": {
    "dept": "Deux-Sèvres",
@@ -1480,7 +1480,7 @@
    "dept": "Vendée",
    "serie": "B",
    "episode": "2026-10-26",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "86|2026-08-24|A": {
    "dept": "Vienne",
