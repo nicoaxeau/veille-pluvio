@@ -88,8 +88,9 @@
    "mail2_envoye_le": "2026-10-27"
   },
   "25|2026-10-27|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-02"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-02",
+   "mail1_envoye_le": "2026-11-03"
   },
   "26|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -154,8 +155,9 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "52|2026-10-27|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-02"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-02",
+   "mail1_envoye_le": "2026-11-03"
   },
   "55|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -749,7 +751,7 @@
    "stats": {
     "contacts": 109,
     "delivres": 87,
-    "ouvertures": 32,
+    "ouvertures": 33,
     "clics": 0,
     "desabos": 1
    }
@@ -791,7 +793,7 @@
    "stats": {
     "contacts": 1304,
     "delivres": 1008,
-    "ouvertures": 282,
+    "ouvertures": 283,
     "clics": 0,
     "desabos": 5
    }
@@ -833,7 +835,7 @@
    "stats": {
     "contacts": 515,
     "delivres": 429,
-    "ouvertures": 152,
+    "ouvertures": 154,
     "clics": 1,
     "desabos": 0
    }
@@ -1022,7 +1024,7 @@
    "stats": {
     "contacts": 618,
     "delivres": 494,
-    "ouvertures": 146,
+    "ouvertures": 148,
     "clics": 2,
     "desabos": 2
    }
@@ -1085,7 +1087,7 @@
    "stats": {
     "contacts": 47,
     "delivres": 41,
-    "ouvertures": 11,
+    "ouvertures": 12,
     "clics": 0,
     "desabos": 0
    }
@@ -1147,8 +1149,8 @@
    "envoye_le": "2026-11-02",
    "stats": {
     "contacts": 404,
-    "delivres": 301,
-    "ouvertures": 46,
+    "delivres": 300,
+    "ouvertures": 54,
     "clics": 0,
     "desabos": 1
    }
@@ -1168,10 +1170,10 @@
    "envoye_le": "2026-11-02",
    "stats": {
     "contacts": 449,
-    "delivres": 363,
-    "ouvertures": 94,
+    "delivres": 360,
+    "ouvertures": 105,
     "clics": 0,
-    "desabos": 1
+    "desabos": 2
    }
   },
   "15068764": {
@@ -1185,7 +1187,15 @@
    "envoi_prevu": "2026-11-03",
    "liste_id": 10655416,
    "titre": "J+7 - Pluies - Doubs",
-   "objet": "Doubs : après un mois pluvieux"
+   "objet": "Doubs : après un mois pluvieux",
+   "envoye_le": "2026-11-03",
+   "stats": {
+    "contacts": 88,
+    "delivres": 77,
+    "ouvertures": 13,
+    "clics": 0,
+    "desabos": 2
+   }
   },
   "15068765": {
    "cle": "52|2026-10-27|B",
@@ -1198,7 +1208,15 @@
    "envoi_prevu": "2026-11-03",
    "liste_id": 10655417,
    "titre": "J+7 - Pluies - Haute-Marne",
-   "objet": "Haute-Marne : après un mois pluvieux"
+   "objet": "Haute-Marne : après un mois pluvieux",
+   "envoye_le": "2026-11-03",
+   "stats": {
+    "contacts": 21,
+    "delivres": 19,
+    "ouvertures": 2,
+    "clics": 0,
+    "desabos": 0
+   }
   }
  },
  "detection_cron": {
