@@ -55,7 +55,7 @@
    "mail2_envoye_le": "2026-10-26"
   },
   "13|2026-10-19|A": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-25",
    "mail1_envoye_le": "2026-10-26"
   },
@@ -74,6 +74,10 @@
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14",
    "mail2_envoye_le": "2026-10-28"
+  },
+  "22|2026-11-02|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-08"
   },
   "23|2026-09-30|A": {
    "etape": "mail2_envoye",
@@ -1217,6 +1221,32 @@
     "clics": 0,
     "desabos": 0
    }
+  },
+  "15078718": {
+   "cle": "22|2026-11-02|B",
+   "dept": "22",
+   "nom_dept": "Côtes-d'Armor",
+   "serie": "B",
+   "episode": "2026-11-02",
+   "etape": "mail1",
+   "monte_le": "2026-11-08",
+   "envoi_prevu": "2026-11-09",
+   "liste_id": 10656893,
+   "titre": "J+7 - Pluies - Côtes-d'Armor",
+   "objet": "Côtes-d'Armor : après un mois pluvieux"
+  },
+  "15078720": {
+   "cle": "13|2026-10-19|A",
+   "dept": "13",
+   "nom_dept": "Bouches-du-Rhône",
+   "serie": "A",
+   "episode": "2026-10-19",
+   "etape": "mail2",
+   "monte_le": "2026-11-08",
+   "envoi_prevu": "2026-11-09",
+   "liste_id": 10653430,
+   "titre": "J+21 - Pluies - Bouches-du-Rhône",
+   "objet": "Bouches-du-Rhône : rien n'est apparu ? 💧"
   }
  },
  "detection_cron": {
