@@ -55,9 +55,10 @@
    "mail2_envoye_le": "2026-10-26"
   },
   "13|2026-10-19|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-25",
-   "mail1_envoye_le": "2026-10-26"
+   "mail1_envoye_le": "2026-10-26",
+   "mail2_envoye_le": "2026-11-09"
   },
   "14|2026-09-28|A": {
    "etape": "abandonne",
@@ -76,8 +77,9 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "22|2026-11-02|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-08"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-08",
+   "mail1_envoye_le": "2026-11-09"
   },
   "23|2026-09-30|A": {
    "etape": "mail2_envoye",
@@ -1154,7 +1156,7 @@
    "stats": {
     "contacts": 404,
     "delivres": 300,
-    "ouvertures": 60,
+    "ouvertures": 61,
     "clics": 0,
     "desabos": 1
    }
@@ -1233,7 +1235,15 @@
    "envoi_prevu": "2026-11-09",
    "liste_id": 10656893,
    "titre": "J+7 - Pluies - Côtes-d'Armor",
-   "objet": "Côtes-d'Armor : après un mois pluvieux"
+   "objet": "Côtes-d'Armor : après un mois pluvieux",
+   "envoye_le": "2026-11-09",
+   "stats": {
+    "contacts": 37,
+    "delivres": 30,
+    "ouvertures": 8,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15078720": {
    "cle": "13|2026-10-19|A",
@@ -1246,7 +1256,15 @@
    "envoi_prevu": "2026-11-09",
    "liste_id": 10653430,
    "titre": "J+21 - Pluies - Bouches-du-Rhône",
-   "objet": "Bouches-du-Rhône : rien n'est apparu ? 💧"
+   "objet": "Bouches-du-Rhône : rien n'est apparu ? 💧",
+   "envoye_le": "2026-11-09",
+   "stats": {
+    "contacts": 2390,
+    "delivres": 2021,
+    "ouvertures": 488,
+    "clics": 2,
+    "desabos": 8
+   }
   }
  },
  "detection_cron": {
