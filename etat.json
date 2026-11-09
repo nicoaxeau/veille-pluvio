@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-11-08T15:57:54+00:00",
+ "maj": "2026-11-09T19:46:27+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -1331,7 +1331,7 @@
    "dept": "Bouches-du-Rhône",
    "serie": "A",
    "episode": "2026-10-19",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "14|2026-09-28|A": {
    "dept": "Calvados",
@@ -1363,7 +1363,7 @@
    "dept": "Côtes-d'Armor",
    "serie": "B",
    "episode": "2026-11-02",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "23|2026-09-30|A": {
    "dept": "Creuse",
