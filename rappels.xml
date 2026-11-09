@@ -4,6 +4,13 @@
   <title>Veille pluviometrique Ax'eau : brouillons a envoyer</title>
   <link>https://nicoaxeau.github.io/veille-pluvio/</link>
   <description>Un element par brouillon pret et pas encore envoye.</description>
-  <lastBuildDate>Mon, 09 Nov 2026 20:45:31 +0000</lastBuildDate>
+  <lastBuildDate>Mon, 09 Nov 2026 21:38:25 +0000</lastBuildDate>
+  <item>
+    <title>À envoyer le 10/11/2026 : mail 2 Alpes-de-Haute-Provence</title>
+    <link>https://app.mailjet.com/campaigns/draft/15080735/edit</link>
+    <guid isPermaLink="false">brouillon-15080735</guid>
+    <pubDate>Tue, 10 Nov 2026 06:00:00 +0000</pubDate>
+    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-10</description>
+  </item>
 </channel>
 </rss>
