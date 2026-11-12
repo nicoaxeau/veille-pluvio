@@ -151,7 +151,7 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "50|2026-10-23|B": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-10-29",
    "mail1_envoye_le": "2026-10-30"
   },
@@ -1287,6 +1287,19 @@
     "clics": 0,
     "desabos": 1
    }
+  },
+  "15085930": {
+   "cle": "50|2026-10-23|B",
+   "dept": "50",
+   "nom_dept": "Manche",
+   "serie": "B",
+   "episode": "2026-10-23",
+   "etape": "mail2",
+   "monte_le": "2026-11-12",
+   "envoi_prevu": "2026-11-13",
+   "liste_id": 10654659,
+   "titre": "J+21 - Pluies - Manche",
+   "objet": "Manche : rien n'est apparu ? 💧"
   }
  },
  "detection_cron": {
