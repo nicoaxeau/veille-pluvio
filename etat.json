@@ -1242,7 +1242,7 @@
     "contacts": 37,
     "delivres": 30,
     "ouvertures": 10,
-    "clics": 0,
+    "clics": 1,
     "desabos": 0
    }
   },
@@ -1262,7 +1262,7 @@
    "stats": {
     "contacts": 2390,
     "delivres": 2020,
-    "ouvertures": 541,
+    "ouvertures": 552,
     "clics": 3,
     "desabos": 9
    }
@@ -1283,7 +1283,7 @@
    "stats": {
     "contacts": 108,
     "delivres": 86,
-    "ouvertures": 21,
+    "ouvertures": 22,
     "clics": 0,
     "desabos": 1
    }
