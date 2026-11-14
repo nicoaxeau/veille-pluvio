@@ -1262,9 +1262,9 @@
    "envoye_le": "2026-11-09",
    "stats": {
     "contacts": 2390,
-    "delivres": 2020,
-    "ouvertures": 558,
-    "clics": 3,
+    "delivres": 2018,
+    "ouvertures": 561,
+    "clics": 4,
     "desabos": 9
    }
   },
@@ -1284,7 +1284,7 @@
    "stats": {
     "contacts": 108,
     "delivres": 86,
-    "ouvertures": 22,
+    "ouvertures": 23,
     "clics": 0,
     "desabos": 1
    }
