@@ -97,7 +97,7 @@
    "mail2_envoye_le": "2026-10-27"
   },
   "25|2026-10-27|B": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-11-02",
    "mail1_envoye_le": "2026-11-03"
   },
@@ -166,7 +166,7 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "52|2026-10-27|B": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-11-02",
    "mail1_envoye_le": "2026-11-03"
   },
@@ -1419,6 +1419,32 @@
     "clics": 2,
     "desabos": 0
    }
+  },
+  "15093019": {
+   "cle": "25|2026-10-27|B",
+   "dept": "25",
+   "nom_dept": "Doubs",
+   "serie": "B",
+   "episode": "2026-10-27",
+   "etape": "mail2",
+   "monte_le": "2026-11-16",
+   "envoi_prevu": "2026-11-17",
+   "liste_id": 10655416,
+   "titre": "J+21 - Pluies - Doubs",
+   "objet": "Doubs : rien n'est apparu ? 💧"
+  },
+  "15093020": {
+   "cle": "52|2026-10-27|B",
+   "dept": "52",
+   "nom_dept": "Haute-Marne",
+   "serie": "B",
+   "episode": "2026-10-27",
+   "etape": "mail2",
+   "monte_le": "2026-11-16",
+   "envoi_prevu": "2026-11-17",
+   "liste_id": 10655417,
+   "titre": "J+21 - Pluies - Haute-Marne",
+   "objet": "Haute-Marne : rien n'est apparu ? 💧"
   }
  },
  "detection_cron": {
