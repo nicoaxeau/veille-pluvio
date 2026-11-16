@@ -16,9 +16,10 @@
  },
  "sequences": {
   "02|2026-10-24|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-01",
-   "mail1_envoye_le": "2026-11-02"
+   "mail1_envoye_le": "2026-11-02",
+   "mail2_envoye_le": "2026-11-16"
   },
   "04|2026-10-20|A": {
    "etape": "mail2_envoye",
@@ -45,9 +46,10 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "08|2026-10-24|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-01",
-   "mail1_envoye_le": "2026-11-02"
+   "mail1_envoye_le": "2026-11-02",
+   "mail2_envoye_le": "2026-11-16"
   },
   "11|2026-10-04|A": {
    "etape": "mail2_envoye",
@@ -106,9 +108,10 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "29|2026-10-24|B": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-01",
-   "mail1_envoye_le": "2026-11-02"
+   "mail1_envoye_le": "2026-11-02",
+   "mail2_envoye_le": "2026-11-16"
   },
   "2A|2026-10-07|A": {
    "etape": "abandonne",
@@ -174,9 +177,10 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "76|2026-10-24|A": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-01",
-   "mail1_envoye_le": "2026-11-02"
+   "mail1_envoye_le": "2026-11-02",
+   "mail2_envoye_le": "2026-11-16"
   },
   "83|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -191,9 +195,10 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "85|2026-10-26|B": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-01",
-   "mail1_envoye_le": "2026-11-02"
+   "mail1_envoye_le": "2026-11-02",
+   "mail2_envoye_le": "2026-11-16"
   },
   "87|2026-09-30|A": {
    "etape": "mail2_envoye",
@@ -1263,7 +1268,7 @@
    "stats": {
     "contacts": 2390,
     "delivres": 2018,
-    "ouvertures": 565,
+    "ouvertures": 576,
     "clics": 4,
     "desabos": 9
    }
@@ -1305,7 +1310,7 @@
    "stats": {
     "contacts": 51,
     "delivres": 41,
-    "ouvertures": 3,
+    "ouvertures": 5,
     "clics": 0,
     "desabos": 0
    }
@@ -1321,7 +1326,15 @@
    "envoi_prevu": "2026-11-16",
    "liste_id": 10655104,
    "titre": "J+21 - Pluies - Aisne",
-   "objet": "Aisne : rien n'est apparu ? 💧"
+   "objet": "Aisne : rien n'est apparu ? 💧",
+   "envoye_le": "2026-11-16",
+   "stats": {
+    "contacts": 47,
+    "delivres": 41,
+    "ouvertures": 9,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15090820": {
    "cle": "08|2026-10-24|A",
@@ -1334,7 +1347,15 @@
    "envoi_prevu": "2026-11-16",
    "liste_id": 10655105,
    "titre": "J+21 - Pluies - Ardennes",
-   "objet": "Ardennes : rien n'est apparu ? 💧"
+   "objet": "Ardennes : rien n'est apparu ? 💧",
+   "envoye_le": "2026-11-16",
+   "stats": {
+    "contacts": 10,
+    "delivres": 8,
+    "ouvertures": 0,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15090821": {
    "cle": "29|2026-10-24|B",
@@ -1347,7 +1368,15 @@
    "envoi_prevu": "2026-11-16",
    "liste_id": 10655106,
    "titre": "J+21 - Pluies - Finistère",
-   "objet": "Finistère : rien n'est apparu ? 💧"
+   "objet": "Finistère : rien n'est apparu ? 💧",
+   "envoye_le": "2026-11-16",
+   "stats": {
+    "contacts": 42,
+    "delivres": 37,
+    "ouvertures": 7,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15090822": {
    "cle": "76|2026-10-24|A",
@@ -1360,7 +1389,15 @@
    "envoi_prevu": "2026-11-16",
    "liste_id": 10655107,
    "titre": "J+21 - Pluies - Seine-Maritime",
-   "objet": "Seine-Maritime : rien n'est apparu ? 💧"
+   "objet": "Seine-Maritime : rien n'est apparu ? 💧",
+   "envoye_le": "2026-11-16",
+   "stats": {
+    "contacts": 403,
+    "delivres": 299,
+    "ouvertures": 37,
+    "clics": 1,
+    "desabos": 1
+   }
   },
   "15090823": {
    "cle": "85|2026-10-26|B",
@@ -1373,7 +1410,15 @@
    "envoi_prevu": "2026-11-16",
    "liste_id": 10655108,
    "titre": "J+21 - Pluies - Vendée",
-   "objet": "Vendée : rien n'est apparu ? 💧"
+   "objet": "Vendée : rien n'est apparu ? 💧",
+   "envoye_le": "2026-11-16",
+   "stats": {
+    "contacts": 447,
+    "delivres": 360,
+    "ouvertures": 85,
+    "clics": 2,
+    "desabos": 0
+   }
   }
  },
  "detection_cron": {
