@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-11-13T17:12:20+00:00",
+ "maj": "2026-11-17T18:33:37+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -1452,7 +1452,7 @@
    "dept": "Aisne",
    "serie": "A",
    "episode": "2026-10-24",
-   "etape": "mail2_a_venir"
+   "etape": "silence"
   },
   "04|2026-10-20|A": {
    "dept": "Alpes-de-Haute-Provence",
@@ -1503,7 +1503,7 @@
    "dept": "Ardennes",
    "serie": "A",
    "episode": "2026-10-24",
-   "etape": "mail2_a_venir"
+   "etape": "silence"
   },
   "11|2026-10-04|A": {
    "dept": "Aude",
@@ -1572,7 +1572,7 @@
    "dept": "Doubs",
    "serie": "B",
    "episode": "2026-10-27",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "26|2026-08-20|A": {
    "dept": "Drôme",
@@ -1591,7 +1591,7 @@
    "dept": "Finistère",
    "serie": "B",
    "episode": "2026-10-24",
-   "etape": "mail2_a_venir"
+   "etape": "silence"
   },
   "30|2026-09-30|A": {
    "dept": "Gard",
@@ -1627,7 +1627,7 @@
    "dept": "Manche",
    "serie": "B",
    "episode": "2026-10-23",
-   "etape": "attente_envoi_mail2"
+   "etape": "silence"
   },
   "51|2026-10-07|A": {
    "dept": "Marne",
@@ -1639,7 +1639,7 @@
    "dept": "Haute-Marne",
    "serie": "B",
    "episode": "2026-10-27",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "55|2026-10-07|A": {
    "dept": "Meuse",
@@ -1675,23 +1675,22 @@
    "etape": "abandonne",
    "motif": "anterieur a la bascule du 2026-10-14"
   },
+  "74|2026-11-15|B": {
+   "dept": "Haute-Savoie",
+   "serie": "B",
+   "episode": "2026-11-15",
+   "etape": "a_venir"
+  },
   "76|2026-10-24|A": {
    "dept": "Seine-Maritime",
    "serie": "A",
    "episode": "2026-10-24",
-   "etape": "mail2_a_venir"
+   "etape": "silence"
   },
   "79|2026-08-26|A": {
    "dept": "Deux-Sèvres",
    "serie": "A",
    "episode": "2026-08-26",
-   "etape": "abandonne",
-   "motif": "anterieur a la bascule du 2026-10-14"
-  },
-  "82|2026-08-15|A": {
-   "dept": "Tarn-et-Garonne",
-   "serie": "A",
-   "episode": "2026-08-15",
    "etape": "abandonne",
    "motif": "anterieur a la bascule du 2026-10-14"
   },
@@ -1718,7 +1717,7 @@
    "dept": "Vendée",
    "serie": "B",
    "episode": "2026-10-26",
-   "etape": "mail2_a_venir"
+   "etape": "silence"
   },
   "86|2026-08-24|A": {
    "dept": "Vienne",
