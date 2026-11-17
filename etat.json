@@ -97,9 +97,10 @@
    "mail2_envoye_le": "2026-10-27"
   },
   "25|2026-10-27|B": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-02",
-   "mail1_envoye_le": "2026-11-03"
+   "mail1_envoye_le": "2026-11-03",
+   "mail2_envoye_le": "2026-11-17"
   },
   "26|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -166,9 +167,10 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "52|2026-10-27|B": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-02",
-   "mail1_envoye_le": "2026-11-03"
+   "mail1_envoye_le": "2026-11-03",
+   "mail2_envoye_le": "2026-11-17"
   },
   "55|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -1331,7 +1333,7 @@
    "stats": {
     "contacts": 47,
     "delivres": 41,
-    "ouvertures": 9,
+    "ouvertures": 11,
     "clics": 0,
     "desabos": 0
    }
@@ -1352,7 +1354,7 @@
    "stats": {
     "contacts": 10,
     "delivres": 8,
-    "ouvertures": 0,
+    "ouvertures": 1,
     "clics": 0,
     "desabos": 0
    }
@@ -1373,7 +1375,7 @@
    "stats": {
     "contacts": 42,
     "delivres": 37,
-    "ouvertures": 7,
+    "ouvertures": 8,
     "clics": 0,
     "desabos": 0
    }
@@ -1393,10 +1395,10 @@
    "envoye_le": "2026-11-16",
    "stats": {
     "contacts": 403,
-    "delivres": 299,
-    "ouvertures": 37,
+    "delivres": 298,
+    "ouvertures": 47,
     "clics": 1,
-    "desabos": 1
+    "desabos": 2
    }
   },
   "15090823": {
@@ -1414,8 +1416,8 @@
    "envoye_le": "2026-11-16",
    "stats": {
     "contacts": 447,
-    "delivres": 360,
-    "ouvertures": 85,
+    "delivres": 357,
+    "ouvertures": 92,
     "clics": 2,
     "desabos": 0
    }
@@ -1431,7 +1433,15 @@
    "envoi_prevu": "2026-11-17",
    "liste_id": 10655416,
    "titre": "J+21 - Pluies - Doubs",
-   "objet": "Doubs : rien n'est apparu ? 💧"
+   "objet": "Doubs : rien n'est apparu ? 💧",
+   "envoye_le": "2026-11-17",
+   "stats": {
+    "contacts": 86,
+    "delivres": 75,
+    "ouvertures": 15,
+    "clics": 0,
+    "desabos": 2
+   }
   },
   "15093020": {
    "cle": "52|2026-10-27|B",
@@ -1444,7 +1454,15 @@
    "envoi_prevu": "2026-11-17",
    "liste_id": 10655417,
    "titre": "J+21 - Pluies - Haute-Marne",
-   "objet": "Haute-Marne : rien n'est apparu ? 💧"
+   "objet": "Haute-Marne : rien n'est apparu ? 💧",
+   "envoye_le": "2026-11-17",
+   "stats": {
+    "contacts": 21,
+    "delivres": 19,
+    "ouvertures": 1,
+    "clics": 0,
+    "desabos": 0
+   }
   }
  },
  "detection_cron": {
