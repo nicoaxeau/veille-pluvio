@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-11-19T18:14:47+00:00",
+ "maj": "2026-11-20T17:46:34+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -1602,7 +1602,7 @@
    "dept": "Creuse",
    "serie": "A",
    "episode": "2026-09-30",
-   "etape": "silence"
+   "etape": "termine"
   },
   "24|2026-10-06|A": {
    "dept": "Dordogne",
@@ -1639,7 +1639,7 @@
    "dept": "Gard",
    "serie": "A",
    "episode": "2026-09-30",
-   "etape": "silence"
+   "etape": "termine"
   },
   "33|2026-10-06|A": {
    "dept": "Gironde",
@@ -1651,7 +1651,7 @@
    "dept": "Hérault",
    "serie": "A",
    "episode": "2026-09-30",
-   "etape": "silence"
+   "etape": "termine"
   },
   "38|2026-10-07|A": {
    "dept": "Isère",
@@ -1731,6 +1731,12 @@
    "dept": "Rhône",
    "serie": "B",
    "episode": "2026-11-17",
+   "etape": "a_venir"
+  },
+  "70|2026-11-18|B": {
+   "dept": "Haute-Saône",
+   "serie": "B",
+   "episode": "2026-11-18",
    "etape": "a_venir"
   },
   "71|2026-11-17|B": {
@@ -1820,7 +1826,13 @@
    "dept": "Haute-Vienne",
    "serie": "A",
    "episode": "2026-09-30",
-   "etape": "silence"
+   "etape": "termine"
+  },
+  "90|2026-11-18|B": {
+   "dept": "Territoire de Belfort",
+   "serie": "B",
+   "episode": "2026-11-18",
+   "etape": "a_venir"
   }
  },
  "mode": "a_blanc"
