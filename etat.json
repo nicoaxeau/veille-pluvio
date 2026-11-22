@@ -15,11 +15,19 @@
   "connu_au_mail1_j": 5
  },
  "sequences": {
+  "01|2026-11-16|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-22"
+  },
   "02|2026-10-24|A": {
    "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-01",
    "mail1_envoye_le": "2026-11-02",
    "mail2_envoye_le": "2026-11-16"
+  },
+  "03|2026-11-16|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-22"
   },
   "04|2026-10-20|A": {
    "etape": "mail2_envoye",
@@ -79,8 +87,12 @@
    "mail1_envoye_le": "2026-10-14",
    "mail2_envoye_le": "2026-10-28"
   },
+  "17|2026-11-16|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-22"
+  },
   "22|2026-11-02|B": {
-   "etape": "mail1_envoye",
+   "etape": "mail2_monte",
    "mail1_monte_le": "2026-11-08",
    "mail1_envoye_le": "2026-11-09"
   },
@@ -172,17 +184,33 @@
    "mail1_envoye_le": "2026-11-03",
    "mail2_envoye_le": "2026-11-17"
   },
+  "53|2026-11-16|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-22"
+  },
   "55|2026-10-07|A": {
    "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-13",
    "mail1_envoye_le": "2026-10-14",
    "mail2_envoye_le": "2026-10-28"
   },
+  "56|2026-11-16|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-22"
+  },
+  "74|2026-11-15|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-22"
+  },
   "76|2026-10-24|A": {
    "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-01",
    "mail1_envoye_le": "2026-11-02",
    "mail2_envoye_le": "2026-11-16"
+  },
+  "79|2026-11-16|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-22"
   },
   "83|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -1463,6 +1491,110 @@
     "clics": 0,
     "desabos": 0
    }
+  },
+  "15103182": {
+   "cle": "01|2026-11-16|B",
+   "dept": "01",
+   "nom_dept": "Ain",
+   "serie": "B",
+   "episode": "2026-11-16",
+   "etape": "mail1",
+   "monte_le": "2026-11-22",
+   "envoi_prevu": "2026-11-23",
+   "liste_id": 10660875,
+   "titre": "J+7 - Pluies - Ain",
+   "objet": "Ain : après un mois pluvieux"
+  },
+  "15103183": {
+   "cle": "03|2026-11-16|B",
+   "dept": "03",
+   "nom_dept": "Allier",
+   "serie": "B",
+   "episode": "2026-11-16",
+   "etape": "mail1",
+   "monte_le": "2026-11-22",
+   "envoi_prevu": "2026-11-23",
+   "liste_id": 10660876,
+   "titre": "J+7 - Pluies - Allier",
+   "objet": "Allier : après un mois pluvieux"
+  },
+  "15103184": {
+   "cle": "17|2026-11-16|A",
+   "dept": "17",
+   "nom_dept": "Charente-Maritime",
+   "serie": "A",
+   "episode": "2026-11-16",
+   "etape": "mail1",
+   "monte_le": "2026-11-22",
+   "envoi_prevu": "2026-11-23",
+   "liste_id": 10660877,
+   "titre": "J+7 - Pluies - Charente-Maritime",
+   "objet": "Charente-Maritime : après les fortes pluies"
+  },
+  "15103185": {
+   "cle": "53|2026-11-16|A",
+   "dept": "53",
+   "nom_dept": "Mayenne",
+   "serie": "A",
+   "episode": "2026-11-16",
+   "etape": "mail1",
+   "monte_le": "2026-11-22",
+   "envoi_prevu": "2026-11-23",
+   "liste_id": 10660879,
+   "titre": "J+7 - Pluies - Mayenne",
+   "objet": "Mayenne : après les fortes pluies"
+  },
+  "15103187": {
+   "cle": "56|2026-11-16|A",
+   "dept": "56",
+   "nom_dept": "Morbihan",
+   "serie": "A",
+   "episode": "2026-11-16",
+   "etape": "mail1",
+   "monte_le": "2026-11-22",
+   "envoi_prevu": "2026-11-23",
+   "liste_id": 10660880,
+   "titre": "J+7 - Pluies - Morbihan",
+   "objet": "Morbihan : après les fortes pluies"
+  },
+  "15103188": {
+   "cle": "74|2026-11-15|B",
+   "dept": "74",
+   "nom_dept": "Haute-Savoie",
+   "serie": "B",
+   "episode": "2026-11-15",
+   "etape": "mail1",
+   "monte_le": "2026-11-22",
+   "envoi_prevu": "2026-11-23",
+   "liste_id": 10660881,
+   "titre": "J+7 - Pluies - Haute-Savoie",
+   "objet": "Haute-Savoie : après un mois pluvieux"
+  },
+  "15103189": {
+   "cle": "79|2026-11-16|A",
+   "dept": "79",
+   "nom_dept": "Deux-Sèvres",
+   "serie": "A",
+   "episode": "2026-11-16",
+   "etape": "mail1",
+   "monte_le": "2026-11-22",
+   "envoi_prevu": "2026-11-23",
+   "liste_id": 10660882,
+   "titre": "J+7 - Pluies - Deux-Sèvres",
+   "objet": "Deux-Sèvres : après les fortes pluies"
+  },
+  "15103190": {
+   "cle": "22|2026-11-02|B",
+   "dept": "22",
+   "nom_dept": "Côtes-d'Armor",
+   "serie": "B",
+   "episode": "2026-11-02",
+   "etape": "mail2",
+   "monte_le": "2026-11-22",
+   "envoi_prevu": "2026-11-23",
+   "liste_id": 10656893,
+   "titre": "J+21 - Pluies - Côtes-d'Armor",
+   "objet": "Côtes-d'Armor : rien n'est apparu ? 💧"
   }
  },
  "detection_cron": {
