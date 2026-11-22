@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-11-21T16:46:14+00:00",
+ "maj": "2026-11-22T17:08:12+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -1583,6 +1583,12 @@
    "episode": "2026-09-30",
    "etape": "termine"
   },
+  "23|2026-11-20|B": {
+   "dept": "Creuse",
+   "serie": "B",
+   "episode": "2026-11-20",
+   "etape": "a_venir"
+  },
   "24|2026-10-06|A": {
    "dept": "Dordogne",
    "serie": "A",
@@ -1721,7 +1727,7 @@
    "dept": "Haute-Savoie",
    "serie": "B",
    "episode": "2026-11-15",
-   "etape": "a_venir"
+   "etape": "a_monter"
   },
   "76|2026-10-24|A": {
    "dept": "Seine-Maritime",
@@ -1784,6 +1790,12 @@
    "serie": "A",
    "episode": "2026-09-30",
    "etape": "termine"
+  },
+  "87|2026-11-20|B": {
+   "dept": "Haute-Vienne",
+   "serie": "B",
+   "episode": "2026-11-20",
+   "etape": "a_venir"
   },
   "90|2026-11-18|B": {
    "dept": "Territoire de Belfort",
