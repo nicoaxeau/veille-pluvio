@@ -4,6 +4,48 @@
   <title>Veille pluviometrique Ax'eau : brouillons a envoyer</title>
   <link>https://nicoaxeau.github.io/veille-pluvio/</link>
   <description>Un element par brouillon pret et pas encore envoye.</description>
-  <lastBuildDate>Mon, 23 Nov 2026 22:04:45 +0000</lastBuildDate>
+  <lastBuildDate>Mon, 23 Nov 2026 22:58:27 +0000</lastBuildDate>
+  <item>
+    <title>À envoyer le 23/11/2026 : mail 1 Loire-Atlantique</title>
+    <link>https://app.mailjet.com/campaigns/draft/15105315/edit</link>
+    <guid isPermaLink="false">brouillon-15105315</guid>
+    <pubDate>Mon, 23 Nov 2026 06:00:00 +0000</pubDate>
+    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-23</description>
+  </item>
+  <item>
+    <title>À envoyer le 24/11/2026 : mail 1 Corrèze</title>
+    <link>https://app.mailjet.com/campaigns/draft/15105314/edit</link>
+    <guid isPermaLink="false">brouillon-15105314</guid>
+    <pubDate>Tue, 24 Nov 2026 06:00:00 +0000</pubDate>
+    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-24</description>
+  </item>
+  <item>
+    <title>À envoyer le 24/11/2026 : mail 1 Pas-de-Calais</title>
+    <link>https://app.mailjet.com/campaigns/draft/15105317/edit</link>
+    <guid isPermaLink="false">brouillon-15105317</guid>
+    <pubDate>Tue, 24 Nov 2026 06:00:00 +0000</pubDate>
+    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-24</description>
+  </item>
+  <item>
+    <title>À envoyer le 24/11/2026 : mail 1 Rhône</title>
+    <link>https://app.mailjet.com/campaigns/draft/15105318/edit</link>
+    <guid isPermaLink="false">brouillon-15105318</guid>
+    <pubDate>Tue, 24 Nov 2026 06:00:00 +0000</pubDate>
+    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-24</description>
+  </item>
+  <item>
+    <title>À envoyer le 24/11/2026 : mail 1 Saône-et-Loire</title>
+    <link>https://app.mailjet.com/campaigns/draft/15105319/edit</link>
+    <guid isPermaLink="false">brouillon-15105319</guid>
+    <pubDate>Tue, 24 Nov 2026 06:00:00 +0000</pubDate>
+    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-24</description>
+  </item>
+  <item>
+    <title>À envoyer le 24/11/2026 : mail 1 Tarn-et-Garonne</title>
+    <link>https://app.mailjet.com/campaigns/draft/15105320/edit</link>
+    <guid isPermaLink="false">brouillon-15105320</guid>
+    <pubDate>Tue, 24 Nov 2026 06:00:00 +0000</pubDate>
+    <description>Brouillon deja pret dans Mailjet. Il reste a cliquer sur Envoyer. Date : 2026-11-24</description>
+  </item>
 </channel>
 </rss>

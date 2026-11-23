@@ -94,6 +94,10 @@
    "mail1_monte_le": "2026-11-22",
    "mail1_envoye_le": "2026-11-23"
   },
+  "19|2026-11-17|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-23"
+  },
   "22|2026-11-02|B": {
    "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-08",
@@ -170,6 +174,10 @@
    "mail1_envoye_le": "2026-10-14",
    "mail2_envoye_le": "2026-10-28"
   },
+  "44|2026-11-16|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-23"
+  },
   "50|2026-10-23|B": {
    "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-29",
@@ -204,6 +212,18 @@
    "mail1_monte_le": "2026-11-22",
    "mail1_envoye_le": "2026-11-23"
   },
+  "62|2026-11-17|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-23"
+  },
+  "69|2026-11-17|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-23"
+  },
+  "71|2026-11-17|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-23"
+  },
   "74|2026-11-15|B": {
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-11-22",
@@ -219,6 +239,10 @@
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-11-22",
    "mail1_envoye_le": "2026-11-23"
+  },
+  "82|2026-11-17|A": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-23"
   },
   "83|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -1667,6 +1691,84 @@
     "clics": 0,
     "desabos": 0
    }
+  },
+  "15105314": {
+   "cle": "19|2026-11-17|B",
+   "dept": "19",
+   "nom_dept": "Corrèze",
+   "serie": "B",
+   "episode": "2026-11-17",
+   "etape": "mail1",
+   "monte_le": "2026-11-23",
+   "envoi_prevu": "2026-11-24",
+   "liste_id": 10661285,
+   "titre": "J+7 - Pluies - Corrèze",
+   "objet": "Corrèze : après un mois pluvieux"
+  },
+  "15105315": {
+   "cle": "44|2026-11-16|A",
+   "dept": "44",
+   "nom_dept": "Loire-Atlantique",
+   "serie": "A",
+   "episode": "2026-11-16",
+   "etape": "mail1",
+   "monte_le": "2026-11-23",
+   "envoi_prevu": "2026-11-23",
+   "liste_id": 10661286,
+   "titre": "J+7 - Pluies - Loire-Atlantique",
+   "objet": "Loire-Atlantique : après les fortes pluies"
+  },
+  "15105317": {
+   "cle": "62|2026-11-17|A",
+   "dept": "62",
+   "nom_dept": "Pas-de-Calais",
+   "serie": "A",
+   "episode": "2026-11-17",
+   "etape": "mail1",
+   "monte_le": "2026-11-23",
+   "envoi_prevu": "2026-11-24",
+   "liste_id": 10661287,
+   "titre": "J+7 - Pluies - Pas-de-Calais",
+   "objet": "Pas-de-Calais : après les fortes pluies"
+  },
+  "15105318": {
+   "cle": "69|2026-11-17|B",
+   "dept": "69",
+   "nom_dept": "Rhône",
+   "serie": "B",
+   "episode": "2026-11-17",
+   "etape": "mail1",
+   "monte_le": "2026-11-23",
+   "envoi_prevu": "2026-11-24",
+   "liste_id": 10661288,
+   "titre": "J+7 - Pluies - Rhône",
+   "objet": "Rhône : après un mois pluvieux"
+  },
+  "15105319": {
+   "cle": "71|2026-11-17|B",
+   "dept": "71",
+   "nom_dept": "Saône-et-Loire",
+   "serie": "B",
+   "episode": "2026-11-17",
+   "etape": "mail1",
+   "monte_le": "2026-11-23",
+   "envoi_prevu": "2026-11-24",
+   "liste_id": 10661289,
+   "titre": "J+7 - Pluies - Saône-et-Loire",
+   "objet": "Saône-et-Loire : après un mois pluvieux"
+  },
+  "15105320": {
+   "cle": "82|2026-11-17|A",
+   "dept": "82",
+   "nom_dept": "Tarn-et-Garonne",
+   "serie": "A",
+   "episode": "2026-11-17",
+   "etape": "mail1",
+   "monte_le": "2026-11-23",
+   "envoi_prevu": "2026-11-24",
+   "liste_id": 10661290,
+   "titre": "J+7 - Pluies - Tarn-et-Garonne",
+   "objet": "Tarn-et-Garonne : après les fortes pluies"
   }
  },
  "detection_cron": {
