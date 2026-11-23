@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-11-22T17:08:12+00:00",
+ "maj": "2026-11-23T21:18:07+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -1602,7 +1602,7 @@
    "dept": "Ain",
    "serie": "B",
    "episode": "2026-11-16",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "02|2026-10-24|A": {
    "dept": "Aisne",
@@ -1614,7 +1614,7 @@
    "dept": "Allier",
    "serie": "B",
    "episode": "2026-11-16",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "04|2026-10-20|A": {
    "dept": "Alpes-de-Haute-Provence",
@@ -1695,7 +1695,7 @@
    "dept": "Charente-Maritime",
    "serie": "A",
    "episode": "2026-11-16",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "19|2026-11-17|B": {
    "dept": "Corrèze",
@@ -1703,11 +1703,17 @@
    "episode": "2026-11-17",
    "etape": "a_venir"
   },
+  "21|2026-11-21|B": {
+   "dept": "Côte-d'Or",
+   "serie": "B",
+   "episode": "2026-11-21",
+   "etape": "a_venir"
+  },
   "22|2026-11-02|B": {
    "dept": "Côtes-d'Armor",
    "serie": "B",
    "episode": "2026-11-02",
-   "etape": "mail2_a_venir"
+   "etape": "attente_envoi_mail2"
   },
   "23|2026-09-30|A": {
    "dept": "Creuse",
@@ -1769,6 +1775,12 @@
    "episode": "2026-10-07",
    "etape": "silence"
   },
+  "39|2026-11-21|B": {
+   "dept": "Jura",
+   "serie": "B",
+   "episode": "2026-11-21",
+   "etape": "a_venir"
+  },
   "40|2026-10-07|A": {
    "dept": "Landes",
    "serie": "A",
@@ -1779,7 +1791,7 @@
    "dept": "Loire-Atlantique",
    "serie": "A",
    "episode": "2026-11-16",
-   "etape": "a_venir"
+   "etape": "a_monter"
   },
   "50|2026-10-23|B": {
    "dept": "Manche",
@@ -1803,7 +1815,7 @@
    "dept": "Mayenne",
    "serie": "A",
    "episode": "2026-11-16",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "55|2026-10-07|A": {
    "dept": "Meuse",
@@ -1815,7 +1827,7 @@
    "dept": "Morbihan",
    "serie": "A",
    "episode": "2026-11-16",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "62|2026-11-17|A": {
    "dept": "Pas-de-Calais",
@@ -1859,7 +1871,7 @@
    "dept": "Haute-Savoie",
    "serie": "B",
    "episode": "2026-11-15",
-   "etape": "a_monter"
+   "etape": "attente_envoi_mail1"
   },
   "76|2026-10-24|A": {
    "dept": "Seine-Maritime",
@@ -1878,7 +1890,7 @@
    "dept": "Deux-Sèvres",
    "serie": "A",
    "episode": "2026-11-16",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "80|2026-11-19|B": {
    "dept": "Somme",
