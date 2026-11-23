@@ -16,8 +16,9 @@
  },
  "sequences": {
   "01|2026-11-16|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-22"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-22",
+   "mail1_envoye_le": "2026-11-23"
   },
   "02|2026-10-24|A": {
    "etape": "mail2_envoye",
@@ -26,8 +27,9 @@
    "mail2_envoye_le": "2026-11-16"
   },
   "03|2026-11-16|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-22"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-22",
+   "mail1_envoye_le": "2026-11-23"
   },
   "04|2026-10-20|A": {
    "etape": "mail2_envoye",
@@ -88,13 +90,15 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "17|2026-11-16|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-22"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-22",
+   "mail1_envoye_le": "2026-11-23"
   },
   "22|2026-11-02|B": {
-   "etape": "mail2_monte",
+   "etape": "mail2_envoye",
    "mail1_monte_le": "2026-11-08",
-   "mail1_envoye_le": "2026-11-09"
+   "mail1_envoye_le": "2026-11-09",
+   "mail2_envoye_le": "2026-11-23"
   },
   "23|2026-09-30|A": {
    "etape": "mail2_envoye",
@@ -185,8 +189,9 @@
    "mail2_envoye_le": "2026-11-17"
   },
   "53|2026-11-16|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-22"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-22",
+   "mail1_envoye_le": "2026-11-23"
   },
   "55|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -195,12 +200,14 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "56|2026-11-16|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-22"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-22",
+   "mail1_envoye_le": "2026-11-23"
   },
   "74|2026-11-15|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-22"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-22",
+   "mail1_envoye_le": "2026-11-23"
   },
   "76|2026-10-24|A": {
    "etape": "mail2_envoye",
@@ -209,8 +216,9 @@
    "mail2_envoye_le": "2026-11-16"
   },
   "79|2026-11-16|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-22"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-22",
+   "mail1_envoye_le": "2026-11-23"
   },
   "83|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -1503,7 +1511,15 @@
    "envoi_prevu": "2026-11-23",
    "liste_id": 10660875,
    "titre": "J+7 - Pluies - Ain",
-   "objet": "Ain : après un mois pluvieux"
+   "objet": "Ain : après un mois pluvieux",
+   "envoye_le": "2026-11-23",
+   "stats": {
+    "contacts": 254,
+    "delivres": 199,
+    "ouvertures": 36,
+    "clics": 0,
+    "desabos": 2
+   }
   },
   "15103183": {
    "cle": "03|2026-11-16|B",
@@ -1516,7 +1532,15 @@
    "envoi_prevu": "2026-11-23",
    "liste_id": 10660876,
    "titre": "J+7 - Pluies - Allier",
-   "objet": "Allier : après un mois pluvieux"
+   "objet": "Allier : après un mois pluvieux",
+   "envoye_le": "2026-11-23",
+   "stats": {
+    "contacts": 59,
+    "delivres": 51,
+    "ouvertures": 11,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15103184": {
    "cle": "17|2026-11-16|A",
@@ -1529,7 +1553,15 @@
    "envoi_prevu": "2026-11-23",
    "liste_id": 10660877,
    "titre": "J+7 - Pluies - Charente-Maritime",
-   "objet": "Charente-Maritime : après les fortes pluies"
+   "objet": "Charente-Maritime : après les fortes pluies",
+   "envoye_le": "2026-11-23",
+   "stats": {
+    "contacts": 153,
+    "delivres": 122,
+    "ouvertures": 29,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15103185": {
    "cle": "53|2026-11-16|A",
@@ -1542,7 +1574,15 @@
    "envoi_prevu": "2026-11-23",
    "liste_id": 10660879,
    "titre": "J+7 - Pluies - Mayenne",
-   "objet": "Mayenne : après les fortes pluies"
+   "objet": "Mayenne : après les fortes pluies",
+   "envoye_le": "2026-11-23",
+   "stats": {
+    "contacts": 17,
+    "delivres": 15,
+    "ouvertures": 1,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15103187": {
    "cle": "56|2026-11-16|A",
@@ -1555,7 +1595,15 @@
    "envoi_prevu": "2026-11-23",
    "liste_id": 10660880,
    "titre": "J+7 - Pluies - Morbihan",
-   "objet": "Morbihan : après les fortes pluies"
+   "objet": "Morbihan : après les fortes pluies",
+   "envoye_le": "2026-11-23",
+   "stats": {
+    "contacts": 108,
+    "delivres": 90,
+    "ouvertures": 25,
+    "clics": 0,
+    "desabos": 2
+   }
   },
   "15103188": {
    "cle": "74|2026-11-15|B",
@@ -1568,7 +1616,15 @@
    "envoi_prevu": "2026-11-23",
    "liste_id": 10660881,
    "titre": "J+7 - Pluies - Haute-Savoie",
-   "objet": "Haute-Savoie : après un mois pluvieux"
+   "objet": "Haute-Savoie : après un mois pluvieux",
+   "envoye_le": "2026-11-23",
+   "stats": {
+    "contacts": 183,
+    "delivres": 116,
+    "ouvertures": 34,
+    "clics": 0,
+    "desabos": 1
+   }
   },
   "15103189": {
    "cle": "79|2026-11-16|A",
@@ -1581,7 +1637,15 @@
    "envoi_prevu": "2026-11-23",
    "liste_id": 10660882,
    "titre": "J+7 - Pluies - Deux-Sèvres",
-   "objet": "Deux-Sèvres : après les fortes pluies"
+   "objet": "Deux-Sèvres : après les fortes pluies",
+   "envoye_le": "2026-11-23",
+   "stats": {
+    "contacts": 95,
+    "delivres": 87,
+    "ouvertures": 8,
+    "clics": 1,
+    "desabos": 1
+   }
   },
   "15103190": {
    "cle": "22|2026-11-02|B",
@@ -1594,7 +1658,15 @@
    "envoi_prevu": "2026-11-23",
    "liste_id": 10656893,
    "titre": "J+21 - Pluies - Côtes-d'Armor",
-   "objet": "Côtes-d'Armor : rien n'est apparu ? 💧"
+   "objet": "Côtes-d'Armor : rien n'est apparu ? 💧",
+   "envoye_le": "2026-11-23",
+   "stats": {
+    "contacts": 37,
+    "delivres": 30,
+    "ouvertures": 4,
+    "clics": 0,
+    "desabos": 0
+   }
   }
  },
  "detection_cron": {
