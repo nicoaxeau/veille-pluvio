@@ -95,8 +95,9 @@
    "mail1_envoye_le": "2026-11-23"
   },
   "19|2026-11-17|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-23"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-23",
+   "mail1_envoye_le": "2026-11-24"
   },
   "22|2026-11-02|B": {
    "etape": "mail2_envoye",
@@ -175,8 +176,9 @@
    "mail2_envoye_le": "2026-10-28"
   },
   "44|2026-11-16|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-23"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-23",
+   "mail1_envoye_le": "2026-11-24"
   },
   "50|2026-10-23|B": {
    "etape": "mail2_envoye",
@@ -213,16 +215,19 @@
    "mail1_envoye_le": "2026-11-23"
   },
   "62|2026-11-17|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-23"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-23",
+   "mail1_envoye_le": "2026-11-24"
   },
   "69|2026-11-17|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-23"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-23",
+   "mail1_envoye_le": "2026-11-24"
   },
   "71|2026-11-17|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-23"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-23",
+   "mail1_envoye_le": "2026-11-24"
   },
   "74|2026-11-15|B": {
    "etape": "mail1_envoye",
@@ -241,8 +246,9 @@
    "mail1_envoye_le": "2026-11-23"
   },
   "82|2026-11-17|A": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-23"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-23",
+   "mail1_envoye_le": "2026-11-24"
   },
   "83|2026-10-07|A": {
    "etape": "mail2_envoye",
@@ -1540,9 +1546,9 @@
    "stats": {
     "contacts": 254,
     "delivres": 199,
-    "ouvertures": 36,
+    "ouvertures": 39,
     "clics": 0,
-    "desabos": 2
+    "desabos": 3
    }
   },
   "15103183": {
@@ -1582,7 +1588,7 @@
    "stats": {
     "contacts": 153,
     "delivres": 122,
-    "ouvertures": 29,
+    "ouvertures": 32,
     "clics": 0,
     "desabos": 1
    }
@@ -1624,7 +1630,7 @@
    "stats": {
     "contacts": 108,
     "delivres": 90,
-    "ouvertures": 25,
+    "ouvertures": 27,
     "clics": 0,
     "desabos": 2
    }
@@ -1645,7 +1651,7 @@
    "stats": {
     "contacts": 183,
     "delivres": 116,
-    "ouvertures": 34,
+    "ouvertures": 35,
     "clics": 0,
     "desabos": 1
    }
@@ -1666,7 +1672,7 @@
    "stats": {
     "contacts": 95,
     "delivres": 87,
-    "ouvertures": 8,
+    "ouvertures": 9,
     "clics": 1,
     "desabos": 1
    }
@@ -1687,7 +1693,7 @@
    "stats": {
     "contacts": 37,
     "delivres": 30,
-    "ouvertures": 4,
+    "ouvertures": 6,
     "clics": 0,
     "desabos": 0
    }
@@ -1703,7 +1709,15 @@
    "envoi_prevu": "2026-11-24",
    "liste_id": 10661285,
    "titre": "J+7 - Pluies - Corrèze",
-   "objet": "Corrèze : après un mois pluvieux"
+   "objet": "Corrèze : après un mois pluvieux",
+   "envoye_le": "2026-11-24",
+   "stats": {
+    "contacts": 25,
+    "delivres": 22,
+    "ouvertures": 4,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15105315": {
    "cle": "44|2026-11-16|A",
@@ -1716,7 +1730,15 @@
    "envoi_prevu": "2026-11-23",
    "liste_id": 10661286,
    "titre": "J+7 - Pluies - Loire-Atlantique",
-   "objet": "Loire-Atlantique : après les fortes pluies"
+   "objet": "Loire-Atlantique : après les fortes pluies",
+   "envoye_le": "2026-11-24",
+   "stats": {
+    "contacts": 1772,
+    "delivres": 1343,
+    "ouvertures": 303,
+    "clics": 2,
+    "desabos": 14
+   }
   },
   "15105317": {
    "cle": "62|2026-11-17|A",
@@ -1729,7 +1751,15 @@
    "envoi_prevu": "2026-11-24",
    "liste_id": 10661287,
    "titre": "J+7 - Pluies - Pas-de-Calais",
-   "objet": "Pas-de-Calais : après les fortes pluies"
+   "objet": "Pas-de-Calais : après les fortes pluies",
+   "envoye_le": "2026-11-24",
+   "stats": {
+    "contacts": 212,
+    "delivres": 174,
+    "ouvertures": 19,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15105318": {
    "cle": "69|2026-11-17|B",
@@ -1742,7 +1772,15 @@
    "envoi_prevu": "2026-11-24",
    "liste_id": 10661288,
    "titre": "J+7 - Pluies - Rhône",
-   "objet": "Rhône : après un mois pluvieux"
+   "objet": "Rhône : après un mois pluvieux",
+   "envoye_le": "2026-11-24",
+   "stats": {
+    "contacts": 1457,
+    "delivres": 1173,
+    "ouvertures": 238,
+    "clics": 2,
+    "desabos": 7
+   }
   },
   "15105319": {
    "cle": "71|2026-11-17|B",
@@ -1755,7 +1793,15 @@
    "envoi_prevu": "2026-11-24",
    "liste_id": 10661289,
    "titre": "J+7 - Pluies - Saône-et-Loire",
-   "objet": "Saône-et-Loire : après un mois pluvieux"
+   "objet": "Saône-et-Loire : après un mois pluvieux",
+   "envoye_le": "2026-11-24",
+   "stats": {
+    "contacts": 86,
+    "delivres": 77,
+    "ouvertures": 15,
+    "clics": 1,
+    "desabos": 0
+   }
   },
   "15105320": {
    "cle": "82|2026-11-17|A",
@@ -1768,7 +1814,15 @@
    "envoi_prevu": "2026-11-24",
    "liste_id": 10661290,
    "titre": "J+7 - Pluies - Tarn-et-Garonne",
-   "objet": "Tarn-et-Garonne : après les fortes pluies"
+   "objet": "Tarn-et-Garonne : après les fortes pluies",
+   "envoye_le": "2026-11-24",
+   "stats": {
+    "contacts": 40,
+    "delivres": 35,
+    "ouvertures": 7,
+    "clics": 1,
+    "desabos": 0
+   }
   }
  },
  "detection_cron": {
