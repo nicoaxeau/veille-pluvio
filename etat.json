@@ -224,6 +224,10 @@
    "mail1_monte_le": "2026-11-23",
    "mail1_envoye_le": "2026-11-24"
   },
+  "70|2026-11-18|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-24"
+  },
   "71|2026-11-17|B": {
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-11-23",
@@ -273,6 +277,10 @@
    "mail1_monte_le": "2026-10-07",
    "mail1_envoye_le": "2026-10-07",
    "mail2_envoye_le": "2026-10-21"
+  },
+  "90|2026-11-18|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-24"
   }
  },
  "campagnes": {
@@ -1823,6 +1831,32 @@
     "clics": 1,
     "desabos": 0
    }
+  },
+  "15107059": {
+   "cle": "70|2026-11-18|B",
+   "dept": "70",
+   "nom_dept": "Haute-Saône",
+   "serie": "B",
+   "episode": "2026-11-18",
+   "etape": "mail1",
+   "monte_le": "2026-11-24",
+   "envoi_prevu": "2026-11-25",
+   "liste_id": 10661717,
+   "titre": "J+7 - Pluies - Haute-Saône",
+   "objet": "Haute-Saône : après un mois pluvieux"
+  },
+  "15107060": {
+   "cle": "90|2026-11-18|B",
+   "dept": "90",
+   "nom_dept": "Territoire de Belfort",
+   "serie": "B",
+   "episode": "2026-11-18",
+   "etape": "mail1",
+   "monte_le": "2026-11-24",
+   "envoi_prevu": "2026-11-25",
+   "liste_id": 10661718,
+   "titre": "J+7 - Pluies - Territoire de Belfort",
+   "objet": "Territoire de Belfort : après un mois pluvieux"
   }
  },
  "detection_cron": {
