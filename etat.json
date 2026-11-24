@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-11-23T21:18:07+00:00",
+ "maj": "2026-11-24T20:09:51+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -1776,7 +1776,7 @@
    "dept": "Ain",
    "serie": "B",
    "episode": "2026-11-16",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "02|2026-10-24|A": {
    "dept": "Aisne",
@@ -1788,7 +1788,7 @@
    "dept": "Allier",
    "serie": "B",
    "episode": "2026-11-16",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "04|2026-10-20|A": {
    "dept": "Alpes-de-Haute-Provence",
@@ -1869,13 +1869,13 @@
    "dept": "Charente-Maritime",
    "serie": "A",
    "episode": "2026-11-16",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "19|2026-11-17|B": {
    "dept": "Corrèze",
    "serie": "B",
    "episode": "2026-11-17",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "21|2026-11-21|B": {
    "dept": "Côte-d'Or",
@@ -1887,7 +1887,7 @@
    "dept": "Côtes-d'Armor",
    "serie": "B",
    "episode": "2026-11-02",
-   "etape": "attente_envoi_mail2"
+   "etape": "silence"
   },
   "23|2026-09-30|A": {
    "dept": "Creuse",
@@ -1965,7 +1965,7 @@
    "dept": "Loire-Atlantique",
    "serie": "A",
    "episode": "2026-11-16",
-   "etape": "a_monter"
+   "etape": "attente_envoi_mail1"
   },
   "50|2026-10-23|B": {
    "dept": "Manche",
@@ -1989,7 +1989,7 @@
    "dept": "Mayenne",
    "serie": "A",
    "episode": "2026-11-16",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "55|2026-10-07|A": {
    "dept": "Meuse",
@@ -2001,13 +2001,13 @@
    "dept": "Morbihan",
    "serie": "A",
    "episode": "2026-11-16",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "62|2026-11-17|A": {
    "dept": "Pas-de-Calais",
    "serie": "A",
    "episode": "2026-11-17",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "63|2026-08-27|A": {
    "dept": "Puy-de-Dôme",
@@ -2020,7 +2020,7 @@
    "dept": "Rhône",
    "serie": "B",
    "episode": "2026-11-17",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "70|2026-11-18|B": {
    "dept": "Haute-Saône",
@@ -2032,7 +2032,7 @@
    "dept": "Saône-et-Loire",
    "serie": "B",
    "episode": "2026-11-17",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "73|2026-09-08|A": {
    "dept": "Savoie",
@@ -2041,11 +2041,17 @@
    "etape": "abandonne",
    "motif": "anterieur a la bascule du 2026-10-14"
   },
+  "73|2026-11-22|A": {
+   "dept": "Savoie",
+   "serie": "A",
+   "episode": "2026-11-22",
+   "etape": "a_venir"
+  },
   "74|2026-11-15|B": {
    "dept": "Haute-Savoie",
    "serie": "B",
    "episode": "2026-11-15",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "76|2026-10-24|A": {
    "dept": "Seine-Maritime",
@@ -2064,7 +2070,7 @@
    "dept": "Deux-Sèvres",
    "serie": "A",
    "episode": "2026-11-16",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "80|2026-11-19|B": {
    "dept": "Somme",
@@ -2076,7 +2082,7 @@
    "dept": "Tarn-et-Garonne",
    "serie": "A",
    "episode": "2026-11-17",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "83|2026-10-07|A": {
    "dept": "Var",
