@@ -250,6 +250,10 @@
    "mail1_monte_le": "2026-11-22",
    "mail1_envoye_le": "2026-11-23"
   },
+  "80|2026-11-19|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-25"
+  },
   "82|2026-11-17|A": {
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-11-23",
@@ -283,6 +287,10 @@
    "etape": "mail1_envoye",
    "mail1_monte_le": "2026-11-24",
    "mail1_envoye_le": "2026-11-25"
+  },
+  "94|2026-11-19|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-25"
   }
  },
  "campagnes": {
@@ -1875,6 +1883,32 @@
     "clics": 0,
     "desabos": 0
    }
+  },
+  "15108811": {
+   "cle": "80|2026-11-19|B",
+   "dept": "80",
+   "nom_dept": "Somme",
+   "serie": "B",
+   "episode": "2026-11-19",
+   "etape": "mail1",
+   "monte_le": "2026-11-25",
+   "envoi_prevu": "2026-11-26",
+   "liste_id": 10662054,
+   "titre": "J+7 - Pluies - Somme",
+   "objet": "Somme : après un mois pluvieux"
+  },
+  "15108812": {
+   "cle": "94|2026-11-19|B",
+   "dept": "94",
+   "nom_dept": "Val-de-Marne",
+   "serie": "B",
+   "episode": "2026-11-19",
+   "etape": "mail1",
+   "monte_le": "2026-11-25",
+   "envoi_prevu": "2026-11-26",
+   "liste_id": 10662055,
+   "titre": "J+7 - Pluies - Val-de-Marne",
+   "objet": "Val-de-Marne : après un mois pluvieux"
   }
  },
  "detection_cron": {
