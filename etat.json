@@ -225,8 +225,9 @@
    "mail1_envoye_le": "2026-11-24"
   },
   "70|2026-11-18|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-24"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-24",
+   "mail1_envoye_le": "2026-11-25"
   },
   "71|2026-11-17|B": {
    "etape": "mail1_envoye",
@@ -279,8 +280,9 @@
    "mail2_envoye_le": "2026-10-21"
   },
   "90|2026-11-18|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-24"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-24",
+   "mail1_envoye_le": "2026-11-25"
   }
  },
  "campagnes": {
@@ -1554,7 +1556,7 @@
    "stats": {
     "contacts": 254,
     "delivres": 199,
-    "ouvertures": 39,
+    "ouvertures": 42,
     "clics": 0,
     "desabos": 3
    }
@@ -1596,7 +1598,7 @@
    "stats": {
     "contacts": 153,
     "delivres": 122,
-    "ouvertures": 32,
+    "ouvertures": 33,
     "clics": 0,
     "desabos": 1
    }
@@ -1638,7 +1640,7 @@
    "stats": {
     "contacts": 108,
     "delivres": 90,
-    "ouvertures": 27,
+    "ouvertures": 29,
     "clics": 0,
     "desabos": 2
    }
@@ -1742,8 +1744,8 @@
    "envoye_le": "2026-11-24",
    "stats": {
     "contacts": 1772,
-    "delivres": 1343,
-    "ouvertures": 303,
+    "delivres": 1342,
+    "ouvertures": 322,
     "clics": 2,
     "desabos": 14
    }
@@ -1764,7 +1766,7 @@
    "stats": {
     "contacts": 212,
     "delivres": 174,
-    "ouvertures": 19,
+    "ouvertures": 25,
     "clics": 0,
     "desabos": 0
    }
@@ -1785,7 +1787,7 @@
    "stats": {
     "contacts": 1457,
     "delivres": 1173,
-    "ouvertures": 238,
+    "ouvertures": 262,
     "clics": 2,
     "desabos": 7
    }
@@ -1806,7 +1808,7 @@
    "stats": {
     "contacts": 86,
     "delivres": 77,
-    "ouvertures": 15,
+    "ouvertures": 17,
     "clics": 1,
     "desabos": 0
    }
@@ -1827,7 +1829,7 @@
    "stats": {
     "contacts": 40,
     "delivres": 35,
-    "ouvertures": 7,
+    "ouvertures": 8,
     "clics": 1,
     "desabos": 0
    }
@@ -1843,7 +1845,15 @@
    "envoi_prevu": "2026-11-25",
    "liste_id": 10661717,
    "titre": "J+7 - Pluies - Haute-Saône",
-   "objet": "Haute-Saône : après un mois pluvieux"
+   "objet": "Haute-Saône : après un mois pluvieux",
+   "envoye_le": "2026-11-25",
+   "stats": {
+    "contacts": 19,
+    "delivres": 17,
+    "ouvertures": 4,
+    "clics": 0,
+    "desabos": 0
+   }
   },
   "15107060": {
    "cle": "90|2026-11-18|B",
@@ -1856,7 +1866,15 @@
    "envoi_prevu": "2026-11-25",
    "liste_id": 10661718,
    "titre": "J+7 - Pluies - Territoire de Belfort",
-   "objet": "Territoire de Belfort : après un mois pluvieux"
+   "objet": "Territoire de Belfort : après un mois pluvieux",
+   "envoye_le": "2026-11-25",
+   "stats": {
+    "contacts": 20,
+    "delivres": 19,
+    "ouvertures": 1,
+    "clics": 0,
+    "desabos": 0
+   }
   }
  },
  "detection_cron": {
