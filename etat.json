@@ -111,6 +111,10 @@
    "mail1_envoye_le": "2026-10-07",
    "mail2_envoye_le": "2026-10-21"
   },
+  "23|2026-11-20|B": {
+   "etape": "abandonne",
+   "motif": "moins de 5 contacts"
+  },
   "24|2026-10-06|A": {
    "etape": "mail2_envoye",
    "mail1_monte_le": "2026-10-08",
@@ -283,6 +287,10 @@
    "mail1_monte_le": "2026-10-07",
    "mail1_envoye_le": "2026-10-07",
    "mail2_envoye_le": "2026-10-21"
+  },
+  "87|2026-11-20|B": {
+   "etape": "mail1_monte",
+   "mail1_monte_le": "2026-11-26"
   },
   "90|2026-11-18|B": {
    "etape": "mail1_envoye",
@@ -1927,6 +1935,19 @@
     "clics": 0,
     "desabos": 1
    }
+  },
+  "15110728": {
+   "cle": "87|2026-11-20|B",
+   "dept": "87",
+   "nom_dept": "Haute-Vienne",
+   "serie": "B",
+   "episode": "2026-11-20",
+   "etape": "mail1",
+   "monte_le": "2026-11-26",
+   "envoi_prevu": "2026-11-27",
+   "liste_id": 10662410,
+   "titre": "J+7 - Pluies - Haute-Vienne",
+   "objet": "Haute-Vienne : après un mois pluvieux"
   }
  },
  "detection_cron": {
