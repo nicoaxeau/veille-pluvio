@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-11-25T19:13:17+00:00",
+ "maj": "2026-11-26T18:59:25+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -2038,7 +2038,7 @@
    "dept": "Dordogne",
    "serie": "A",
    "episode": "2026-10-06",
-   "etape": "silence"
+   "etape": "termine"
   },
   "25|2026-10-27|B": {
    "dept": "Doubs",
@@ -2064,11 +2064,17 @@
    "episode": "2026-09-30",
    "etape": "termine"
   },
+  "30|2026-11-24|A": {
+   "dept": "Gard",
+   "serie": "A",
+   "episode": "2026-11-24",
+   "etape": "a_venir"
+  },
   "33|2026-10-06|A": {
    "dept": "Gironde",
    "serie": "A",
    "episode": "2026-10-06",
-   "etape": "silence"
+   "etape": "termine"
   },
   "34|2026-09-30|A": {
    "dept": "Hérault",
@@ -2159,7 +2165,7 @@
    "dept": "Haute-Saône",
    "serie": "B",
    "episode": "2026-11-18",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "71|2026-11-17|B": {
    "dept": "Saône-et-Loire",
@@ -2209,7 +2215,7 @@
    "dept": "Somme",
    "serie": "B",
    "episode": "2026-11-19",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "82|2026-11-17|A": {
    "dept": "Tarn-et-Garonne",
@@ -2251,13 +2257,13 @@
    "dept": "Territoire de Belfort",
    "serie": "B",
    "episode": "2026-11-18",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "94|2026-11-19|B": {
    "dept": "Val-de-Marne",
    "serie": "B",
    "episode": "2026-11-19",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   }
  },
  "mode": "a_blanc"
