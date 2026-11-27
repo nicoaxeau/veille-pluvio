@@ -289,8 +289,9 @@
    "mail2_envoye_le": "2026-10-21"
   },
   "87|2026-11-20|B": {
-   "etape": "mail1_monte",
-   "mail1_monte_le": "2026-11-26"
+   "etape": "mail1_envoye",
+   "mail1_monte_le": "2026-11-26",
+   "mail1_envoye_le": "2026-11-27"
   },
   "90|2026-11-18|B": {
    "etape": "mail1_envoye",
@@ -1574,7 +1575,7 @@
    "stats": {
     "contacts": 254,
     "delivres": 199,
-    "ouvertures": 42,
+    "ouvertures": 43,
     "clics": 0,
     "desabos": 3
    }
@@ -1763,7 +1764,7 @@
    "stats": {
     "contacts": 1772,
     "delivres": 1342,
-    "ouvertures": 325,
+    "ouvertures": 329,
     "clics": 2,
     "desabos": 14
    }
@@ -1784,7 +1785,7 @@
    "stats": {
     "contacts": 212,
     "delivres": 174,
-    "ouvertures": 27,
+    "ouvertures": 28,
     "clics": 0,
     "desabos": 0
    }
@@ -1805,7 +1806,7 @@
    "stats": {
     "contacts": 1457,
     "delivres": 1173,
-    "ouvertures": 277,
+    "ouvertures": 281,
     "clics": 2,
     "desabos": 7
    }
@@ -1910,7 +1911,7 @@
    "stats": {
     "contacts": 126,
     "delivres": 100,
-    "ouvertures": 26,
+    "ouvertures": 27,
     "clics": 0,
     "desabos": 2
    }
@@ -1931,7 +1932,7 @@
    "stats": {
     "contacts": 237,
     "delivres": 171,
-    "ouvertures": 34,
+    "ouvertures": 42,
     "clics": 0,
     "desabos": 1
    }
@@ -1947,7 +1948,15 @@
    "envoi_prevu": "2026-11-27",
    "liste_id": 10662410,
    "titre": "J+7 - Pluies - Haute-Vienne",
-   "objet": "Haute-Vienne : après un mois pluvieux"
+   "objet": "Haute-Vienne : après un mois pluvieux",
+   "envoye_le": "2026-11-27",
+   "stats": {
+    "contacts": 23,
+    "delivres": 20,
+    "ouvertures": 7,
+    "clics": 0,
+    "desabos": 1
+   }
   }
  },
  "detection_cron": {
