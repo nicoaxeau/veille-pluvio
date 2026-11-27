@@ -1,6 +1,6 @@
 {
  "version": 2,
- "maj": "2026-11-26T18:59:25+00:00",
+ "maj": "2026-11-27T18:56:00+00:00",
  "bascule": "2026-10-14",
  "parametres": {
   "pic_mm": 30.0,
@@ -1979,19 +1979,19 @@
    "dept": "Hautes-Alpes",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "06|2026-10-07|A": {
    "dept": "Alpes-Maritimes",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "07|2026-10-07|A": {
    "dept": "Ardèche",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "08|2026-10-24|A": {
    "dept": "Ardennes",
@@ -2018,6 +2018,12 @@
    "etape": "abandonne",
    "motif": "mail 1 non envoyé, décision du 07/10/2026"
   },
+  "14|2026-11-25|B": {
+   "dept": "Calvados",
+   "serie": "B",
+   "episode": "2026-11-25",
+   "etape": "a_venir"
+  },
   "15|2026-08-27|A": {
    "dept": "Cantal",
    "serie": "A",
@@ -2029,13 +2035,13 @@
    "dept": "Cantal",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "16|2026-10-07|A": {
    "dept": "Charente",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "17|2026-11-16|A": {
    "dept": "Charente-Maritime",
@@ -2071,6 +2077,13 @@
    "dept": "Creuse",
    "serie": "B",
    "episode": "2026-11-20",
+   "etape": "abandonne",
+   "motif": "moins de 5 contacts"
+  },
+  "23|2026-11-21|B": {
+   "dept": "Creuse",
+   "serie": "B",
+   "episode": "2026-11-21",
    "etape": "a_venir"
   },
   "24|2026-10-06|A": {
@@ -2089,7 +2102,7 @@
    "dept": "Drôme",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "29|2026-10-24|B": {
    "dept": "Finistère",
@@ -2125,7 +2138,7 @@
    "dept": "Isère",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "39|2026-11-21|B": {
    "dept": "Jura",
@@ -2137,7 +2150,7 @@
    "dept": "Landes",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "44|2026-11-16|A": {
    "dept": "Loire-Atlantique",
@@ -2155,7 +2168,7 @@
    "dept": "Marne",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "52|2026-10-27|B": {
    "dept": "Haute-Marne",
@@ -2173,7 +2186,7 @@
    "dept": "Meuse",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "56|2026-11-16|A": {
    "dept": "Morbihan",
@@ -2237,13 +2250,6 @@
    "episode": "2026-10-24",
    "etape": "silence"
   },
-  "79|2026-08-26|A": {
-   "dept": "Deux-Sèvres",
-   "serie": "A",
-   "episode": "2026-08-26",
-   "etape": "abandonne",
-   "motif": "anterieur a la bascule du 2026-10-14"
-  },
   "79|2026-11-16|A": {
    "dept": "Deux-Sèvres",
    "serie": "A",
@@ -2254,7 +2260,7 @@
    "dept": "Somme",
    "serie": "B",
    "episode": "2026-11-19",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   },
   "82|2026-11-17|A": {
    "dept": "Tarn-et-Garonne",
@@ -2266,13 +2272,13 @@
    "dept": "Var",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "84|2026-10-07|A": {
    "dept": "Vaucluse",
    "serie": "A",
    "episode": "2026-10-07",
-   "etape": "silence"
+   "etape": "termine"
   },
   "85|2026-10-26|B": {
    "dept": "Vendée",
@@ -2290,7 +2296,7 @@
    "dept": "Haute-Vienne",
    "serie": "B",
    "episode": "2026-11-20",
-   "etape": "a_venir"
+   "etape": "attente_envoi_mail1"
   },
   "90|2026-11-18|B": {
    "dept": "Territoire de Belfort",
@@ -2302,7 +2308,7 @@
    "dept": "Val-de-Marne",
    "serie": "B",
    "episode": "2026-11-19",
-   "etape": "attente_envoi_mail1"
+   "etape": "mail2_a_venir"
   }
  },
  "mode": "a_blanc"
